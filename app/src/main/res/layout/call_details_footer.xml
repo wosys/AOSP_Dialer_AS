@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@id/footer_container"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1.0dip"
+        android:layout_marginTop="@dimen/ec_divider_top_bottom_margin"
+        android:layout_marginBottom="@dimen/ec_divider_top_bottom_margin" />
+
+    <TextView
+        android:id="@id/call_detail_action_copy"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:text="@string/call_details_copy_number"
+        app:drawableStartCompat="@drawable/quantum_ic_content_copy_vd_theme_24" />
+
+    <TextView
+        android:id="@id/call_detail_action_edit_before_call"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:text="@string/call_details_edit_number"
+        app:drawableStartCompat="@drawable/ic_edit" />
+
+    <TextView
+        android:id="@id/call_detail_action_report_caller_id"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:text="@string/call_details_report_call_id"
+        android:visibility="gone"
+        app:drawableStartCompat="@drawable/quantum_ic_report_vd_theme_24" />
+
+    <TextView
+        android:id="@id/call_detail_action_delete"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:text="@string/delete"
+        app:drawableStartCompat="@drawable/quantum_ic_delete_vd_theme_24" />
+</LinearLayout>

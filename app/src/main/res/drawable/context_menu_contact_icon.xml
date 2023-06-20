@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:width="24.0dip"
+        android:height="24.0dip"
+        android:drawable="@drawable/product_logo_avatar_anonymous_white_color_120"
+        android:gravity="center" />
+</layer-list>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="answer_animate_entry_millis">1000</integer>
+    <integer name="call_composer_message_limit">60</integer>
+    <integer name="call_subject_animation_duration">250</integer>
+    <integer name="cancel_button_image_alpha">127</integer>
+    <integer name="contact_list_card_layout_weight">0</integer>
+    <integer name="contact_list_space_layout_weight">0</integer>
+    <integer name="contact_tile_column_count_in_favorites">2</integer>
+    <integer name="dialpad_slide_in_duration">400</integer>
+    <integer name="dialpad_slide_out_duration">400</integer>
+    <integer name="fade_duration">300</integer>
+    <integer name="floating_action_button_animation_duration">250</integer>
+    <integer name="gallery_composer_grid_view_rows">2</integer>
+    <integer name="incall_num_rows">0</integer>
+    <integer name="post_call_char_limit">60</integer>
+    <integer name="status_bar_notification_info_maxnum">999</integer>
+    <integer name="video_call_auto_fullscreen_timeout">5000</integer>
+</resources>

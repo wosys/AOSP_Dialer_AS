@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@id/calllog_frame"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:fitsSystemWindows="true">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="fill_parent"
+            android:layout_height="?actionBarSize"
+            app:elevation="0.0dip" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <com.android.contacts.common.list.ViewPagerTabs
+        android:id="@id/viewpager_header"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/tab_height"
+        android:layout_gravity="top"
+        android:elevation="@dimen/tab_elevation"
+        android:orientation="horizontal"
+        android:textAllCaps="true" />
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@id/call_log_pager"
+        android:layout_width="fill_parent"
+        android:layout_height="0.0dip"
+        android:layout_weight="1.0" />
+
+    <RelativeLayout
+        android:id="@id/floating_action_button_container"
+        android:layout_width="0.0dip"
+        android:layout_height="0.0dip" />
+</LinearLayout>

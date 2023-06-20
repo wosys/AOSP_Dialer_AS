@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.wintmain.dialer.dialpadview.DialpadKeyButton xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@id/one"
+    style="@style/DialpadKeyButtonStyle">
+
+    <LinearLayout
+        android:id="@id/dialpad_key_layout"
+        style="@style/DialpadKeyInternalLayoutStyle"
+        android:layout_gravity="center"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:layout_width="@dimen/dialpad_key_number_width"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dialpad_key_margin_right">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@id/dialpad_key_number"
+                style="@style/DialpadKeyNumberStyle" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@id/dialpad_key_icon_or_letters_layout"
+            style="@style/DialpadKeyInternalLayoutStyle">
+
+            <ImageView
+                android:id="@id/dialpad_key_voicemail"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dialpad_voicemail_icon_size"
+                android:contentDescription="TODO"
+                android:scaleType="fitCenter"
+                android:src="@drawable/quantum_ic_voicemail_white_24" />
+        </LinearLayout>
+
+        <View
+            android:id="@id/dialpad_key_horizontal_placeholder"
+            android:layout_width="0.0dip"
+            android:layout_height="fill_parent" />
+    </LinearLayout>
+</com.wintmain.dialer.dialpadview.DialpadKeyButton>

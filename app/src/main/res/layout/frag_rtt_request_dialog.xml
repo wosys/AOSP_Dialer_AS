@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@id/details"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="24.0dip"
+        android:paddingTop="20.0dip"
+        android:paddingEnd="24.0dip"
+        android:paddingBottom="12.0dip"
+        android:textColor="#de000000"
+        android:textSize="16.0sp" />
+
+    <TextView
+        android:id="@id/more_information"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="24.0dip"
+        android:paddingEnd="24.0dip"
+        android:paddingBottom="16.0dip"
+        android:text="@string/rtt_request_dialog_more_information"
+        android:textColor="#8a000000"
+        android:textSize="14.0sp" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8.0dip">
+
+        <View
+            android:layout_width="0.0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.0" />
+
+        <Button
+            android:id="@id/rtt_button_decline_request"
+            style="@style/Widget.AppCompat.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:backgroundTint="?android:colorBackgroundFloating"
+            android:fontFamily="sans-serif-medium"
+            android:paddingStart="16.0dip"
+            android:paddingEnd="16.0dip"
+            android:stateListAnimator="@null"
+            android:text="@string/rtt_button_decline_request"
+            android:textColor="#ff757575" />
+
+        <Button
+            android:id="@id/rtt_button_accept_request"
+            style="@style/Widget.AppCompat.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:backgroundTint="?android:colorPrimary"
+            android:fontFamily="sans-serif-medium"
+            android:paddingStart="16.0dip"
+            android:paddingEnd="16.0dip"
+            android:stateListAnimator="@null"
+            android:text="@string/rtt_button_accept_request"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+</LinearLayout>

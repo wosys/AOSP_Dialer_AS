@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="@dimen/ec_container_height"
+    android:clickable="true"
+    android:paddingStart="@dimen/call_entry_text_left_margin">
+
+    <TextView
+        android:id="@id/multimedia_details"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="1.0dip"
+        android:maxLines="2" />
+
+    <FrameLayout
+        android:id="@id/multimedia_image_container"
+        android:layout_width="@dimen/ec_photo_size"
+        android:layout_height="@dimen/ec_photo_size"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/call_entry_padding"
+        android:background="@drawable/multimedia_image_background"
+        android:clickable="true"
+        android:foreground="?selectableItemBackground"
+        android:outlineProvider="background"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@id/multimedia_image"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:contentDescription="TODO"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:id="@id/multimedia_attachments_number"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:textSize="20.0sp"
+            android:visibility="gone" />
+    </FrameLayout>
+</RelativeLayout>

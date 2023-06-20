@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="a11y_minutes">
+        <item quantity="other">minuter</item>
+        <item quantity="one">minut</item>
+    </plurals>
+    <plurals name="a11y_new_call_log_entry_answered_call">
+        <item quantity="other">^1 samtal, det senaste är ett besvarat samtal från ^2</item>
+        <item quantity="one">^1 besvarat samtal från ^2</item>
+    </plurals>
+    <plurals name="a11y_new_call_log_entry_blocked_call">
+        <item quantity="other">^1 samtal, det senaste är ett blockerat samtal från ^2</item>
+        <item quantity="one">^1 blockerat samtal från ^2</item>
+    </plurals>
+    <plurals name="a11y_new_call_log_entry_missed_call">
+        <item quantity="other">^1 samtal, det senaste är ett missat samtal från ^2</item>
+        <item quantity="one">^1 missat samtal från ^2</item>
+    </plurals>
+    <plurals name="a11y_new_call_log_entry_outgoing_call">
+        <item quantity="other">^1 samtal, det senaste är ett utgående samtal till ^2</item>
+        <item quantity="one">^1 utgående samtal till ^2</item>
+    </plurals>
+    <plurals name="a11y_seconds">
+        <item quantity="other">sekunder</item>
+        <item quantity="one">sekund</item>
+    </plurals>
+    <plurals name="tab_title_with_unread_items">
+        <item quantity="other">Fliken %1$s. %2$d olästa poster.</item>
+        <item quantity="one">Fliken %1$s. %2$d oläst post.</item>
+    </plurals>
+</resources>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="24.0dip"
+    android:paddingBottom="16.0dip">
+
+    <ImageView
+        android:layout_width="16.0dip"
+        android:layout_height="16.0dip"
+        android:layout_gravity="center_horizontal"
+        android:contentDescription="TODO"
+        android:src="@drawable/quantum_ic_question_answer_vd_theme_24"
+        android:tintMode="src_in"
+        app:tint="#deffffff" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:paddingStart="64.0dip"
+        android:paddingTop="4.0dip"
+        android:paddingEnd="64.0dip"
+        android:paddingBottom="9.0dip"
+        android:text="@string/rtt_transcript_advisory"
+        android:textColor="#ffffffff"
+        android:textSize="12.0sp" />
+</LinearLayout>

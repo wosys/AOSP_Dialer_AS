@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="a11y_minutes">
+        <item quantity="other">دقيقة</item>
+        <item quantity="zero">دقيقة</item>
+        <item quantity="one">دقيقة</item>
+        <item quantity="two">دقيقتان</item>
+        <item quantity="few">دقائق</item>
+        <item quantity="many">دقيقة</item>
+    </plurals>
+    <plurals name="a11y_new_call_log_entry_answered_call">
+        <item quantity="other">^1 مكالمة، الأخيرة هي مكالمة تم الرد عليها من قِبل ^2</item>
+        <item quantity="zero">^1 مكالمات، الأخيرة هي مكالمة تم الرد عليها من قِبل ^2</item>
+        <item quantity="one">^1 مكالمة تم الرد عليها من قِبل ^2</item>
+        <item quantity="two">مكالمتان ^1، الأخيرة هي مكالمة تم الرد عليها من قِبل ^2</item>
+        <item quantity="few">^1 مكالمات، الأخيرة هي مكالمة تم الرد عليها من قِبل ^2</item>
+        <item quantity="many">^1 مكالمة، الأخيرة هي مكالمة تم الرد عليها من قِبل ^2</item>
+    </plurals>
+    <plurals name="a11y_new_call_log_entry_blocked_call">
+        <item quantity="other">^1 مكالمة، الأخيرة هي مكالمة محظورة من ^2</item>
+        <item quantity="zero">^1 مكالمات، الأخيرة هي مكالمة محظورة من ^2</item>
+        <item quantity="one">^1 مكالمة محظورة من ^2</item>
+        <item quantity="two">مكالمتان ^1، الأخيرة هي مكالمة محظورة من ^2</item>
+        <item quantity="few">^1 مكالمات، الأخيرة هي مكالمة محظورة من ^2</item>
+        <item quantity="many">^1 مكالمة، الأخيرة هي مكالمة محظورة من ^2</item>
+    </plurals>
+    <plurals name="a11y_new_call_log_entry_missed_call">
+        <item quantity="other">^1 مكالمة، الأخيرة هي مكالمة فائتة من ^2</item>
+        <item quantity="zero">^1 مكالمات، الأخيرة هي مكالمة فائتة من ^2</item>
+        <item quantity="one">^1 مكالمة فائتة من ^2</item>
+        <item quantity="two">مكالمتان ^1، الأخيرة هي مكالمة فائتة من ^2</item>
+        <item quantity="few">^1 مكالمات، الأخيرة هي مكالمة فائتة من ^2</item>
+        <item quantity="many">^1 مكالمة، الأخيرة هي مكالمة فائتة من ^2</item>
+    </plurals>
+    <plurals name="a11y_new_call_log_entry_outgoing_call">
+        <item quantity="other">^1 مكالمة، الأخيرة هي مكالمة صادرة إلى ^2</item>
+        <item quantity="zero">^1 مكالمات، الأخيرة هي مكالمة صادرة إلى ^2</item>
+        <item quantity="one">^1 مكالمة صادرة إلى ^2</item>
+        <item quantity="two">مكالمتان ^1، الأخيرة هي مكالمة صادرة إلى ^2</item>
+        <item quantity="few">^1 مكالمات، الأخيرة هي مكالمة صادرة إلى ^2</item>
+        <item quantity="many">^1 مكالمة، الأخيرة هي مكالمة صادرة إلى ^2</item>
+    </plurals>
+    <plurals name="a11y_seconds">
+        <item quantity="other">ثانية</item>
+        <item quantity="zero">ثوان</item>
+        <item quantity="one">ثانية واحدة</item>
+        <item quantity="two">ثانيتان</item>
+        <item quantity="few">ثوان</item>
+        <item quantity="many">ثانية</item>
+    </plurals>
+    <plurals name="tab_title_with_unread_items">
+        <item quantity="other">%1$s علامة تبويب. %2$d عناصر غير مقروءة.</item>
+        <item quantity="zero">%1$s علامة تبويب. %2$d عناصر غير مقروءة.</item>
+        <item quantity="one">%1$s علامة تبويب. عنصر واحد (%2$d) غير مقروء.</item>
+        <item quantity="two">علامتا تبويب %1$s. %2$d عناصر غير مقروءة.</item>
+        <item quantity="few">%1$s علامات تبويب. %2$d عناصر غير مقروءة.</item>
+        <item quantity="many">%1$s علامة تبويب. %2$d عناصر غير مقروءة.</item>
+    </plurals>
+</resources>

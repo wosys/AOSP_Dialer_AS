@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@id/contact_layout_root"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#ffffffff"
+    android:focusable="true"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingStart="8.0dip"
+    android:paddingTop="12.0dip"
+    android:paddingEnd="8.0dip"
+    android:paddingBottom="12.0dip">
+
+    <com.wintmain.dialer.widget.ContactPhotoView
+        android:id="@id/contact_photo_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8.0dip" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <com.wintmain.dialer.widget.BidiTextView
+            android:id="@id/primary_text"
+            style="@style/Dialer.TextAppearance.Primary.Ellipsize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <com.wintmain.dialer.widget.BidiTextView
+            android:id="@id/secondary_text"
+            style="@style/Dialer.TextAppearance.Secondary.Ellipsize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2.0dip" />
+    </LinearLayout>
+</LinearLayout>

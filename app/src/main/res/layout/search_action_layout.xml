@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="48.0dip">
+
+    <ImageView
+        android:id="@id/search_action_image"
+        android:layout_width="48.0dip"
+        android:layout_height="48.0dip"
+        android:layout_gravity="start|center"
+        android:layout_marginStart="8.0dip"
+        android:contentDescription="TODO"
+        android:padding="12.0dip"
+        app:tint="?android:colorPrimary" />
+
+    <TextView
+        android:id="@id/search_action_text"
+        style="@style/Dialer.TextAppearance.Primary"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="72.0dip"
+        android:layout_marginEnd="16.0dip" />
+</FrameLayout>

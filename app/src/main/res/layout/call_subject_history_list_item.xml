@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@android:id/text1"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:paddingStart="@dimen/call_subject_dialog_margin"
+    android:paddingTop="@dimen/call_subject_history_item_padding"
+    android:paddingEnd="@dimen/call_subject_dialog_margin"
+    android:paddingBottom="@dimen/call_subject_history_item_padding"
+    android:singleLine="true"
+    android:textColor="?android:textColorPrimary"
+    android:textSize="@dimen/call_subject_dialog_primary_text_size" />

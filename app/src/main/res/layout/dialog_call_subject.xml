@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@id/call_subject_dialog"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@android:color/transparent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0.0dip"
+        android:layout_weight="1.0">
+
+        <LinearLayout
+            android:id="@id/dialog_view"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/dialog_background_material"
+            android:clickable="true"
+            android:elevation="16.0dip"
+            android:orientation="vertical"
+            android:theme="@android:style/Theme.Material.Light.Dialog">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/call_subject_dialog_margin"
+                android:layout_marginTop="@dimen/call_subject_dialog_margin"
+                android:layout_marginEnd="@dimen/call_subject_dialog_margin"
+                android:orientation="horizontal">
+
+                <QuickContactBadge
+                    android:id="@id/contact_photo"
+                    android:layout_width="@dimen/call_subject_dialog_contact_photo_size"
+                    android:layout_height="@dimen/call_subject_dialog_contact_photo_size"
+                    android:layout_gravity="top"
+                    android:layout_marginEnd="@dimen/call_subject_dialog_margin"
+                    android:focusable="true" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@id/name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:textColor="?android:textColorPrimary"
+                        android:textSize="@dimen/call_subject_dialog_secondary_text_size" />
+
+                    <TextView
+                        android:id="@id/number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginTop="@dimen/call_subject_dialog_between_line_margin"
+                        android:singleLine="true"
+                        android:textColor="?android:textColorSecondary"
+                        android:textSize="@dimen/call_subject_dialog_secondary_text_size" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <EditText
+                android:id="@id/call_subject"
+                android:layout_width="fill_parent"
+                android:layout_height="0.0dip"
+                android:layout_gravity="top"
+                android:layout_marginStart="@dimen/call_subject_dialog_margin"
+                android:layout_marginTop="@dimen/call_subject_dialog_edit_spacing"
+                android:layout_marginEnd="@dimen/call_subject_dialog_margin"
+                android:layout_weight="1.0"
+                android:autofillHints=""
+                android:background="@null"
+                android:gravity="top"
+                android:hint="@string/call_subject_hint"
+                android:inputType="textAutoComplete"
+                android:textColor="?android:textColorSecondary"
+                android:textSize="@dimen/call_subject_dialog_secondary_text_size" />
+
+            <TextView
+                android:id="@id/character_limit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/call_subject_dialog_margin"
+                android:layout_marginTop="@dimen/call_subject_dialog_margin"
+                android:layout_marginEnd="@dimen/call_subject_dialog_margin"
+                android:layout_marginBottom="@dimen/call_subject_dialog_margin"
+                android:singleLine="true"
+                android:textColor="?android:textColorSecondary"
+                android:textSize="@dimen/call_subject_dialog_secondary_text_size" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1.0dip"
+                android:background="@color/call_subject_divider" />
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/call_subject_dialog_margin"
+                android:layout_marginTop="@dimen/call_subject_dialog_margin"
+                android:layout_marginEnd="@dimen/call_subject_dialog_margin"
+                android:layout_marginBottom="@dimen/call_subject_dialog_margin">
+
+                <ImageView
+                    android:id="@id/history_button"
+                    android:layout_width="25.0dip"
+                    android:layout_height="25.0dip"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="TODO"
+                    android:src="@drawable/quantum_ic_history_vd_theme_24" />
+
+                <TextView
+                    android:id="@id/send_and_call_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:singleLine="true"
+                    android:text="@string/send_and_call_button"
+                    android:textColor="@color/call_subject_button"
+                    android:textSize="@dimen/call_subject_dialog_secondary_text_size" />
+            </RelativeLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <ListView
+        android:id="@id/subject_list"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:colorBackground"
+        android:divider="@null"
+        android:elevation="8.0dip" />
+</LinearLayout>

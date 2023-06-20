@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.wintmain.dialer.callcomposer.GalleryGridItemView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:clickable="true"
+    android:padding="@dimen/gallery_item_padding">
+
+    <ImageView
+        android:id="@id/image"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/gallery_grid_item_view_background"
+        android:contentDescription="TODO"
+        android:outlineProvider="background"
+        android:scaleType="centerCrop" />
+
+    <FrameLayout
+        android:id="@id/checkbox"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/gallery_grid_checkbox_background"
+        android:outlineProvider="background"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="@dimen/gallery_check_size"
+            android:layout_height="@dimen/gallery_check_size"
+            android:layout_gravity="center"
+            android:contentDescription="TODO"
+            android:src="@drawable/gallery_item_selected_drawable" />
+    </FrameLayout>
+
+    <ImageView
+        android:id="@id/gallery"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center"
+        android:background="@drawable/gallery_background"
+        android:contentDescription="TODO"
+        android:outlineProvider="background"
+        android:scaleType="center"
+        android:src="@drawable/quantum_ic_photo_library_white_24"
+        android:visibility="gone" />
+</com.wintmain.dialer.callcomposer.GalleryGridItemView>

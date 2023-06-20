@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@id/caller_information"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:baselineAligned="false"
+    android:focusable="true"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/blocked_number_horizontal_margin">
+
+    <QuickContactBadge
+        android:id="@id/quick_contact_photo"
+        android:layout_width="@dimen/contact_photo_size"
+        android:layout_height="@dimen/contact_photo_size"
+        android:layout_marginTop="@dimen/blocked_number_top_margin"
+        android:layout_marginBottom="@dimen/blocked_number_bottom_margin"
+        android:focusable="true" />
+
+    <LinearLayout
+        android:layout_width="0.0dip"
+        android:layout_height="fill_parent"
+        android:layout_marginStart="@dimen/blocked_number_horizontal_margin"
+        android:layout_weight="1.0"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@id/caller_name"
+            style="@style/Dialer.TextAppearance.Primary.Ellipsize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false" />
+
+        <TextView
+            android:id="@id/caller_number"
+            style="@style/Dialer.TextAppearance.Secondary.Ellipsize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@id/delete_button"
+        android:layout_width="@dimen/blocked_number_delete_icon_size"
+        android:layout_height="@dimen/blocked_number_delete_icon_size"
+        android:layout_marginEnd="24.0dip"
+        android:background="?android:selectableItemBackgroundBorderless"
+        android:contentDescription="@string/description_blocked_number_list_delete"
+        android:scaleType="center"
+        android:src="@drawable/ic_remove" />
+</LinearLayout>

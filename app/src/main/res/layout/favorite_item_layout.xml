@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8.0dip"
+    android:layout_marginBottom="12.0dip"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@id/avatar_container"
+        android:layout_width="wrap_content"
+        android:layout_height="104.0dip"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="8.0dip"
+        android:minWidth="128.0dip">
+
+        <QuickContactBadge
+            android:id="@id/avatar"
+            android:layout_width="104.0dip"
+            android:layout_height="104.0dip"
+            android:layout_gravity="center_horizontal"
+            android:adjustViewBounds="false"
+            android:clickable="false" />
+
+        <FrameLayout
+            android:id="@id/video_call_container"
+            android:layout_width="36.0dip"
+            android:layout_height="36.0dip"
+            android:layout_gravity="end|bottom|center"
+            android:layout_marginEnd="12.0dip">
+
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:contentDescription="TODO"
+                android:src="@drawable/favorite_icon" />
+
+            <ImageView
+                android:layout_width="24.0dip"
+                android:layout_height="24.0dip"
+                android:layout_gravity="center"
+                android:contentDescription="TODO"
+                android:src="@drawable/quantum_ic_videocam_vd_white_24" />
+        </FrameLayout>
+    </FrameLayout>
+
+    <TextView
+        android:id="@id/name"
+        style="@style/Dialer.TextAppearance.Primary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginStart="4.0dip"
+        android:layout_marginTop="8.0dip"
+        android:layout_marginEnd="4.0dip"
+        android:layout_marginBottom="1.0dip"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center_horizontal"
+        android:textSize="14.0sp" />
+
+    <TextView
+        android:id="@id/phone_type"
+        style="@style/Dialer.TextAppearance.Secondary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginStart="4.0dip"
+        android:layout_marginEnd="4.0dip"
+        android:layout_marginBottom="17.0dip"
+        android:gravity="center_horizontal" />
+</LinearLayout>

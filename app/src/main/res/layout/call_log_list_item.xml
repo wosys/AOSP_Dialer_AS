@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@id/call_log_list_item"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@id/call_log_day_group_label"
+        style="@style/Dialer.TextAppearance.OVERLINE.Ellipsize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginStart="@dimen/call_log_start_margin"
+        android:layout_marginEnd="@dimen/call_log_outer_margin"
+        android:paddingTop="@dimen/call_log_day_group_padding_top"
+        android:paddingBottom="@dimen/call_log_day_group_padding_bottom" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@id/call_log_row"
+        style="@style/CallLogCardStyle">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@id/primary_action_view"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:selectableItemBackground"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:nextFocusLeft="@id/quick_contact_photo"
+                android:nextFocusRight="@id/call_back_action"
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/call_log_start_margin"
+                android:paddingTop="@dimen/call_log_vertical_padding"
+                android:paddingEnd="@dimen/call_log_outer_margin"
+                android:paddingBottom="@dimen/call_log_vertical_padding">
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top">
+
+                    <com.wintmain.dialer.app.calllog.DialerQuickContactBadge
+                        android:id="@id/quick_contact_photo"
+                        android:layout_width="@dimen/contact_photo_size"
+                        android:layout_height="@dimen/contact_photo_size"
+                        android:focusable="true"
+                        android:nextFocusRight="@id/primary_action_view"
+                        android:paddingTop="2.0dip" />
+
+                    <ImageView
+                        android:id="@id/quick_contact_checkbox"
+                        android:layout_width="@dimen/contact_photo_size"
+                        android:layout_height="@dimen/contact_photo_size"
+                        android:contentDescription="TODO"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_check_mark_48dp"
+                        android:visibility="gone" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0.0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/call_log_list_item_info_margin_start"
+                    android:layout_weight="1.0"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <com.wintmain.dialer.widget.BidiTextView
+                        android:id="@id/name"
+                        style="@style/Dialer.TextAppearance.Primary.Ellipsize"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/call_log_icon_margin"
+                        android:layout_marginBottom="@dimen/call_log_name_margin_bottom" />
+
+                    <LinearLayout
+                        android:id="@id/call_type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <com.wintmain.dialer.calllogutils.CallTypeIconsView
+                            android:id="@id/call_type_icons"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginEnd="@dimen/call_log_icon_margin" />
+
+                        <ImageView
+                            android:id="@id/work_profile_icon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/call_log_icon_margin"
+                            android:contentDescription="TODO"
+                            android:scaleType="center"
+                            android:src="@drawable/ic_work_profile"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:id="@id/call_location_and_date"
+                            style="Dialer.TextAppearance.Secondary.Ellipsize"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginEnd="@dimen/call_log_icon_margin" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@id/call_account_label"
+                        style="Dialer.TextAppearance.Secondary2.Ellipsize"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/call_log_call_account_margin_bottom"
+                        android:layout_marginEnd="@dimen/call_log_icon_margin"
+                        android:visibility="gone" />
+
+                    <LinearLayout
+                        android:id="@id/transcription"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/call_log_icon_margin"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@id/voicemail_transcription"
+                            style="Dialer.TextAppearance.Secondary2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:focusable="true"
+                            android:nextFocusDown="@id/voicemail_transcription_branding"
+                            android:textIsSelectable="true" />
+
+                        <TextView
+                            android:id="@id/voicemail_transcription_branding"
+                            style="Dialer.TextAppearance.Secondary2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:focusable="true"
+                            android:nextFocusUp="@id/voicemail_transcription"
+                            android:nextFocusDown="@id/voicemail_transcription_rating"
+                            android:paddingTop="2.0dip" />
+
+                        <LinearLayout
+                            android:id="@id/voicemail_transcription_rating"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginTop="@dimen/call_log_icon_margin"
+                            android:orientation="horizontal"
+                            android:paddingTop="2.0dip"
+                            android:visibility="gone">
+
+                            <TextView
+                                android:id="@id/voicemail_transcription_rating_text"
+                                style="@style/TranscriptionQualityRating"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1.0"
+                                android:focusable="true"
+                                android:gravity="start|center"
+                                android:text="@string/voicemail_transcription_rating" />
+
+                            <ImageView
+                                android:id="@id/voicemail_transcription_rating_good"
+                                style="@style/TranscriptionQualityRatingIcon"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:contentDescription="@string/description_rating_good"
+                                android:focusable="true"
+                                android:gravity="end|center"
+                                android:src="@drawable/quantum_ic_thumb_up_grey600_24" />
+
+                            <ImageView
+                                android:id="@id/voicemail_transcription_rating_bad"
+                                style="@style/TranscriptionQualityRatingIcon"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:contentDescription="@string/description_rating_bad"
+                                android:focusable="true"
+                                android:gravity="end|center"
+                                android:src="@drawable/quantum_ic_thumb_down_grey600_24" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@id/primary_action_button"
+                    android:layout_width="@dimen/call_log_list_item_primary_action_dimen"
+                    android:layout_height="@dimen/call_log_list_item_primary_action_dimen"
+                    android:layout_gravity="center_vertical"
+                    android:background="?android:selectableItemBackgroundBorderless"
+                    android:contentDescription="TODO"
+                    android:scaleType="center"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <ViewStub
+                android:id="@id/call_log_entry_actions_stub"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:inflatedId="@id/call_log_entry_actions"
+                android:layout="@layout/call_log_list_item_actions" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+</LinearLayout>
