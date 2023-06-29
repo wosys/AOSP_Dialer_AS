@@ -26,6 +26,7 @@ public final class LookupSettings {
      */
     private static final String SHARED_PREFERENCES_NAME = "lookup_settings";
     private static final String ENABLE_FORWARD_LOOKUP = "enable_forward_lookup";
+    private static final String ENABLE_PEOPLE_LOOKUP = "enable_people_lookup";
 
     private LookupSettings() {
     }
@@ -39,6 +40,14 @@ public final class LookupSettings {
     }
 
     public static void setForwardLookupEnabled(Context context, boolean value) {
+        getSharedPreferences(context).edit().putBoolean(ENABLE_FORWARD_LOOKUP, value).apply();
+    }
+
+    public static boolean isPeopleLookupEnabled(Context context) {
+        return getSharedPreferences(context).getBoolean(ENABLE_PEOPLE_LOOKUP, false);
+    }
+
+    public static void setPeopleLookupEnabled(Context context, boolean value) {
         getSharedPreferences(context).edit().putBoolean(ENABLE_FORWARD_LOOKUP, value).apply();
     }
 

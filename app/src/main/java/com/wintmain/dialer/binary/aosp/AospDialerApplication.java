@@ -27,20 +27,27 @@ import com.android.contacts.common.extensions.PhoneDirectoryExtenderFactory;
 import com.android.incallui.bindings.InCallUiBindings;
 import com.android.incallui.bindings.InCallUiBindingsFactory;
 import com.android.incallui.bindings.InCallUiBindingsStub;
+import com.android.incallui.bindings.PhoneNumberService;
 import com.wintmain.dialer.binary.common.DialerApplication;
 import com.wintmain.dialer.inject.ContextModule;
 import com.wintmain.dialer.lookup.LookupCacheService;
 import com.wintmain.dialer.lookup.LookupProvider;
 import com.wintmain.dialer.lookup.LookupSettings;
+import com.wintmain.dialer.lookup.ReverseLookupService;
+import com.wintmain.dialer.phonenumbercache.CachedNumberLookupService;
 import com.wintmain.dialer.phonenumbercache.PhoneNumberCacheBindings;
 import com.wintmain.dialer.phonenumbercache.PhoneNumberCacheBindingsFactory;
 
 /**
- * The application class for the AOSP Dialer. This is a version of the Dialer app that has no
- * dependency on Google Play Services.
+ * The application class for the AOSP Dialer.
+ * This is a version of the Dialer app that has no dependency on Google Play Services.
+ *
+ * See more in https://github.com/LineageOS/android_packages_apps_Dialer
  */
 public class AospDialerApplication extends DialerApplication implements
         PhoneNumberCacheBindingsFactory, PhoneDirectoryExtenderFactory, InCallUiBindingsFactory {
+
+    // 这里implements实现的几个类在AOSP示例中没有，但在repo里还是有源码的。
 
     /**
      * Returns a new instance of the root component for the AOSP Dialer.
@@ -57,7 +64,8 @@ public class AospDialerApplication extends DialerApplication implements
         return new PhoneDirectoryExtender() {
             @Override
             public boolean isEnabled(Context context) {
-                return LookupSettings.isForwardLookupEnabled(AospDialerApplication.this);
+                return LookupSettings.isForwardLookupEnabled(AospDialerApplication.this)
+                        || LookupSettings.isPeopleLookupEnabled(AospDialerApplication.this);
             }
 
             @Override
@@ -70,11 +78,24 @@ public class AospDialerApplication extends DialerApplication implements
 
     @Override
     public InCallUiBindings newInCallUiBindings() {
-        return new InCallUiBindingsStub();
+        return new InCallUiBindingsStub(){
+            @Override
+            @Nullable
+            public PhoneNumberService newPhoneNumberService(Context context) {
+                return new ReverseLookupService(context);
+            }
+        };
     }
 
     @Override
     public PhoneNumberCacheBindings newPhoneNumberCacheBindings() {
-        return LookupCacheService::new;
+        return new PhoneNumberCacheBindings() {
+            @Nullable
+            @Override
+            public CachedNumberLookupService getCachedNumberLookupService() {
+                return new LookupCacheService();
+            }
+        };
+        //--> lamda == return LookupCacheService::new;
     }
 }
