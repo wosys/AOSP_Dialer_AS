@@ -36,11 +36,15 @@ import com.wintmain.dialer.phonenumbercache.PhoneNumberCacheBindings;
 import com.wintmain.dialer.phonenumbercache.PhoneNumberCacheBindingsFactory;
 
 /**
- * The application class for the AOSP Dialer. This is a version of the Dialer app that has no
- * dependency on Google Play Services.
+ * The application class for the AOSP Dialer.
+ * This is a version of the Dialer app that has no dependency on Google Play Services.
+ *
+ * See more in https://github.com/LineageOS/android_packages_apps_Dialer
  */
 public class AospDialerApplication extends DialerApplication implements
         PhoneNumberCacheBindingsFactory, PhoneDirectoryExtenderFactory, InCallUiBindingsFactory {
+
+    // 这里implements实现的几个类在AOSP示例中没有，但在repo里还是有源码的。
 
     /**
      * Returns a new instance of the root component for the AOSP Dialer.
