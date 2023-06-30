@@ -96,6 +96,6 @@ public class AospDialerApplication extends DialerApplication implements
                 return new LookupCacheService();
             }
         };
-        //--> lamda == return LookupCacheService::new;
+        //--> lambda == return LookupCacheService::new;
     }
 }

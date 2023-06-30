@@ -268,4 +268,14 @@ public class LookupCache {
 
         return new File(dir, normalizedNumber + ".webp");
     }
+
+    public static boolean hasCachedContact(Context context, String number) {
+        String normalizedNumber = formatE164(context, number);
+        if (normalizedNumber == null) {
+            return false;
+        }
+
+        File file = getFilePath(context, normalizedNumber);
+        return file.exists();
+    }
 }

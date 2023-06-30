@@ -20,6 +20,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 public final class LookupSettings {
+    /** Reverse lookup providers */
+    public static final String RLP_OPENCNAM = "OpenCnam";
+    public static final String RLP_YELLOWPAGES = "YellowPages";
+    public static final String RLP_YELLOWPAGES_CA = "YellowPages_CA";
+    public static final String RLP_ZABASEARCH = "ZabaSearch";
+    public static final String RLP_DEFAULT = RLP_OPENCNAM;
 
     /**
      * Preferences
@@ -27,6 +33,8 @@ public final class LookupSettings {
     private static final String SHARED_PREFERENCES_NAME = "lookup_settings";
     private static final String ENABLE_FORWARD_LOOKUP = "enable_forward_lookup";
     private static final String ENABLE_PEOPLE_LOOKUP = "enable_people_lookup";
+    private static final String ENABLE_REVERSE_LOOKUP = "enable_reverse_lookup";
+    private static final String REVERSE_LOOKUP_PROVIDER = "reverse_lookup_provider";
 
     private LookupSettings() {
     }
@@ -51,4 +59,15 @@ public final class LookupSettings {
         getSharedPreferences(context).edit().putBoolean(ENABLE_FORWARD_LOOKUP, value).apply();
     }
 
+    public static boolean isReverseLookupEnabled(Context context) {
+        return getSharedPreferences(context).getBoolean(ENABLE_REVERSE_LOOKUP, false);
+    }
+
+    public static String getReverseLookupProvider(Context context) {
+        return getSharedPreferences(context).getString(REVERSE_LOOKUP_PROVIDER, RLP_DEFAULT);
+    }
+
+    public static void setReverseLookupProvider(Context context, String value) {
+        getSharedPreferences(context).edit().putString(REVERSE_LOOKUP_PROVIDER, value).apply();
+    }
 }

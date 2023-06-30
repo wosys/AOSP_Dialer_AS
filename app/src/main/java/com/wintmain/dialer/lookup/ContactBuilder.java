@@ -81,6 +81,16 @@ public class ContactBuilder {
         return new ContactBuilder(number);
     }
 
+    private ContactBuilder(long directoryId, String normalizedNumber, String formattedNumber) {
+        this.directoryId = directoryId;
+        this.normalizedNumber = normalizedNumber;
+        this.formattedNumber = formattedNumber;
+    }
+
+    public static ContactBuilder forReverseLookup(String normalizedNumber, String formattedNumber) {
+        return new ContactBuilder(DirectoryId.NULL, normalizedNumber, formattedNumber);
+    }
+
     public ContactBuilder addAddress(Address address) {
         if (DEBUG) Log.d(TAG, "Adding address");
         if (address != null) {
@@ -223,6 +233,16 @@ public class ContactBuilder {
             if (json.has(StructuredPostal.FORMATTED_ADDRESS)) {
                 formattedAddress = json.getString(StructuredPostal.FORMATTED_ADDRESS);
             }
+        }
+
+        public static Address createFormattedHome(String address) {
+            if (address == null) {
+                return null;
+            }
+            Address a = new Address();
+            a.formattedAddress = address;
+            a.type = StructuredPostal.TYPE_HOME;
+            return a;
         }
 
         public JSONObject getJsonObject() throws JSONException {

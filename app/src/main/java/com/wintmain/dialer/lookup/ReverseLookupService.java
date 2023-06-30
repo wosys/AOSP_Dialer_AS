@@ -9,14 +9,16 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
+import android.telephony.PhoneNumberUtils;
 import android.telephony.TelephonyManager;
 
 import com.android.incallui.bindings.PhoneNumberService;
-import com.wintmain.dialer.logging.ContactLookupResult;
+import com.wintmain.dialer.location.GeoUtil;
 import com.wintmain.dialer.phonenumbercache.ContactInfo;
 
+import java.io.IOException;
+
 public class ReverseLookupService implements PhoneNumberService, Handler.Callback {
-    private final HandlerThread backgroundThread;
     private final Handler backgroundHandler;
     private final Handler handler;
     private final Context context;
@@ -30,7 +32,7 @@ public class ReverseLookupService implements PhoneNumberService, Handler.Callbac
         telephonyManager = context.getSystemService(TelephonyManager.class);
 
         // TODO: stop after a while?
-        backgroundThread = new HandlerThread("ReverseLookup");
+        HandlerThread backgroundThread = new HandlerThread("ReverseLookup");
         backgroundThread.start();
 
         backgroundHandler = new Handler(backgroundThread.getLooper(), this);
@@ -39,7 +41,24 @@ public class ReverseLookupService implements PhoneNumberService, Handler.Callbac
 
     @Override
     public void getPhoneNumberInfo(String phoneNumber, NumberLookupListener numberListener) {
+        if (!LookupSettings.isReverseLookupEnabled(context)){
+            LookupCache.deleteCachedContacts(context);
+            return;
+        }
+        String countryIso = telephonyManager.getSimCountryIso().toUpperCase();
+        String normalizeNum = phoneNumber != null ? PhoneNumberUtils.formatNumberToE164(
+                    phoneNumber, countryIso) : null;
+        // Without a number, can't do reverse lookup
+        if (normalizeNum == null) {
+            return;
+        }
+        LookupUtils.LookupRequest request = new LookupUtils.LookupRequest();
+        request.normalizedNumber = normalizeNum;
+        request.formattedNumber = PhoneNumberUtils.formatNumber(phoneNumber,
+                request.normalizedNumber, GeoUtil.getCurrentCountryIso(context));
+        request.numberListener = numberListener;
 
+        backgroundHandler.obtainMessage(MSG_LOOKUP, request).sendToTarget();
     }
 
     @Override
@@ -47,6 +66,15 @@ public class ReverseLookupService implements PhoneNumberService, Handler.Callbac
         switch (msg.what) {
             case MSG_LOOKUP: {
                 // background thread
+                LookupUtils.LookupRequest request = (LookupUtils.LookupRequest) msg.obj;
+                try {
+                    request.contactInfo = doLookup(request);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if (request.contactInfo != null){
+                    handler.obtainMessage(MSG_NOTIFY_NUMBER, request).sendToTarget();
+                }
                 break;
             }
             case MSG_NOTIFY_NUMBER: {
@@ -57,48 +85,28 @@ public class ReverseLookupService implements PhoneNumberService, Handler.Callbac
 
         return true;
     }
-    private static class LookupNumberInfo implements PhoneNumberInfo {
-        private final ContactInfo info;
-        private LookupNumberInfo(ContactInfo info) {
-            this.info = info;
+
+    private ContactInfo doLookup(LookupUtils.LookupRequest request) throws IOException {
+        final String number = request.normalizedNumber;
+
+        if (LookupCache.hasCachedContact(context, number)) {
+            ContactInfo info = LookupCache.getCachedContact(context, number);
+            if (!ContactInfo.EMPTY.equals(info)) {
+                return info;
+            } else {
+                // If we have an empty cached contact, remove it and redo lookup
+                LookupCache.deleteCachedContact(context, number);
+            }
         }
 
-        @Override
-        public String getDisplayName() {
-            return info.name;
+        ReverseLookup inst = ReverseLookup.getInstance(context);
+        ContactInfo info = inst.lookupNumber(context, number, request.formattedNumber);
+        if (info != null && !info.equals(ContactInfo.EMPTY)) {
+            LookupCache.cacheContact(context, info);
+            return info;
         }
-        @Override
-        public String getNumber() {
-            return info.number;
-        }
-        @Override
-        public int getPhoneType() {
-            return info.type;
-        }
-        @Override
-        public String getPhoneLabel() {
-            return info.label;
-        }
-        @Override
-        public String getNormalizedNumber() {
-            return info.normalizedNumber;
-        }
-        @Override
-        public String getImageUrl() {
-            return info.photoUri != null ? info.photoUri.toString() : null;
-        }
-        @Override
-        public boolean isBusiness() {
-            // FIXME
-            return false;
-        }
-        @Override
-        public String getLookupKey() {
-            return info.lookupKey;
-        }
-        @Override
-        public ContactLookupResult.Type getLookupSource() {
-            return ContactLookupResult.Type.REMOTE;
-        }
+
+        return null;
     }
+
 }

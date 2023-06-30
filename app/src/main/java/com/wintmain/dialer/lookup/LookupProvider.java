@@ -63,7 +63,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 public class LookupProvider extends ContentProvider {
-    public static final String AUTHORITY = "com.fissy.dialer.lookup";
+    public static final String AUTHORITY = "com.wintmain.dialer.lookup";
     public static final Uri AUTHORITY_URI = Uri.parse("content://" + AUTHORITY);
     public static final Uri NEARBY_AND_PEOPLE_LOOKUP_URI =
             Uri.withAppendedPath(AUTHORITY_URI, "nearby_and_people");
@@ -272,7 +272,8 @@ public class LookupProvider extends ContentProvider {
         ArrayList<ContactInfo> results = new ArrayList<>();
         if (type == NEARBY || type == NEARBY_AND_PEOPLE) {
             List<ContactInfo> nearby = GoogleForwardLookup.lookup(getContext(), filter, lastLocation);
-            if (nearby != null) {
+//            List<ContactInfo> nearby = null;
+             if (nearby != null) {
                 if (DEBUG) Log.v(TAG, "adding places");
                 results.addAll(nearby);
             }

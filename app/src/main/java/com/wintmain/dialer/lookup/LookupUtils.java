@@ -17,6 +17,12 @@
 package com.wintmain.dialer.lookup;
 
 
+import android.text.Html;
+
+import com.android.incallui.bindings.PhoneNumberService;
+import com.wintmain.dialer.logging.ContactLookupResult;
+import com.wintmain.dialer.phonenumbercache.ContactInfo;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -27,6 +33,8 @@ import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class LookupUtils {
     private static final String USER_AGENT =
@@ -93,6 +101,83 @@ public class LookupUtils {
             return new String(response, determineCharset(connection));
         } finally {
             connection.disconnect();
+        }
+    }
+
+    public static byte[] httpGetBytes(String url, Map<String, String> headers) throws IOException {
+        HttpURLConnection connection = prepareHttpConnection(url, headers);
+        try {
+            return httpFetch(connection);
+        } finally {
+            connection.disconnect();
+        }
+    }
+
+    public static String firstRegexResult(String input, String regex, boolean dotall) {
+        if (input == null) {
+            return null;
+        }
+        Pattern pattern = Pattern.compile(regex, dotall ? Pattern.DOTALL : 0);
+        Matcher m = pattern.matcher(input);
+        return m.find() ? m.group(1).trim() : null;
+    }
+
+    public static String fromHtml(String input) {
+        if (input == null) {
+            return null;
+        }
+        return Html.fromHtml(input).toString().trim();
+    }
+
+    static class LookupRequest {
+        String normalizedNumber;
+        String formattedNumber;
+        PhoneNumberService.NumberLookupListener numberListener;
+        ContactInfo contactInfo;
+    }
+
+    static class LookupNumberInfo implements PhoneNumberService.PhoneNumberInfo {
+        private final ContactInfo info;
+        private LookupNumberInfo(ContactInfo info) {
+            this.info = info;
+        }
+
+        @Override
+        public String getDisplayName() {
+            return info.name;
+        }
+        @Override
+        public String getNumber() {
+            return info.number;
+        }
+        @Override
+        public int getPhoneType() {
+            return info.type;
+        }
+        @Override
+        public String getPhoneLabel() {
+            return info.label;
+        }
+        @Override
+        public String getNormalizedNumber() {
+            return info.normalizedNumber;
+        }
+        @Override
+        public String getImageUrl() {
+            return info.photoUri != null ? info.photoUri.toString() : null;
+        }
+        @Override
+        public boolean isBusiness() {
+            // FIXME
+            return false;
+        }
+        @Override
+        public String getLookupKey() {
+            return info.lookupKey;
+        }
+        @Override
+        public ContactLookupResult.Type getLookupSource() {
+            return ContactLookupResult.Type.REMOTE;
         }
     }
 
