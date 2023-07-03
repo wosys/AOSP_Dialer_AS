@@ -18,7 +18,6 @@ package com.wintmain.dialer.binary.common;
 
 import android.app.Application;
 import android.os.Trace;
-
 import androidx.annotation.NonNull;
 import androidx.core.os.BuildCompat;
 
@@ -48,7 +47,6 @@ public abstract class DialerApplication extends Application implements HasRootCo
         Trace.beginSection("DialerApplication.onCreate");
         StrictModeComponent.get(this).getDialerStrictMode().onApplicationCreate(this);
         super.onCreate();
-
 
         new BlockedNumbersAutoMigrator(
                 this.getApplicationContext(),
@@ -87,6 +85,7 @@ public abstract class DialerApplication extends Application implements HasRootCo
      */
     @NonNull
     protected abstract Object buildRootComponent();
+    // protected abstract DaggerAospDialerRootComponet buildRootComponet();
 
     /**
      * Returns a cached instance of application's root component.
