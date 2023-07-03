@@ -85,8 +85,8 @@ public class AospDialerApplication extends DialerApplication implements
     @Override
     public InCallUiBindings newInCallUiBindings() {
         return new InCallUiBindingsStub(){
+            @NonNull
             @Override
-            @Nullable
             public PhoneNumberService newPhoneNumberService(Context context) {
                 return new ReverseLookupService(context);
             }
@@ -96,7 +96,7 @@ public class AospDialerApplication extends DialerApplication implements
     @Override
     public PhoneNumberCacheBindings newPhoneNumberCacheBindings() {
         return new PhoneNumberCacheBindings() {
-            @Nullable
+            @NonNull
             @Override
             public CachedNumberLookupService getCachedNumberLookupService() {
                 return new LookupCacheService();
