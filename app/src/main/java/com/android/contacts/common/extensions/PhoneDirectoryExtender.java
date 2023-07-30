@@ -35,3 +35,17 @@ public interface PhoneDirectoryExtender {
     @Nullable
     Uri getContentUri();
 }
+
+class PhoneDirectoryExtenderStub implements PhoneDirectoryExtender {
+
+    @Override
+    public boolean isEnabled(Context context) {
+        return false;
+    }
+
+    @Nullable
+    @Override
+    public Uri getContentUri() {
+        return null;
+    }
+}

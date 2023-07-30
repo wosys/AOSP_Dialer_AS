@@ -17,7 +17,7 @@ package com.android.contacts.common.extensions;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.VisibleForTesting;
+//import androidx.annotation.VisibleForTesting;
 
 import com.wintmain.dialer.common.Assert;
 
@@ -31,10 +31,10 @@ public final class PhoneDirectoryExtenderAccessor {
     private PhoneDirectoryExtenderAccessor() {
     }
 
-    @VisibleForTesting
-    public static void setForTesting(PhoneDirectoryExtender extender) {
-        instance = extender;
-    }
+//    @VisibleForTesting
+//    public static void setForTesting(PhoneDirectoryExtender extender) {
+//        instance = extender;
+//    }
 
     @NonNull
     public static PhoneDirectoryExtender get(@NonNull Context context) {
