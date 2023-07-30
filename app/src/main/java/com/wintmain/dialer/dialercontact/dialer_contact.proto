@@ -1,11 +1,11 @@
 syntax = "proto2";
 
-option java_package = "com.fissy.dialer.dialercontact";
+option java_package = "com.wintmain.dialer.dialercontact";
 option java_multiple_files = true;
 option optimize_for = LITE_RUNTIME;
 
 
-package com.fissy.dialer.dialercontact;
+package com.wintmain.dialer.dialercontact;
 
 message DialerContact {
   optional fixed64 photo_id = 1;

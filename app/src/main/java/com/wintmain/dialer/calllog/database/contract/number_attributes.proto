@@ -14,14 +14,14 @@
 
 syntax = "proto2";
 
-option java_package = "com.fissy.dialer";
+option java_package = "com.wintmain.dialer";
 option java_multiple_files = true;
 option optimize_for = LITE_RUNTIME;
 
 
-package com.fissy.dialer;
+package com.wintmain.dialer;
 
-import "com/fissy/dialer/logging/contact_source.proto";
+import "com/wintmain/dialer/logging/contact_source.proto";
 
 // Information related to the phone number of the call.
 // Next ID: 15
@@ -66,7 +66,7 @@ message NumberAttributes {
   optional bool is_spam = 10;
 
   // Source of the contact associated with the number.
-  optional com.fissy.dialer.logging.ContactSource.Type contact_source = 11;
+  optional com.wintmain.dialer.logging.ContactSource.Type contact_source = 11;
 
   // Whether the number can be reached via a carrier video call.
   optional bool can_support_carrier_video_call = 12;

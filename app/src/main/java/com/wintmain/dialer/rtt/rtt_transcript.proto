@@ -1,11 +1,11 @@
 syntax = "proto2";
 
-option java_package = "com.fissy.dialer.rtt";
+option java_package = "com.wintmain.dialer.rtt";
 option java_multiple_files = true;
 option optimize_for = LITE_RUNTIME;
 
 
-package com.fissy.dialer.rtt;
+package com.wintmain.dialer.rtt;
 
 // RTT transcript which contains chat history of a RTT call.
 message RttTranscript {

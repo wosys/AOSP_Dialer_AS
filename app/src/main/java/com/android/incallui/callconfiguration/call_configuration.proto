@@ -14,12 +14,12 @@
 
 syntax = "proto2";
 
-option java_package = "com.fissy.dialer";
+option java_package = "com.wintmain.dialer";
 option java_multiple_files = true;
 option optimize_for = LITE_RUNTIME;
 
 
-package com.fissy.dialer;
+package com.wintmain.dialer;
 
 // Configuration for starting a call
 message CallConfiguration {

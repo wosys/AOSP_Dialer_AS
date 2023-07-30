@@ -14,12 +14,12 @@
 
 syntax = "proto2";
 
-option java_package = "com.fissy.dialer";
+option java_package = "com.wintmain.dialer";
 option java_multiple_files = true;
 option optimize_for = LITE_RUNTIME;
 
 
-package com.fissy.dialer;
+package com.wintmain.dialer;
 
 // A proto containing a list of IDs of the rows in AnnotatedCallLog that are
 // coalesced into a row in CoalescedAnnotatedCallLog.

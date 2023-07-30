@@ -1,14 +1,14 @@
 syntax = "proto2";
 
-option java_package = "com.fissy.dialer.blockreportspam";
+option java_package = "com.wintmain.dialer.blockreportspam";
 option java_multiple_files = true;
 option optimize_for = LITE_RUNTIME;
 
 
-package com.fissy.dialer.blockreportspam;
+package com.wintmain.dialer.blockreportspam;
 
-import "com/fissy/dialer/logging/contact_source.proto";
-import "com/fissy/dialer/logging/reporting_location.proto";
+import "com/wintmain/dialer/logging/contact_source.proto";
+import "com/wintmain/dialer/logging/reporting_location.proto";
 
 // Contains information needed in dialogs that allow a user to block a number
 // and/or report it as spam/not spam.
@@ -26,9 +26,9 @@ message BlockReportSpamDialogInfo {
   optional int32 call_type = 3;
 
   // The location where the number is reported.
-  optional com.fissy.dialer.logging.ReportingLocation.Type
+  optional com.wintmain.dialer.logging.ReportingLocation.Type
       reporting_location = 4;
 
   // The source where contact info is associated with the number.
-  optional com.fissy.dialer.logging.ContactSource.Type contact_source = 5;
+  optional com.wintmain.dialer.logging.ContactSource.Type contact_source = 5;
 }

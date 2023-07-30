@@ -4,7 +4,7 @@
 package com.wintmain.dialer;
 
 /**
- * Protobuf enum {@code com.fissy.dialer.Mode}
+ * Protobuf enum {@code com.wintmain.dialer.Mode}
  */
 public enum Mode
         implements com.google.protobuf.Internal.EnumLite {
@@ -26,9 +26,8 @@ public enum Mode
      * <code>BUBBLE = 1;</code>
      */
     public static final int BUBBLE_VALUE = 1;
-    private static final com.google.protobuf.Internal.EnumLiteMap<
-            Mode> internalValueMap =
-            number -> Mode.forNumber(number);
+    private static final com.google.protobuf.Internal.EnumLiteMap<Mode> internalValueMap = number -> Mode
+            .forNumber(number);
     private final int value;
 
     Mode(int value) {
@@ -54,8 +53,7 @@ public enum Mode
         }
     }
 
-    public static com.google.protobuf.Internal.EnumLiteMap<Mode>
-    internalGetValueMap() {
+    public static com.google.protobuf.Internal.EnumLiteMap<Mode> internalGetValueMap() {
         return internalValueMap;
     }
 
@@ -63,6 +61,5 @@ public enum Mode
         return value;
     }
 
-    // @@protoc_insertion_point(enum_scope:com.fissy.dialer.Mode)
+    // @@protoc_insertion_point(enum_scope:com.wintmain.dialer.Mode)
 }
-

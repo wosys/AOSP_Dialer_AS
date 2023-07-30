@@ -14,12 +14,12 @@
 
 syntax = "proto2";
 
-option java_package = "com.fissy.dialer";
+option java_package = "com.wintmain.dialer";
 option java_multiple_files = true;
 option optimize_for = LITE_RUNTIME;
 
 
-package com.fissy.dialer;
+package com.wintmain.dialer;
 
 // A phone number for use in the dialer application in the context of a call. It
 // consists of a normalized number string and a two-letter country code.

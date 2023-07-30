@@ -4,16 +4,16 @@
 package com.wintmain.dialer;
 
 public interface CallConfigurationOrBuilder extends
-        // @@protoc_insertion_point(interface_extends:com.fissy.dialer.CallConfiguration)
+        // @@protoc_insertion_point(interface_extends:com.wintmain.dialer.CallConfiguration)
         com.google.protobuf.MessageLiteOrBuilder {
 
     /**
-     * <code>optional .com.fissy.dialer.Mode call_mode = 1;</code>
+     * <code>optional .com.wintmain.dialer.Mode call_mode = 1;</code>
      */
     boolean hasCallMode();
 
     /**
-     * <code>optional .com.fissy.dialer.Mode call_mode = 1;</code>
+     * <code>optional .com.wintmain.dialer.Mode call_mode = 1;</code>
      */
     com.wintmain.dialer.Mode getCallMode();
 }

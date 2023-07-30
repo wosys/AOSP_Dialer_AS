@@ -1,13 +1,13 @@
 syntax = "proto2";
 
-option java_package = "com.fissy.dialer.calldetails";
+option java_package = "com.wintmain.dialer.calldetails";
 option java_multiple_files = true;
 option optimize_for = LITE_RUNTIME;
 
 
-import "com/fissy/dialer/enrichedcall/historyquery/proto/history_result.proto";
+import "com/wintmain/dialer/enrichedcall/historyquery/proto/history_result.proto";
 
-package com.fissy.dialer.calldetails;
+package com.wintmain.dialer.calldetails;
 
 message CallDetailsEntries {
   message CallDetailsEntry {

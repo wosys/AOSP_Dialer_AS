@@ -1,15 +1,15 @@
 syntax = "proto2";
 
-option java_package = "com.fissy.dialer.callintent";
+option java_package = "com.wintmain.dialer.callintent";
 option java_multiple_files = true;
 option optimize_for = LITE_RUNTIME;
 
 
-package com.fissy.dialer.callintent;
+package com.wintmain.dialer.callintent;
 
-import "com/fissy/dialer/callintent/call_initiation_type.proto";
-import "com/fissy/dialer/callintent/speed_dial_contact_type.proto";
-import "com/fissy/dialer/logging/ui_action.proto";
+import "com/wintmain/dialer/callintent/call_initiation_type.proto";
+import "com/wintmain/dialer/callintent/speed_dial_contact_type.proto";
+import "com/wintmain/dialer/logging/ui_action.proto";
 
 // Miscellaneous data that's included in a new outgoing call initiated by
 // Dialer. The system will pass this data to the InCallUi which can use it
@@ -29,7 +29,7 @@ message CallSpecificAppData {
   optional int64 time_since_first_click = 7;
   // The following two list should be of the same length
   // (adding another message is not allowed here)
-  repeated com.fissy.dialer.logging.UiAction.Type
+  repeated com.wintmain.dialer.logging.UiAction.Type
       ui_actions_since_app_launch = 8;
   repeated int64 ui_action_timestamps_since_app_launch = 9;
 

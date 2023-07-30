@@ -1,11 +1,11 @@
 syntax = "proto2";
 
-option java_package = "com.fissy.dialer.callintent";
+option java_package = "com.wintmain.dialer.callintent";
 option java_multiple_files = true;
 option optimize_for = LITE_RUNTIME;
 
 
-package com.fissy.dialer.callintent;
+package com.wintmain.dialer.callintent;
 
 
 

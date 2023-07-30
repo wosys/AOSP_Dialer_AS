@@ -8,15 +8,14 @@ package com.wintmain.dialer;
  * Configuration for starting a call
  * </pre>
  * <p>
- * Protobuf type {@code com.fissy.dialer.CallConfiguration}
+ * Protobuf type {@code com.wintmain.dialer.CallConfiguration}
  */
-public final class CallConfiguration extends
-        com.google.protobuf.GeneratedMessageLite<
-                CallConfiguration, CallConfiguration.Builder> implements
-        // @@protoc_insertion_point(message_implements:com.fissy.dialer.CallConfiguration)
-        CallConfigurationOrBuilder {
-    public static final int CALL_MODE_FIELD_NUMBER = 1;
-    // @@protoc_insertion_point(class_scope:com.fissy.dialer.CallConfiguration)
+public final class CallConfiguration
+        extends com.google.protobuf.GeneratedMessageLite<CallConfiguration, CallConfiguration.Builder>
+        // @@protoc_insertion_point(message_implements:com.wintmain.dialer.CallConfiguration)
+        implements CallConfigurationOrBuilder {
+    // public static final int CALL_MODE_FIELD_NUMBER = 1;
+    // @@protoc_insertion_point(class_scope:com.wintmain.dialer.CallConfiguration)
     private static final com.wintmain.dialer.CallConfiguration DEFAULT_INSTANCE;
     private static volatile com.google.protobuf.Parser<CallConfiguration> PARSER;
 
@@ -32,8 +31,7 @@ public final class CallConfiguration extends
         callMode_ = 0;
     }
 
-    public static com.wintmain.dialer.CallConfiguration parseFrom(
-            com.google.protobuf.ByteString data)
+    public static com.wintmain.dialer.CallConfiguration parseFrom(com.google.protobuf.ByteString data)
             throws com.google.protobuf.InvalidProtocolBufferException {
         return com.google.protobuf.GeneratedMessageLite.parseFrom(
                 DEFAULT_INSTANCE, data);
@@ -57,22 +55,19 @@ public final class CallConfiguration extends
             byte[] data,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws com.google.protobuf.InvalidProtocolBufferException {
-        return com.google.protobuf.GeneratedMessageLite.parseFrom(
-                DEFAULT_INSTANCE, data, extensionRegistry);
+        return com.google.protobuf.GeneratedMessageLite.parseFrom(DEFAULT_INSTANCE, data, extensionRegistry);
     }
 
     public static com.wintmain.dialer.CallConfiguration parseFrom(java.io.InputStream input)
             throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageLite.parseFrom(
-                DEFAULT_INSTANCE, input);
+        return com.google.protobuf.GeneratedMessageLite.parseFrom(DEFAULT_INSTANCE, input);
     }
 
     public static com.wintmain.dialer.CallConfiguration parseFrom(
             java.io.InputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageLite.parseFrom(
-                DEFAULT_INSTANCE, input, extensionRegistry);
+        return com.google.protobuf.GeneratedMessageLite.parseFrom(DEFAULT_INSTANCE, input, extensionRegistry);
     }
 
     public static com.wintmain.dialer.CallConfiguration parseDelimitedFrom(java.io.InputStream input)
@@ -119,14 +114,14 @@ public final class CallConfiguration extends
     }
 
     /**
-     * <code>optional .com.fissy.dialer.Mode call_mode = 1;</code>
+     * <code>optional .com.wintmain.dialer.Mode call_mode = 1;</code>
      */
     public boolean hasCallMode() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
     }
 
     /**
-     * <code>optional .com.fissy.dialer.Mode call_mode = 1;</code>
+     * <code>optional .com.wintmain.dialer.Mode call_mode = 1;</code>
      */
     public com.wintmain.dialer.Mode getCallMode() {
         com.wintmain.dialer.Mode result = com.wintmain.dialer.Mode.forNumber(callMode_);
@@ -134,7 +129,7 @@ public final class CallConfiguration extends
     }
 
     /**
-     * <code>optional .com.fissy.dialer.Mode call_mode = 1;</code>
+     * <code>optional .com.wintmain.dialer.Mode call_mode = 1;</code>
      */
     private void setCallMode(com.wintmain.dialer.Mode value) {
         if (value == null) {
@@ -145,7 +140,7 @@ public final class CallConfiguration extends
     }
 
     /**
-     * <code>optional .com.fissy.dialer.Mode call_mode = 1;</code>
+     * <code>optional .com.wintmain.dialer.Mode call_mode = 1;</code>
      */
     private void clearCallMode() {
         bitField0_ = (bitField0_ & ~0x00000001);
@@ -162,7 +157,8 @@ public final class CallConfiguration extends
 
     public int getSerializedSize() {
         int size = memoizedSerializedSize;
-        if (size != -1) return size;
+        if (size != -1)
+            return size;
 
         size = 0;
         if (((bitField0_ & 0x00000001) == 0x00000001)) {
@@ -195,17 +191,14 @@ public final class CallConfiguration extends
                 com.wintmain.dialer.CallConfiguration other = (com.wintmain.dialer.CallConfiguration) arg1;
                 callMode_ = visitor.visitInt(hasCallMode(), callMode_,
                         other.hasCallMode(), other.callMode_);
-                if (visitor == com.google.protobuf.GeneratedMessageLite.MergeFromVisitor
-                        .INSTANCE) {
+                if (visitor == com.google.protobuf.GeneratedMessageLite.MergeFromVisitor.INSTANCE) {
                     bitField0_ |= other.bitField0_;
                 }
                 return this;
             }
             case MERGE_FROM_STREAM: {
-                com.google.protobuf.CodedInputStream input =
-                        (com.google.protobuf.CodedInputStream) arg0;
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry =
-                        (com.google.protobuf.ExtensionRegistryLite) arg1;
+                com.google.protobuf.CodedInputStream input = (com.google.protobuf.CodedInputStream) arg0;
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry = (com.google.protobuf.ExtensionRegistryLite) arg1;
                 try {
                     boolean done = false;
                     while (!done) {
@@ -263,35 +256,33 @@ public final class CallConfiguration extends
      * Configuration for starting a call
      * </pre>
      * <p>
-     * Protobuf type {@code com.fissy.dialer.CallConfiguration}
+     * Protobuf type {@code com.wintmain.dialer.CallConfiguration}
      */
     public static final class Builder extends
-            com.google.protobuf.GeneratedMessageLite.Builder<
-                    com.wintmain.dialer.CallConfiguration, Builder> implements
-            // @@protoc_insertion_point(builder_implements:com.fissy.dialer.CallConfiguration)
+            com.google.protobuf.GeneratedMessageLite.Builder<com.wintmain.dialer.CallConfiguration, Builder> implements
+            // @@protoc_insertion_point(builder_implements:com.wintmain.dialer.CallConfiguration)
             com.wintmain.dialer.CallConfigurationOrBuilder {
-        // Construct using com.fissy.dialer.CallConfiguration.newBuilder()
+        // Construct using com.wintmain.dialer.CallConfiguration.newBuilder()
         private Builder() {
             super(DEFAULT_INSTANCE);
         }
 
-
         /**
-         * <code>optional .com.fissy.dialer.Mode call_mode = 1;</code>
+         * <code>optional .com.wintmain.dialer.Mode call_mode = 1;</code>
          */
         public boolean hasCallMode() {
             return instance.hasCallMode();
         }
 
         /**
-         * <code>optional .com.fissy.dialer.Mode call_mode = 1;</code>
+         * <code>optional .com.wintmain.dialer.Mode call_mode = 1;</code>
          */
         public com.wintmain.dialer.Mode getCallMode() {
             return instance.getCallMode();
         }
 
         /**
-         * <code>optional .com.fissy.dialer.Mode call_mode = 1;</code>
+         * <code>optional .com.wintmain.dialer.Mode call_mode = 1;</code>
          */
         public Builder setCallMode(com.wintmain.dialer.Mode value) {
             copyOnWrite();
@@ -300,7 +291,7 @@ public final class CallConfiguration extends
         }
 
         /**
-         * <code>optional .com.fissy.dialer.Mode call_mode = 1;</code>
+         * <code>optional .com.wintmain.dialer.Mode call_mode = 1;</code>
          */
         public Builder clearCallMode() {
             copyOnWrite();
@@ -308,7 +299,6 @@ public final class CallConfiguration extends
             return this;
         }
 
-        // @@protoc_insertion_point(builder_scope:com.fissy.dialer.CallConfiguration)
+        // @@protoc_insertion_point(builder_scope:com.wintmain.dialer.CallConfiguration)
     }
 }
-

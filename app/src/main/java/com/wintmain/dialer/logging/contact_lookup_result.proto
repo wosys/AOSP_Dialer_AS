@@ -1,7 +1,7 @@
 syntax = "proto2";
 
-package com.fissy.dialer.logging;
-option java_package = "com.fissy.dialer.logging";
+package com.wintmain.dialer.logging;
+option java_package = "com.wintmain.dialer.logging";
 option java_multiple_files = true;
 option optimize_for = LITE_RUNTIME;
 

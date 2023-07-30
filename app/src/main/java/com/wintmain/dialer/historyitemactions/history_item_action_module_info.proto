@@ -1,13 +1,13 @@
 syntax = "proto2";
 
-option java_package = "com.fissy.dialer.historyitemactions";
+option java_package = "com.wintmain.dialer.historyitemactions";
 option java_multiple_files = true;
 option optimize_for = LITE_RUNTIME;
 
 
-package com.fissy.dialer.historyitemactions;
+package com.wintmain.dialer.historyitemactions;
 
-import "com/fissy/dialer/logging/contact_source.proto";
+import "com/wintmain/dialer/logging/contact_source.proto";
 
 // Contains information needed to construct items (modules) in a bottom sheet.
 // Next ID: 17
@@ -57,7 +57,7 @@ message HistoryItemActionModuleInfo {
   optional bool is_voicemail_call = 13;
 
   // The source of the contact if there is one associated with the number.
-  optional com.fissy.dialer.logging.ContactSource.Type contact_source = 14;
+  optional com.wintmain.dialer.logging.ContactSource.Type contact_source = 14;
 
   // Places that can host items (modules) in a bottom sheet
   enum Host {

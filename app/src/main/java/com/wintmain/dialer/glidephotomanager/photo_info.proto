@@ -1,11 +1,11 @@
 syntax = "proto2";
 
-option java_package = "com.fissy.dialer.glidephotomanager";
+option java_package = "com.wintmain.dialer.glidephotomanager";
 option java_multiple_files = true;
 option optimize_for = LITE_RUNTIME;
 
 
-package com.fissy.dialer.glidephotomanager;
+package com.wintmain.dialer.glidephotomanager;
 
 // Contains information associated with a number, which is used to create the
 // photo.

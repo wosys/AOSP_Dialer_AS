@@ -1,15 +1,15 @@
 syntax = "proto2";
 
-option java_package = "com.fissy.dialer.calllog.model";
+option java_package = "com.wintmain.dialer.calllog.model";
 option java_multiple_files = true;
 option optimize_for = LITE_RUNTIME;
 
 
-package com.fissy.dialer.calllog.model;
+package com.wintmain.dialer.calllog.model;
 
-import "com/fissy/dialer/calllog/database/contract/coalesced_ids.proto";
-import "com/fissy/dialer/calllog/database/contract/number_attributes.proto";
-import "com/fissy/dialer/phonenumberproto/dialer_phone_number.proto";
+import "com/wintmain/dialer/calllog/database/contract/coalesced_ids.proto";
+import "com/wintmain/dialer/calllog/database/contract/number_attributes.proto";
+import "com/wintmain/dialer/phonenumberproto/dialer_phone_number.proto";
 
 // Contains the contents of a row from the CoalescedAnnotatedCallLog.
 // Next ID: 17
@@ -21,7 +21,7 @@ message CoalescedRow {
   optional int64 timestamp = 2;
 
   // Value in column CoalescedAnnotatedCallLog.NUMBER
-  optional com.fissy.dialer.DialerPhoneNumber number = 3;
+  optional com.wintmain.dialer.DialerPhoneNumber number = 3;
 
   // Value in column CoalescedAnnotatedCallLog.FORMATTED_NUMBER
   optional string formatted_number = 4;
@@ -51,8 +51,8 @@ message CoalescedRow {
   optional int32 call_type = 12;
 
   // Value in column CoalescedAnnotatedCallLog.NUMBER_ATTRIBUTES
-  optional com.fissy.dialer.NumberAttributes number_attributes = 13;
+  optional com.wintmain.dialer.NumberAttributes number_attributes = 13;
 
   // Value in column CoalescedAnnotatedCallLog.COALESCED_IDS
-  optional com.fissy.dialer.CoalescedIds coalesced_ids = 16;
+  optional com.wintmain.dialer.CoalescedIds coalesced_ids = 16;
 }
