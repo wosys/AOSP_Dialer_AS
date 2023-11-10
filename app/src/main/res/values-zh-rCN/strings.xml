@@ -361,7 +361,6 @@
     <string name="listSingleContact">单个联系人</string>
     <string name="list_filter_all_accounts">所有联系人</string>
     <string name="list_filter_phones">所有拥有电话号码的联系人</string>
-    <string name="main_activity_label">拨打电话</string>
     <string name="make_primary">记住此选择</string>
     <string name="manageConferenceLabel">管理电话会议</string>
     <string name="manage_blocked_numbers_label">已屏蔽的号码</string>

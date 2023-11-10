@@ -14,10 +14,10 @@
   ~ limitations under the License
   -->
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <bool name="motorola_sprint_hd_codec">true</bool>
     <bool name="motorola_hidden_menu_enabled">true</bool>
-    <string-array name="motorola_enabled_spn">
+    <string-array name="motorola_enabled_spn" tools:ignore="ExtraTranslation">
         <item>Sprint</item>
         <item>moto</item>
     </string-array>
