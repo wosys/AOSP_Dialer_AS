@@ -13,4 +13,4 @@ dependencyResolutionManagement {
     }
 }
 include ':app'
-rootProject.name = "AOSP_Dialer"
+rootProject.name = "AOSP_Dialer_AS"
