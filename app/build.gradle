@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         vectorDrawables.useSupportLibrary = true
@@ -11,14 +11,14 @@ android {
         // ERROR: .../res/mipmap-anydpi/ic_launcher.xml:
         // AAPT: error: <adaptive-icon> elements require a sdk version of at least 26.
         minSdk 26
-        targetSdk 33
+        targetSdk 34
         versionCode 1
         versionName '1.0'
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     packagingOptions {
         resources {
@@ -40,6 +40,10 @@ android {
     lint {
         abortOnError false
         checkReleaseBuilds false
+    }
+
+    buildFeatures {
+        aidl true
     }
 
     namespace 'com.wintmain.dialer'
