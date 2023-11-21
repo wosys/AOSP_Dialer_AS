@@ -17,11 +17,9 @@
 package com.android.bubble.stub;
 
 import com.android.bubble.Bubble;
-
-import javax.inject.Singleton;
-
 import dagger.Binds;
 import dagger.Module;
+import javax.inject.Singleton;
 
 @Module
 public abstract class StubBubbleModule {

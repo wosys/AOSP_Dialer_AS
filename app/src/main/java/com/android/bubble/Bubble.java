@@ -17,9 +17,7 @@
 package com.android.bubble;
 
 import android.graphics.drawable.Drawable;
-
 import androidx.annotation.NonNull;
-
 import java.util.List;
 
 /**
@@ -35,19 +33,13 @@ public interface Bubble {
      */
     void show();
 
-    /**
-     * Hide the bubble.
-     */
+    /** Hide the bubble. */
     void hide();
 
-    /**
-     * Returns whether the bubble is currently visible
-     */
+    /** Returns whether the bubble is currently visible */
     boolean isVisible();
 
-    /**
-     * Returns whether the bubble is currently dismissed
-     */
+    /** Returns whether the bubble is currently dismissed */
     boolean isDismissed();
 
     /**

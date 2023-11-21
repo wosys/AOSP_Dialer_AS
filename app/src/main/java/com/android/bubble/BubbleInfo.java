@@ -19,35 +19,17 @@ package com.android.bubble;
 import android.app.PendingIntent;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
-
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.Px;
-
 import com.google.auto.value.AutoValue;
-
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Info for displaying a {@link Bubble}
- */
+/** Info for displaying a {@link Bubble} */
 @AutoValue
 public abstract class BubbleInfo {
-    public static Builder builder() {
-        return new AutoValue_BubbleInfo.Builder().setActions(Collections.emptyList());
-    }
-
-    public static Builder from(@NonNull BubbleInfo bubbleInfo) {
-        return builder()
-                .setPrimaryColor(bubbleInfo.getPrimaryColor())
-                .setPrimaryIcon(bubbleInfo.getPrimaryIcon())
-                .setStartingYPosition(bubbleInfo.getStartingYPosition())
-                .setActions(bubbleInfo.getActions())
-                .setAvatar(bubbleInfo.getAvatar());
-    }
-
     @ColorInt
     public abstract int getPrimaryColor();
 
@@ -62,9 +44,20 @@ public abstract class BubbleInfo {
     @NonNull
     public abstract List<Action> getActions();
 
-    /**
-     * Builder for {@link BubbleInfo}
-     */
+    public static Builder builder() {
+        return new AutoValue_BubbleInfo.Builder().setActions(Collections.emptyList());
+    }
+
+    public static Builder from(@NonNull BubbleInfo bubbleInfo) {
+        return builder()
+                .setPrimaryColor(bubbleInfo.getPrimaryColor())
+                .setPrimaryIcon(bubbleInfo.getPrimaryIcon())
+                .setStartingYPosition(bubbleInfo.getStartingYPosition())
+                .setActions(bubbleInfo.getActions())
+                .setAvatar(bubbleInfo.getAvatar());
+    }
+
+    /** Builder for {@link BubbleInfo} */
     @AutoValue.Builder
     public abstract static class Builder {
 
@@ -81,25 +74,9 @@ public abstract class BubbleInfo {
         public abstract BubbleInfo build();
     }
 
-    /**
-     * Represents actions to be shown in the bubble when expanded
-     */
+    /** Represents actions to be shown in the bubble when expanded */
     @AutoValue
     public abstract static class Action {
-
-        public static Builder builder() {
-            return new AutoValue_BubbleInfo_Action.Builder().setCheckable(true).setChecked(false);
-        }
-
-        public static Builder from(@NonNull Action action) {
-            return builder()
-                    .setIntent(action.getIntent())
-                    .setChecked(action.isChecked())
-                    .setCheckable(action.isCheckable())
-                    .setName(action.getName())
-                    .setIconDrawable(action.getIconDrawable())
-                    .setSecondaryIconDrawable(action.getSecondaryIconDrawable());
-        }
 
         public abstract Drawable getIconDrawable();
 
@@ -116,9 +93,21 @@ public abstract class BubbleInfo {
 
         public abstract boolean isChecked();
 
-        /**
-         * Builder for {@link Action}
-         */
+        public static Builder builder() {
+            return new AutoValue_BubbleInfo_Action.Builder().setCheckable(true).setChecked(false);
+        }
+
+        public static Builder from(@NonNull Action action) {
+            return builder()
+                    .setIntent(action.getIntent())
+                    .setChecked(action.isChecked())
+                    .setCheckable(action.isCheckable())
+                    .setName(action.getName())
+                    .setIconDrawable(action.getIconDrawable())
+                    .setSecondaryIconDrawable(action.getSecondaryIconDrawable());
+        }
+
+        /** Builder for {@link Action} */
         @AutoValue.Builder
         public abstract static class Builder {
 
