@@ -17,31 +17,23 @@
 package com.wintmain.dialer.activecalls;
 
 import android.telecom.PhoneAccountHandle;
-
 import androidx.annotation.Nullable;
-
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Optional;
 
-/**
- * Info of an active call
- */
+/** Info of an active call */
 @AutoValue
 @SuppressWarnings("Guava")
 public abstract class ActiveCallInfo {
+
+    /** The {@link PhoneAccountHandle} the call is made with */
+    public abstract Optional<PhoneAccountHandle> phoneAccountHandle();
 
     public static Builder builder() {
         return new AutoValue_ActiveCallInfo.Builder();
     }
 
-    /**
-     * The {@link PhoneAccountHandle} the call is made with
-     */
-    public abstract Optional<PhoneAccountHandle> phoneAccountHandle();
-
-    /**
-     * Builder for {@link ActiveCallInfo}. Only In Call UI should create ActiveCallInfo
-     */
+    /** Builder for {@link ActiveCallInfo}. Only In Call UI should create ActiveCallInfo */
     @AutoValue.Builder
     public abstract static class Builder {
 

@@ -21,19 +21,16 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
-
 import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import androidx.annotation.WorkerThread;
-
 import com.wintmain.dialer.R;
 import com.wintmain.dialer.common.Assert;
 import com.wintmain.dialer.common.LogUtil;
 import com.wintmain.dialer.configprovider.ConfigProviderComponent;
 import com.google.auto.value.AutoValue;
-
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -54,16 +51,64 @@ public class CequintCallerIdManager {
     private static final int CALLER_ID_LOOKUP_SYSTEM_PROVIDED_CID = 0x0002;
     private static final int CALLER_ID_LOOKUP_INCOMING_CALL = 0x0020;
 
-    private static final String[] EMPTY_PROJECTION = new String[]{};
+    private static final String[] EMPTY_PROJECTION = new String[] {};
+
+    /** Column names in Cequint content provider. */
+    @VisibleForTesting
+    public static final class CequintColumnNames {
+        public static final String CITY_NAME = "cid_pCityName";
+        public static final String STATE_NAME = "cid_pStateName";
+        public static final String STATE_ABBR = "cid_pStateAbbr";
+        public static final String COUNTRY_NAME = "cid_pCountryName";
+        public static final String COMPANY = "cid_pCompany";
+        public static final String NAME = "cid_pName";
+        public static final String FIRST_NAME = "cid_pFirstName";
+        public static final String LAST_NAME = "cid_pLastName";
+        public static final String PHOTO_URI = "cid_pLogo";
+        public static final String DISPLAY_NAME = "cid_pDisplayName";
+    }
+
     private static boolean hasAlreadyCheckedCequintCallerIdPackage;
     private static String cequintProviderAuthority;
+
     // TODO(a bug): Revisit it and maybe remove it if it's not necessary.
     private final ConcurrentHashMap<String, CequintCallerIdContact> callLogCache =
             new ConcurrentHashMap<>();
 
-    /**
-     * Check whether Cequint Caller ID provider package is available and enabled.
-     */
+    /** Cequint caller ID contact information. */
+    @AutoValue
+    public abstract static class CequintCallerIdContact {
+
+        @Nullable
+        public abstract String name();
+
+        /**
+         * Description of the geolocation (e.g., "Mountain View, CA"), which is for display purpose
+         * only.
+         */
+        @Nullable
+        public abstract String geolocation();
+
+        @Nullable
+        public abstract String photoUri();
+
+        static Builder builder() {
+            return new AutoValue_CequintCallerIdManager_CequintCallerIdContact.Builder();
+        }
+
+        @AutoValue.Builder
+        abstract static class Builder {
+            abstract Builder setName(@Nullable String name);
+
+            abstract Builder setGeolocation(@Nullable String geolocation);
+
+            abstract Builder setPhotoUri(@Nullable String photoUri);
+
+            abstract CequintCallerIdContact build();
+        }
+    }
+
+    /** Check whether Cequint Caller ID provider package is available and enabled. */
     @AnyThread
     public static synchronized boolean isCequintCallerIdEnabled(@NonNull Context context) {
         if (!ConfigProviderComponent.get(context)
@@ -89,9 +134,7 @@ public class CequintCallerIdManager {
         return cequintProviderAuthority != null;
     }
 
-    /**
-     * Returns a {@link CequintCallerIdContact} for a call.
-     */
+    /** Returns a {@link CequintCallerIdContact} for a call. */
     @WorkerThread
     @Nullable
     public static CequintCallerIdContact getCequintCallerIdContactForCall(
@@ -115,6 +158,33 @@ public class CequintCallerIdManager {
     }
 
     /**
+     * Returns a cached {@link CequintCallerIdContact} associated with the provided number. If no
+     * contact can be found in the cache, look up the number using the Cequint content provider.
+     *
+     * @deprecated This method is for the old call log only. New code should use {@link
+     *     #getCequintCallerIdContactForNumber(Context, String)}.
+     */
+    @Deprecated
+    @WorkerThread
+    @Nullable
+    public CequintCallerIdContact getCachedCequintCallerIdContact(Context context, String number) {
+        Assert.isWorkerThread();
+        LogUtil.d(
+                "CequintCallerIdManager.getCachedCequintCallerIdContact",
+                "number: %s",
+                LogUtil.sanitizePhoneNumber(number));
+        if (callLogCache.containsKey(number)) {
+            return callLogCache.get(number);
+        }
+        CequintCallerIdContact cequintCallerIdContact =
+                getCequintCallerIdContactForNumber(context, number);
+        if (cequintCallerIdContact != null) {
+            callLogCache.put(number, cequintCallerIdContact);
+        }
+        return cequintCallerIdContact;
+    }
+
+    /**
      * Returns a {@link CequintCallerIdContact} associated with the provided number by looking it up
      * using the Cequint content provider.
      */
@@ -129,7 +199,7 @@ public class CequintCallerIdManager {
                 LogUtil.sanitizePhoneNumber(number));
 
         return lookup(
-                context, getLookupUri(), PhoneNumberUtils.stripSeparators(number), new String[]{"system"});
+                context, getLookupUri(), PhoneNumberUtils.stripSeparators(number), new String[] {"system"});
     }
 
     @WorkerThread
@@ -230,9 +300,7 @@ public class CequintCallerIdManager {
         return null;
     }
 
-    /**
-     * Returns geolocation information (e.g., "Mountain View, CA").
-     */
+    /** Returns geolocation information (e.g., "Mountain View, CA"). */
     private static String getGeolocation(
             String city, String state, String stateAbbr, String country) {
         String geoDescription = null;
@@ -253,84 +321,5 @@ public class CequintCallerIdManager {
 
     private static Uri getIncallLookupUri() {
         return Uri.parse("content://" + cequintProviderAuthority + "/incalllookup");
-    }
-
-    /**
-     * Returns a cached {@link CequintCallerIdContact} associated with the provided number. If no
-     * contact can be found in the cache, look up the number using the Cequint content provider.
-     *
-     * @deprecated This method is for the old call log only. New code should use {@link
-     * #getCequintCallerIdContactForNumber(Context, String)}.
-     */
-    @Deprecated
-    @WorkerThread
-    @Nullable
-    public CequintCallerIdContact getCachedCequintCallerIdContact(Context context, String number) {
-        Assert.isWorkerThread();
-        LogUtil.d(
-                "CequintCallerIdManager.getCachedCequintCallerIdContact",
-                "number: %s",
-                LogUtil.sanitizePhoneNumber(number));
-        if (callLogCache.containsKey(number)) {
-            return callLogCache.get(number);
-        }
-        CequintCallerIdContact cequintCallerIdContact =
-                getCequintCallerIdContactForNumber(context, number);
-        if (cequintCallerIdContact != null) {
-            callLogCache.put(number, cequintCallerIdContact);
-        }
-        return cequintCallerIdContact;
-    }
-
-    /**
-     * Column names in Cequint content provider.
-     */
-    @VisibleForTesting
-    public static final class CequintColumnNames {
-        public static final String CITY_NAME = "cid_pCityName";
-        public static final String STATE_NAME = "cid_pStateName";
-        public static final String STATE_ABBR = "cid_pStateAbbr";
-        public static final String COUNTRY_NAME = "cid_pCountryName";
-        public static final String COMPANY = "cid_pCompany";
-        public static final String NAME = "cid_pName";
-        public static final String FIRST_NAME = "cid_pFirstName";
-        public static final String LAST_NAME = "cid_pLastName";
-        public static final String PHOTO_URI = "cid_pLogo";
-        public static final String DISPLAY_NAME = "cid_pDisplayName";
-    }
-
-    /**
-     * Cequint caller ID contact information.
-     */
-    @AutoValue
-    public abstract static class CequintCallerIdContact {
-
-        static Builder builder() {
-            return new AutoValue_CequintCallerIdManager_CequintCallerIdContact.Builder();
-        }
-
-        @Nullable
-        public abstract String name();
-
-        /**
-         * Description of the geolocation (e.g., "Mountain View, CA"), which is for display purpose
-         * only.
-         */
-        @Nullable
-        public abstract String geolocation();
-
-        @Nullable
-        public abstract String photoUri();
-
-        @AutoValue.Builder
-        abstract static class Builder {
-            abstract Builder setName(@Nullable String name);
-
-            abstract Builder setGeolocation(@Nullable String geolocation);
-
-            abstract Builder setPhotoUri(@Nullable String photoUri);
-
-            abstract CequintCallerIdContact build();
-        }
     }
 }

@@ -17,9 +17,7 @@
 package com.wintmain.dialer.assisteddialing;
 
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
-
 import com.google.auto.value.AutoValue;
 
 /**
@@ -28,8 +26,7 @@ import com.google.auto.value.AutoValue;
  */
 @AutoValue
 public abstract class TransformationInfo {
-    @NonNull
-    private static final String ORIGINAL_NUBMER_KEY = "TRANSFORMATION_INFO_ORIGINAL_NUMBER";
+    @NonNull private static final String ORIGINAL_NUBMER_KEY = "TRANSFORMATION_INFO_ORIGINAL_NUMBER";
 
     @NonNull
     private static final String TRANSFORMED_NUMBER_KEY = "TRANSFORMATION_INFO_TRANSFORMED_NUMBER";
@@ -46,8 +43,34 @@ public abstract class TransformationInfo {
     private static final String TRANSFORMED_NUMBER_COUNTRY_CALLING_CODE_KEY =
             "TRANSFORMED_NUMBER_COUNTRY_CALLING_CODE";
 
+    public abstract String originalNumber();
+
+    public abstract String transformedNumber();
+
+    public abstract String userHomeCountryCode();
+
+    public abstract String userRoamingCountryCode();
+
+    public abstract int transformedNumberCountryCallingCode();
+
     public static Builder builder() {
         return new AutoValue_TransformationInfo.Builder();
+    }
+
+    /** A builder for TransformationInfo. */
+    @AutoValue.Builder
+    public abstract static class Builder {
+        public abstract Builder setOriginalNumber(String value);
+
+        public abstract Builder setTransformedNumber(String value);
+
+        public abstract Builder setUserHomeCountryCode(String value);
+
+        public abstract Builder setUserRoamingCountryCode(String value);
+
+        public abstract Builder setTransformedNumberCountryCallingCode(int value);
+
+        public abstract TransformationInfo build();
     }
 
     public static TransformationInfo newInstanceFromBundle(@NonNull Bundle transformationInfoBundle) {
@@ -63,16 +86,6 @@ public abstract class TransformationInfo {
                 .build();
     }
 
-    public abstract String originalNumber();
-
-    public abstract String transformedNumber();
-
-    public abstract String userHomeCountryCode();
-
-    public abstract String userRoamingCountryCode();
-
-    public abstract int transformedNumberCountryCallingCode();
-
     /**
      * Callers are not expected to directly use this bundle. The bundle is provided for IPC purposes.
      * Callers wishing to use the data should call newInstanceFromBundle with the bundle to get a
@@ -87,23 +100,5 @@ public abstract class TransformationInfo {
         assistedDialingExtras.putInt(
                 TRANSFORMED_NUMBER_COUNTRY_CALLING_CODE_KEY, transformedNumberCountryCallingCode());
         return assistedDialingExtras;
-    }
-
-    /**
-     * A builder for TransformationInfo.
-     */
-    @AutoValue.Builder
-    public abstract static class Builder {
-        public abstract Builder setOriginalNumber(String value);
-
-        public abstract Builder setTransformedNumber(String value);
-
-        public abstract Builder setUserHomeCountryCode(String value);
-
-        public abstract Builder setUserRoamingCountryCode(String value);
-
-        public abstract Builder setTransformedNumberCountryCallingCode(int value);
-
-        public abstract TransformationInfo build();
     }
 }

@@ -17,15 +17,12 @@
 package com.android.incallui.incall.impl;
 
 import android.util.ArraySet;
-
 import androidx.annotation.NonNull;
 import androidx.collection.ArrayMap;
-
 import com.android.incallui.incall.protocol.InCallButtonIds;
 import com.android.incallui.incall.protocol.InCallButtonIdsExtension;
 import com.wintmain.dialer.common.Assert;
 import com.google.auto.value.AutoValue;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -33,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
 import javax.annotation.concurrent.Immutable;
 
 /**
@@ -50,10 +46,8 @@ import javax.annotation.concurrent.Immutable;
 @Immutable
 final class MappedButtonConfig {
 
-    @NonNull
-    private final Map<Integer, MappingInfo> mapping;
-    @NonNull
-    private final List<Integer> orderedMappedSlots;
+    @NonNull private final Map<Integer, MappingInfo> mapping;
+    @NonNull private final List<Integer> orderedMappedSlots;
 
     /**
      * Creates this MappedButtonConfig with the given mapping of {@link InCallButtonIds} to their
@@ -77,9 +71,7 @@ final class MappedButtonConfig {
         return orderedSlots;
     }
 
-    /**
-     * Returns an immutable list of the slots for which this class has button mapping.
-     */
+    /** Returns an immutable list of the slots for which this class has button mapping. */
     @NonNull
     public List<Integer> getOrderedMappedSlots() {
         if (mapping.isEmpty()) {
@@ -114,13 +106,16 @@ final class MappedButtonConfig {
      */
     @NonNull
     public Comparator<Integer> getSlotComparator() {
-        return (lhs, rhs) -> {
-            MappingInfo lhsInfo = lookupMappingInfo(lhs);
-            MappingInfo rhsInfo = lookupMappingInfo(rhs);
-            if (lhsInfo.getSlot() != rhsInfo.getSlot()) {
-                throw new IllegalArgumentException("lhs and rhs don't go in the same slot");
+        return new Comparator<Integer>() {
+            @Override
+            public int compare(Integer lhs, Integer rhs) {
+                MappingInfo lhsInfo = lookupMappingInfo(lhs);
+                MappingInfo rhsInfo = lookupMappingInfo(rhs);
+                if (lhsInfo.getSlot() != rhsInfo.getSlot()) {
+                    throw new IllegalArgumentException("lhs and rhs don't go in the same slot");
+                }
+                return lhsInfo.getSlotOrder() - rhsInfo.getSlotOrder();
             }
-            return lhsInfo.getSlotOrder() - rhsInfo.getSlotOrder();
         };
     }
 
@@ -135,10 +130,13 @@ final class MappedButtonConfig {
      */
     @NonNull
     public Comparator<Integer> getConflictComparator() {
-        return (lhs, rhs) -> {
-            MappingInfo lhsInfo = lookupMappingInfo(lhs);
-            MappingInfo rhsInfo = lookupMappingInfo(rhs);
-            return lhsInfo.getConflictOrder() - rhsInfo.getConflictOrder();
+        return new Comparator<Integer>() {
+            @Override
+            public int compare(Integer lhs, Integer rhs) {
+                MappingInfo lhsInfo = lookupMappingInfo(lhs);
+                MappingInfo rhsInfo = lookupMappingInfo(rhs);
+                return lhsInfo.getConflictOrder() - rhsInfo.getConflictOrder();
+            }
         };
     }
 
@@ -152,23 +150,13 @@ final class MappedButtonConfig {
         return info;
     }
 
-    /**
-     * Holds information about button mapping.
-     */
+    /** Holds information about button mapping. */
     @AutoValue
     abstract static class MappingInfo {
 
-        static Builder builder(int slot) {
-            return new AutoValue_MappedButtonConfig_MappingInfo.Builder()
-                    .setSlot(slot)
-                    .setSlotOrder(Integer.MAX_VALUE)
-                    .setConflictOrder(Integer.MAX_VALUE)
-                    .setMutuallyExclusiveButton(InCallButtonIds.NO_MUTUALLY_EXCLUSIVE_BUTTON_SET);
-        }
+        public static final int NO_MUTUALLY_EXCLUSIVE_BUTTON_SET = -1;
 
-        /**
-         * The Ui slot into which a given button desires to be placed.
-         */
+        /** The Ui slot into which a given button desires to be placed. */
         public abstract int getSlot();
 
         /**
@@ -187,16 +175,21 @@ final class MappedButtonConfig {
 
         /**
          * Returns an integer representing a button for which the given button conflicts. Defaults to
-         *
+         * {@link NO_MUTUALLY_EXCLUSIVE_BUTTON_SET}.
          *
          * <p>If the mutually exclusive button is chosen, the associated button should never be chosen.
          */
-        public abstract @InCallButtonIds
-        int getMutuallyExclusiveButton();
+        public abstract @InCallButtonIds int getMutuallyExclusiveButton();
 
-        /**
-         * Class used to build instances of {@link MappingInfo}.
-         */
+        static Builder builder(int slot) {
+            return new AutoValue_MappedButtonConfig_MappingInfo.Builder()
+                    .setSlot(slot)
+                    .setSlotOrder(Integer.MAX_VALUE)
+                    .setConflictOrder(Integer.MAX_VALUE)
+                    .setMutuallyExclusiveButton(NO_MUTUALLY_EXCLUSIVE_BUTTON_SET);
+        }
+
+        /** Class used to build instances of {@link MappingInfo}. */
         @AutoValue.Builder
         abstract static class Builder {
             public abstract Builder setSlot(int slot);

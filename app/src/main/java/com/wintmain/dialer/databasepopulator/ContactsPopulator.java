@@ -28,23 +28,17 @@ import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.RawContacts;
 import android.text.TextUtils;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
-
 import com.wintmain.dialer.common.Assert;
 import com.google.auto.value.AutoValue;
-
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-/**
- * Populates the device database with contacts.
- */
+/** Populates the device database with contacts. */
 public final class ContactsPopulator {
     // Phone numbers from https://www.google.com/about/company/facts/locations/
     private static final Contact[] SIMPLE_CONTACTS = {
@@ -132,9 +126,6 @@ public final class ContactsPopulator {
                     .build(),
     };
 
-    private ContactsPopulator() {
-    }
-
     @WorkerThread
     public static void populateContacts(@NonNull Context context, boolean fastMode) {
         Assert.isWorkerThread();
@@ -184,7 +175,7 @@ public final class ContactsPopulator {
                     .applyBatch(
                             ContactsContract.AUTHORITY,
                             new ArrayList<>(
-                                    Collections.singletonList(
+                                    Arrays.asList(
                                             ContentProviderOperation.newDelete(RawContacts.CONTENT_URI).build())));
         } catch (RemoteException | OperationApplicationException e) {
             Assert.fail("failed to delete contacts: " + e);
@@ -259,16 +250,6 @@ public final class ContactsPopulator {
 
     @AutoValue
     abstract static class Contact {
-        static Builder builder() {
-            return new AutoValue_ContactsPopulator_Contact.Builder()
-                    .setAccountType()
-                    .setAccountName()
-                    .setPinned(0)
-                    .setIsStarred(false)
-                    .setPhoneNumbers(new ArrayList<>())
-                    .setEmails(new ArrayList<>());
-        }
-
         @NonNull
         abstract String getAccountType();
 
@@ -291,35 +272,24 @@ public final class ContactsPopulator {
         @NonNull
         abstract List<Email> getEmails();
 
+        static Builder builder() {
+            return new AutoValue_ContactsPopulator_Contact.Builder()
+                    .setAccountType("com.google")
+                    .setAccountName("foo@example")
+                    .setPinned(0)
+                    .setIsStarred(false)
+                    .setPhoneNumbers(new ArrayList<>())
+                    .setEmails(new ArrayList<>());
+        }
+
         @AutoValue.Builder
         abstract static class Builder {
-            @NonNull
-            private final List<PhoneNumber> phoneNumbers = new ArrayList<>();
-            @NonNull
-            private final List<Email> emails = new ArrayList<>();
+            @NonNull private final List<PhoneNumber> phoneNumbers = new ArrayList<>();
+            @NonNull private final List<Email> emails = new ArrayList<>();
 
-            /**
-             * Creates a contact photo with a green background and a circle of the given color.
-             */
-            private static ByteArrayOutputStream getPhotoStreamWithColor(int color) {
-                int width = 300;
-                int height = 300;
-                Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-                Canvas canvas = new Canvas(bitmap);
-                canvas.drawColor(Color.argb(0xff, 0x4c, 0x9c, 0x23));
-                Paint paint = new Paint();
-                paint.setColor(color);
-                paint.setStyle(Paint.Style.FILL);
-                canvas.drawCircle(150, 150, 100, paint);
+            abstract Builder setAccountType(@NonNull String accountType);
 
-                ByteArrayOutputStream photoStream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 75, photoStream);
-                return photoStream;
-            }
-
-            abstract Builder setAccountType();
-
-            abstract Builder setAccountName();
+            abstract Builder setAccountName(@NonNull String accountName);
 
             abstract Builder setName(@NonNull String name);
 
@@ -327,7 +297,7 @@ public final class ContactsPopulator {
 
             abstract Builder setPinned(int position);
 
-            abstract void setPhotoStream(ByteArrayOutputStream photoStream);
+            abstract Builder setPhotoStream(ByteArrayOutputStream photoStream);
 
             abstract Builder setPhoneNumbers(@NonNull List<PhoneNumber> phoneNumbers);
 
@@ -364,6 +334,23 @@ public final class ContactsPopulator {
                 setPhotoStream(getPhotoStreamWithColor(Color.rgb(0x99, 0x5a, 0xa0)));
                 return this;
             }
+
+            /** Creates a contact photo with a green background and a circle of the given color. */
+            private static ByteArrayOutputStream getPhotoStreamWithColor(int color) {
+                int width = 300;
+                int height = 300;
+                Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+                Canvas canvas = new Canvas(bitmap);
+                canvas.drawColor(Color.argb(0xff, 0x4c, 0x9c, 0x23));
+                Paint paint = new Paint();
+                paint.setColor(color);
+                paint.setStyle(Paint.Style.FILL);
+                canvas.drawCircle(width / 2, height / 2, width / 3, paint);
+
+                ByteArrayOutputStream photoStream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 75, photoStream);
+                return photoStream;
+            }
         }
     }
 
@@ -390,4 +377,6 @@ public final class ContactsPopulator {
             label = "simulator email";
         }
     }
+
+    private ContactsPopulator() {}
 }

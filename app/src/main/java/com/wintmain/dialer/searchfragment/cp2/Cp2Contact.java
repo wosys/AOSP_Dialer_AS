@@ -17,39 +17,13 @@
 package com.wintmain.dialer.searchfragment.cp2;
 
 import android.database.Cursor;
-
 import androidx.annotation.Nullable;
-
 import com.wintmain.dialer.searchfragment.common.Projections;
 import com.google.auto.value.AutoValue;
 
-/**
- * POJO Representation for contacts returned in {@link SearchContactsCursorLoader}.
- */
+/** POJO Representation for contacts returned in {@link SearchContactsCursorLoader}. */
 @AutoValue
 public abstract class Cp2Contact {
-
-    public static Builder builder() {
-        return new AutoValue_Cp2Contact.Builder();
-    }
-
-    public static Cp2Contact fromCursor(Cursor cursor) {
-        return Cp2Contact.builder()
-                .setPhoneId(cursor.getLong(Projections.CONTACT_ID))
-                .setPhoneType(cursor.getInt(Projections.PHONE_TYPE))
-                .setPhoneLabel(cursor.getString(Projections.PHONE_LABEL))
-                .setPhoneNumber(cursor.getString(Projections.PHONE_NUMBER))
-                .setDisplayName(cursor.getString(Projections.DISPLAY_NAME))
-                .setPhotoId(cursor.getInt(Projections.PHOTO_ID))
-                .setPhotoUri(cursor.getString(Projections.PHOTO_URI))
-                .setLookupKey(cursor.getString(Projections.LOOKUP_KEY))
-                .setCarrierPresence(cursor.getInt(Projections.CARRIER_PRESENCE))
-                .setContactId(cursor.getInt(Projections.CONTACT_ID))
-                .setCompanyName(cursor.getString(Projections.COMPANY_NAME))
-                .setNickName(cursor.getString(Projections.NICKNAME))
-                .setMimeType(cursor.getString(Projections.MIME_TYPE))
-                .build();
-    }
 
     public abstract long phoneId();
 
@@ -82,29 +56,7 @@ public abstract class Cp2Contact {
 
     public abstract String mimeType();
 
-    public Object[] toCursorRow() {
-        Object[] row = new Object[Projections.CP2_PROJECTION.length];
-        row[Projections.ID] = phoneId();
-        row[Projections.PHONE_TYPE] = phoneType();
-        row[Projections.PHONE_LABEL] = phoneLabel();
-        row[Projections.PHONE_NUMBER] = phoneNumber();
-        row[Projections.DISPLAY_NAME] = displayName();
-        row[Projections.PHOTO_ID] = photoId();
-        row[Projections.PHOTO_URI] = photoUri();
-        row[Projections.LOOKUP_KEY] = lookupKey();
-        row[Projections.CARRIER_PRESENCE] = carrierPresence();
-        row[Projections.CONTACT_ID] = contactId();
-        row[Projections.COMPANY_NAME] = companyName();
-        row[Projections.NICKNAME] = nickName();
-        row[Projections.MIME_TYPE] = mimeType();
-        return row;
-    }
-
-    public abstract Builder toBuilder();
-
-    /**
-     * Builder for {@link Cp2Contact}.
-     */
+    /** Builder for {@link Cp2Contact}. */
     @AutoValue.Builder
     public abstract static class Builder {
         public abstract Builder setPhoneId(long id);
@@ -135,4 +87,46 @@ public abstract class Cp2Contact {
 
         public abstract Cp2Contact build();
     }
+
+    public static Builder builder() {
+        return new AutoValue_Cp2Contact.Builder();
+    }
+
+    public static Cp2Contact fromCursor(Cursor cursor) {
+        return Cp2Contact.builder()
+                .setPhoneId(cursor.getLong(Projections.CONTACT_ID))
+                .setPhoneType(cursor.getInt(Projections.PHONE_TYPE))
+                .setPhoneLabel(cursor.getString(Projections.PHONE_LABEL))
+                .setPhoneNumber(cursor.getString(Projections.PHONE_NUMBER))
+                .setDisplayName(cursor.getString(Projections.DISPLAY_NAME))
+                .setPhotoId(cursor.getInt(Projections.PHOTO_ID))
+                .setPhotoUri(cursor.getString(Projections.PHOTO_URI))
+                .setLookupKey(cursor.getString(Projections.LOOKUP_KEY))
+                .setCarrierPresence(cursor.getInt(Projections.CARRIER_PRESENCE))
+                .setContactId(cursor.getInt(Projections.CONTACT_ID))
+                .setCompanyName(cursor.getString(Projections.COMPANY_NAME))
+                .setNickName(cursor.getString(Projections.NICKNAME))
+                .setMimeType(cursor.getString(Projections.MIME_TYPE))
+                .build();
+    }
+
+    public Object[] toCursorRow() {
+        Object[] row = new Object[Projections.CP2_PROJECTION.length];
+        row[Projections.ID] = phoneId();
+        row[Projections.PHONE_TYPE] = phoneType();
+        row[Projections.PHONE_LABEL] = phoneLabel();
+        row[Projections.PHONE_NUMBER] = phoneNumber();
+        row[Projections.DISPLAY_NAME] = displayName();
+        row[Projections.PHOTO_ID] = photoId();
+        row[Projections.PHOTO_URI] = photoUri();
+        row[Projections.LOOKUP_KEY] = lookupKey();
+        row[Projections.CARRIER_PRESENCE] = carrierPresence();
+        row[Projections.CONTACT_ID] = contactId();
+        row[Projections.COMPANY_NAME] = companyName();
+        row[Projections.NICKNAME] = nickName();
+        row[Projections.MIME_TYPE] = mimeType();
+        return row;
+    }
+
+    public abstract Builder toBuilder();
 }

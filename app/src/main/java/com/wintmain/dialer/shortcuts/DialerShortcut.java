@@ -16,13 +16,14 @@
 
 package com.wintmain.dialer.shortcuts;
 
+import android.annotation.TargetApi;
 import android.content.pm.ShortcutInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.ContactsContract.Contacts;
-
 import androidx.annotation.NonNull;
-
 import com.google.auto.value.AutoValue;
+
 
 /**
  * Convenience data structure.
@@ -30,20 +31,69 @@ import com.google.auto.value.AutoValue;
  * <p>This differs from {@link ShortcutInfo} in that it doesn't hold an icon or intent, and provides
  * convenience methods for doing things like constructing labels.
  */
-// Shortcuts introduced in N MR1
+@TargetApi(Build.VERSION_CODES.N_MR1) // Shortcuts introduced in N MR1
 @AutoValue
 abstract class DialerShortcut {
 
-    /**
-     * Marker value indicates that shortcut has no setRank. Used by pinned shortcuts.
-     */
+    /** Marker value indicates that shortcut has no setRank. Used by pinned shortcuts. */
     static final int NO_RANK = -1;
 
     /**
-     * The display name for the provided shortcut.
+     * Contact ID from contacts provider. Note that this a numeric row ID from the
+     * ContactsContract.Contacts._ID column.
      */
+    abstract long getContactId();
+
+    /**
+     * Lookup key from contacts provider. An example lookup key is: "0r8-47392D". This is the value
+     * from ContactsContract.Contacts.LOOKUP_KEY.
+     */
+    @NonNull
+    abstract String getLookupKey();
+
+    /** Display name from contacts provider. */
+    @NonNull
+    abstract String getDisplayName();
+
+    /**
+     * Rank for dynamic shortcuts. This value should be positive or {@link #NO_RANK}.
+     *
+     * <p>For floating shortcuts (pinned shortcuts with no corresponding dynamic shortcut), setRank
+     * has no meaning and the setRank may be set to {@link #NO_RANK}.
+     */
+    abstract int getRank();
+
+    /** The short label for the shortcut. Used when pinning shortcuts, for example. */
+    @NonNull
+    String getShortLabel() {
+        // Be sure to update getDisplayNameFromShortcutInfo when updating this.
+        return getDisplayName();
+    }
+
+    /**
+     * The long label for the shortcut. Used for shortcuts displayed when pressing and holding the app
+     * launcher icon, for example.
+     */
+    @NonNull
+    String getLongLabel() {
+        return getDisplayName();
+    }
+
+    /** The display name for the provided shortcut. */
     static String getDisplayNameFromShortcutInfo(ShortcutInfo shortcutInfo) {
         return shortcutInfo.getShortLabel().toString();
+    }
+
+    /**
+     * The id used to identify launcher shortcuts. Used for updating/deleting shortcuts.
+     *
+     * <p>Lookup keys are used for shortcut IDs. See {@link #getLookupKey()}.
+     *
+     * <p>If you change this, you probably also need to change {@link #getLookupKeyFromShortcutInfo}.
+     */
+    @NonNull
+    String getShortcutId() {
+        return getLookupKey();
     }
 
     /**
@@ -75,67 +125,6 @@ abstract class DialerShortcut {
         return Contacts.getLookupUri(contactId, lookupKey);
     }
 
-    static Builder builder() {
-        return new AutoValue_DialerShortcut.Builder().setRank(NO_RANK);
-    }
-
-    /**
-     * Contact ID from contacts provider. Note that this a numeric row ID from the
-     * ContactsContract.Contacts._ID column.
-     */
-    abstract long getContactId();
-
-    /**
-     * Lookup key from contacts provider. An example lookup key is: "0r8-47392D". This is the value
-     * from ContactsContract.Contacts.LOOKUP_KEY.
-     */
-    @NonNull
-    abstract String getLookupKey();
-
-    /**
-     * Display name from contacts provider.
-     */
-    @NonNull
-    abstract String getDisplayName();
-
-    /**
-     * Rank for dynamic shortcuts. This value should be positive or {@link #NO_RANK}.
-     *
-     * <p>For floating shortcuts (pinned shortcuts with no corresponding dynamic shortcut), setRank
-     * has no meaning and the setRank may be set to {@link #NO_RANK}.
-     */
-    abstract int getRank();
-
-    /**
-     * The short label for the shortcut. Used when pinning shortcuts, for example.
-     */
-    @NonNull
-    String getShortLabel() {
-        // Be sure to update getDisplayNameFromShortcutInfo when updating this.
-        return getDisplayName();
-    }
-
-    /**
-     * The long label for the shortcut. Used for shortcuts displayed when pressing and holding the app
-     * launcher icon, for example.
-     */
-    @NonNull
-    String getLongLabel() {
-        return getDisplayName();
-    }
-
-    /**
-     * The id used to identify launcher shortcuts. Used for updating/deleting shortcuts.
-     *
-     * <p>Lookup keys are used for shortcut IDs. See {@link #getLookupKey()}.
-     *
-     * <p>If you change this, you probably also need to change {@link #getLookupKeyFromShortcutInfo}.
-     */
-    @NonNull
-    String getShortcutId() {
-        return getLookupKey();
-    }
-
     /**
      * Contacts provider URI which uses the contact lookup key.
      *
@@ -162,7 +151,14 @@ abstract class DialerShortcut {
         if (!oldInfo.getShortLabel().equals(this.getShortLabel())) {
             return true;
         }
-        return !oldInfo.getLongLabel().equals(this.getLongLabel());
+        if (!oldInfo.getLongLabel().equals(this.getLongLabel())) {
+            return true;
+        }
+        return false;
+    }
+
+    static Builder builder() {
+        return new AutoValue_DialerShortcut.Builder().setRank(NO_RANK);
     }
 
     @AutoValue.Builder
@@ -178,9 +174,7 @@ abstract class DialerShortcut {
          */
         abstract Builder setLookupKey(@NonNull String value);
 
-        /**
-         * Sets the display name. This should be a value provided by the contact provider.
-         */
+        /** Sets the display name. This should be a value provided by the contact provider. */
         abstract Builder setDisplayName(@NonNull String value);
 
         /**
@@ -191,9 +185,7 @@ abstract class DialerShortcut {
          */
         abstract Builder setRank(int value);
 
-        /**
-         * Builds the immutable {@link DialerShortcut} object from this builder.
-         */
+        /** Builds the immutable {@link DialerShortcut} object from this builder. */
         abstract DialerShortcut build();
     }
 }

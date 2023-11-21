@@ -8,7 +8,9 @@ android {
     defaultConfig {
         vectorDrawables.useSupportLibrary = true
         applicationId "com.wintmain.dialer"
-        minSdk 29
+        // ERROR: .../res/mipmap-anydpi/ic_launcher.xml:
+        // AAPT: error: <adaptive-icon> elements require a sdk version of at least 26.
+        minSdk 26
         targetSdk 33
         versionCode 1
         versionName '1.0'
@@ -20,16 +22,17 @@ android {
     }
     packagingOptions {
         resources {
-            excludes += ['META-INF/DEPENDENCIES', 'META-INF/NOTICE', 'META-INF/LICENSE', 'META-INF/LICENSE.txt', 'META-INF/NOTICE.txt']
+            excludes += ['META-INF/DEPENDENCIES', 'META-INF/NOTICE', 'META-INF/LICENSE',
+                         'META-INF/LICENSE.txt', 'META-INF/NOTICE.txt']
         }
     }
 
     android.applicationVariants.all { variant ->
         variant.outputs.all {
             if (variant.name.endsWith("debug")) {
-                outputFileName = "Dialer_v${defaultConfig.versionName}_debug.apk"
+                outputFileName = "AOSP_Dialer_AS_v${defaultConfig.versionName}_debug.apk"
             } else {
-                outputFileName = "Dialer_v${defaultConfig.versionName}_release.apk"
+                outputFileName = "AOSP_Dialer_AS_v${defaultConfig.versionName}_release.apk"
             }
         }
     }
@@ -43,7 +46,6 @@ android {
 }
 
 dependencies {
-    implementation 'com.google.dagger:dagger:2.46.1'
     implementation 'com.android.volley:volley:1.2.1'
     implementation 'me.leolin:ShortcutBadger:1.1.22'
     implementation 'com.googlecode.libphonenumber:libphonenumber:8.13.14'
@@ -61,11 +63,17 @@ dependencies {
     implementation 'io.grpc:grpc-protobuf-lite:1.0.3'
     //noinspection GradleDependency
     implementation 'commons-io:commons-io:2.13.0'
-    implementation 'com.google.auto:auto-common:1.2.2'
-    // https://github.com/google/auto/releases/tag/auto-value-1.6
-    implementation 'com.google.auto.value:auto-value-annotations:1.10.2'
     //noinspection GradleDependency
     implementation 'com.github.bumptech.glide:glide:4.8.0'
     implementation "androidx.preference:preference:1.2.0"
     implementation 'androidx.exifinterface:exifinterface:1.3.6'
+
+    // AutoValue: https://github.com/google/auto
+    implementation 'com.google.auto:auto-common:1.2.2'
+    implementation 'com.google.auto.value:auto-value-annotations:1.10.2'
+    annotationProcessor 'com.google.auto.value:auto-value:1.10.2'
+
+    // Dagger2: https://github.com/google/dagger
+    implementation 'com.google.dagger:dagger:2.46.1'
+    annotationProcessor "com.google.dagger:dagger-compiler:2.46.1"
 }

@@ -20,9 +20,7 @@ import com.wintmain.dialer.function.Supplier;
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableMap;
 
-/**
- * Supplies commands
- */
+/** Supplies commands */
 @AutoValue
 public abstract class CommandSupplier implements Supplier<ImmutableMap<String, Command>> {
 
@@ -37,9 +35,7 @@ public abstract class CommandSupplier implements Supplier<ImmutableMap<String, C
         return commands();
     }
 
-    /**
-     * builder for the supplier
-     */
+    /** builder for the supplier */
     @AutoValue.Builder
     public abstract static class Builder {
 

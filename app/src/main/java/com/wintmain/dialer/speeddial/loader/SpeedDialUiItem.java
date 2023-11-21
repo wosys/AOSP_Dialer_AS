@@ -24,9 +24,7 @@ import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Data;
 import android.text.TextUtils;
 import android.util.ArraySet;
-
 import androidx.annotation.Nullable;
-
 import com.wintmain.dialer.common.Assert;
 import com.wintmain.dialer.glidephotomanager.PhotoInfo;
 import com.wintmain.dialer.speeddial.database.SpeedDialEntry;
@@ -34,7 +32,6 @@ import com.wintmain.dialer.speeddial.database.SpeedDialEntry.Channel;
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -113,7 +110,7 @@ public abstract class SpeedDialUiItem {
             Resources resources, Cursor cursor, boolean isImsEnabled) {
         Trace.beginSection("fromCursor");
         Assert.checkArgument(cursor != null);
-        Assert.checkArgument(Objects.requireNonNull(cursor).getCount() != 0);
+        Assert.checkArgument(cursor.getCount() != 0);
         String lookupKey = cursor.getString(LOOKUP_KEY);
         SpeedDialUiItem.Builder builder =
                 SpeedDialUiItem.builder()
@@ -286,46 +283,32 @@ public abstract class SpeedDialUiItem {
     @Nullable
     public abstract Long speedDialEntryId();
 
-    /**
-     * @see SpeedDialEntry#pinnedPosition()
-     */
+    /** @see SpeedDialEntry#pinnedPosition() */
     public abstract Optional<Integer> pinnedPosition();
 
-    /**
-     * @see android.provider.ContactsContract.Contacts#DISPLAY_NAME
-     */
+    /** @see android.provider.ContactsContract.Contacts#DISPLAY_NAME */
     public abstract String name();
 
-    /**
-     * @see android.provider.ContactsContract.Contacts#_ID
-     */
+    /** @see android.provider.ContactsContract.Contacts#_ID */
     public abstract long contactId();
 
-    /**
-     * @see android.provider.ContactsContract.Contacts#LOOKUP_KEY
-     */
+    /** @see android.provider.ContactsContract.Contacts#LOOKUP_KEY */
     public abstract String lookupKey();
 
-    /**
-     * @see android.provider.ContactsContract.Contacts#STARRED
-     */
+    /** @see android.provider.ContactsContract.Contacts#STARRED */
     public abstract boolean isStarred();
 
-    /**
-     * @see Phone#PHOTO_ID
-     */
+    /** @see Phone#PHOTO_ID */
     public abstract long photoId();
 
-    /**
-     * @see Phone#PHOTO_URI
-     */
+    /** @see Phone#PHOTO_URI */
     public abstract String photoUri();
 
     /**
      * Returns a list of channels available. A Duo channel is included iff it is reachable. Since a
      * contact can have multiple phone numbers and each number can have multiple technologies,
      * enumerate each one here so that the user can choose the correct one. Each channel here
-     * represents a row in the {@link com.wintmain.dialer.speeddial.DisambigDialog}.
+     * represents a row in the {@link com.android.dialer.speeddial.DisambigDialog}.
      *
      * <p>These channels have a few very strictly enforced assumption that are used heavily throughout
      * the codebase. Those assumption are that:
@@ -337,12 +320,12 @@ public abstract class SpeedDialUiItem {
      *   <li>For each of the contact's phone numbers, there will be a voice channel, then the next
      *       channel will either be the same phone number but a video channel, or a new number.
      * </ol>
-     * <p>
+     *
      * For example: Say a contact has two phone numbers (A & B) and A is duo reachable. Then you can
      * assume the list of channels will be ordered as either {A_voice, A_duo, B_voice} or {B_voice,
      * A_voice, A_duo}.
      *
-     * @see com.wintmain.dialer.speeddial.database.SpeedDialEntry.Channel
+     * @see com.android.dialer.speeddial.database.SpeedDialEntry.Channel
      */
     public abstract ImmutableList<Channel> channels();
 
@@ -353,22 +336,17 @@ public abstract class SpeedDialUiItem {
      * it will remain as the default channel but disappear in the list returned by {@link
      * #channels()}.
      *
-     * @see com.wintmain.dialer.speeddial.database.SpeedDialEntry#defaultChannel()
+     * @see com.android.dialer.speeddial.database.SpeedDialEntry#defaultChannel()
      */
-    public abstract @Nullable
-    Channel defaultChannel();
+    public abstract @Nullable Channel defaultChannel();
 
     public abstract Builder toBuilder();
 
-    /**
-     * Builder class for speed dial contact.
-     */
+    /** Builder class for speed dial contact. */
     @AutoValue.Builder
     public abstract static class Builder {
 
-        /**
-         * Set to null if {@link #isStarred()} is false.
-         */
+        /** Set to null if {@link #isStarred()} is false. */
         public abstract Builder setSpeedDialEntryId(@Nullable Long id);
 
         public abstract Builder setPinnedPosition(Optional<Integer> pinnedPosition);
@@ -387,9 +365,7 @@ public abstract class SpeedDialUiItem {
 
         public abstract Builder setChannels(ImmutableList<Channel> channels);
 
-        /**
-         * Set to null if the user hasn't chosen a default or the channel no longer exists.
-         */
+        /** Set to null if the user hasn't chosen a default or the channel no longer exists. */
         public abstract Builder setDefaultChannel(@Nullable Channel defaultChannel);
 
         public abstract SpeedDialUiItem build();

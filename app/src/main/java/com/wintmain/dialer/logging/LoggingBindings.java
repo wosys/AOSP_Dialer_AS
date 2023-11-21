@@ -16,14 +16,10 @@ package com.wintmain.dialer.logging;
 
 import android.app.Activity;
 import android.widget.QuickContactBadge;
-
 import com.google.auto.value.AutoValue;
-
 import java.util.Collection;
 
-/**
- * Allows the container application to gather analytics.
- */
+/** Allows the container application to gather analytics. */
 public interface LoggingBindings {
 
     /**
@@ -44,8 +40,8 @@ public interface LoggingBindings {
     /**
      * Logs an impression for a general dialer event that's associated with a specific call.
      *
-     * @param dialerImpression    an integer representing what event occurred.
-     * @param callId              unique ID of the call.
+     * @param dialerImpression an integer representing what event occurred.
+     * @param callId unique ID of the call.
      * @param callStartTimeMillis the absolute time when the call started.
      */
     void logCallImpression(
@@ -63,14 +59,12 @@ public interface LoggingBindings {
      * Logs an event indicating that a screen was displayed.
      *
      * @param screenEvent an integer representing the displayed screen.
-     * @param activity    Parent activity of the displayed screen.
+     * @param activity Parent activity of the displayed screen.
      * @see com.wintmain.dialer.logging.ScreenEvent
      */
     void logScreenView(com.wintmain.dialer.logging.ScreenEvent.Type screenEvent, Activity activity);
 
-    /**
-     * Logs the composition of contact tiles in the speed dial tab.
-     */
+    /** Logs the composition of contact tiles in the speed dial tab. */
     void logSpeedDialContactComposition(
             int counter,
             int starredContactsCount,
@@ -80,62 +74,37 @@ public interface LoggingBindings {
             int contactsWithNameCount,
             int lightbringerReachableContactsCount);
 
-    /**
-     * Logs a hit event to the analytics server.
-     */
+    /** Logs a hit event to the analytics server. */
     void sendHitEventAnalytics(String category, String action, String label, long value);
 
-    /**
-     * Logs where a quick contact badge is clicked
-     */
+    /** Logs where a quick contact badge is clicked */
     void logQuickContactOnTouch(
             QuickContactBadge quickContact,
             InteractionEvent.Type interactionEvent,
             boolean shouldPerformClick);
 
-    /**
-     * Logs People Api lookup result with error
-     */
+    /** Logs People Api lookup result with error */
     void logPeopleApiLookupReportWithError(
             long latency, int httpResponseCode, PeopleApiLookupError.Type errorType);
 
-    /**
-     * Logs successful People Api lookup result
-     */
+    /** Logs successful People Api lookup result */
     void logSuccessfulPeopleApiLookupReport(long latency, int httpResponseCode);
 
-    /**
-     * Logs a call auto-blocked in call screening.
-     */
+    /** Logs a call auto-blocked in call screening. */
     void logAutoBlockedCall(String phoneNumber);
 
-    /**
-     * Logs annotated call log metrics.
-     */
+    /** Logs annotated call log metrics. */
     void logAnnotatedCallLogMetrics(int invalidNumbersInCallLog);
 
-    /**
-     * Logs annotated call log metrics.
-     */
+    /** Logs annotated call log metrics. */
     void logAnnotatedCallLogMetrics(int numberRowsThatDidPop, int numberRowsThatDidNotPop);
 
-    /**
-     * Logs contacts provider metrics.
-     */
+    /** Logs contacts provider metrics. */
     void logContactsProviderMetrics(Collection<ContactsProviderMatchInfo> matchInfos);
 
-    /**
-     * Input type for {@link #logContactsProviderMetrics(Collection)}.
-     */
+    /** Input type for {@link #logContactsProviderMetrics(Collection)}. */
     @AutoValue
     abstract class ContactsProviderMatchInfo {
-        public static Builder builder() {
-            return new AutoValue_LoggingBindings_ContactsProviderMatchInfo.Builder()
-                    .setMatchedContact(false)
-                    .setMatchedNumberLength(0)
-                    .setMatchedNumberHasPostdialDigits(false);
-        }
-
         public abstract boolean matchedContact();
 
         public abstract boolean inputNumberValid();
@@ -148,14 +117,19 @@ public interface LoggingBindings {
 
         public abstract boolean matchedNumberHasPostdialDigits();
 
-        /**
-         * Builder.
-         */
+        public static Builder builder() {
+            return new AutoValue_LoggingBindings_ContactsProviderMatchInfo.Builder()
+                    .setMatchedContact(false)
+                    .setMatchedNumberLength(0)
+                    .setMatchedNumberHasPostdialDigits(false);
+        }
+
+        /** Builder. */
         @AutoValue.Builder
         public abstract static class Builder {
             public abstract Builder setMatchedContact(boolean value);
 
-            public abstract void setInputNumberValid(boolean value);
+            public abstract Builder setInputNumberValid(boolean value);
 
             public abstract Builder setInputNumberLength(int value);
 

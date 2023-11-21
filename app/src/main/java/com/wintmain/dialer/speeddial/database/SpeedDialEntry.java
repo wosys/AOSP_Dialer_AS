@@ -17,25 +17,16 @@
 package com.wintmain.dialer.speeddial.database;
 
 import android.provider.ContactsContract.CommonDataKinds.Phone;
-
 import androidx.annotation.IntDef;
 import androidx.annotation.Nullable;
-
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Optional;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-/**
- * POJO representation of database rows returned by {@link SpeedDialEntryDao}.
- */
+/** POJO representation of database rows returned by {@link SpeedDialEntryDao}. */
 @AutoValue
 public abstract class SpeedDialEntry {
-
-    public static Builder builder() {
-        return new AutoValue_SpeedDialEntry.Builder().setPinnedPosition(Optional.absent());
-    }
 
     /**
      * Unique ID
@@ -45,19 +36,13 @@ public abstract class SpeedDialEntry {
     @Nullable
     public abstract Long id();
 
-    /**
-     * Position the contact is pinned to in the UI. Will be absent if it hasn't be set yet.
-     */
+    /** Position the contact is pinned to in the UI. Will be absent if it hasn't be set yet. */
     public abstract Optional<Integer> pinnedPosition();
 
-    /**
-     *
-     */
+    /** @see {@link Contacts#_ID} */
     public abstract long contactId();
 
-    /**
-     *
-     */
+    /** @see {@link Contacts#LOOKUP_KEY} */
     public abstract String lookupKey();
 
     /**
@@ -71,9 +56,11 @@ public abstract class SpeedDialEntry {
 
     public abstract Builder toBuilder();
 
-    /**
-     * Builder class for speed dial entry.
-     */
+    public static Builder builder() {
+        return new AutoValue_SpeedDialEntry.Builder().setPinnedPosition(Optional.absent());
+    }
+
+    /** Builder class for speed dial entry. */
     @AutoValue.Builder
     public abstract static class Builder {
 
@@ -90,9 +77,7 @@ public abstract class SpeedDialEntry {
         public abstract SpeedDialEntry build();
     }
 
-    /**
-     * POJO representation of a relevant phone number columns in {@link SpeedDialEntryDao}.
-     */
+    /** POJO representation of a relevant phone number columns in {@link SpeedDialEntryDao}. */
     @AutoValue
     public abstract static class Channel {
 
@@ -101,9 +86,10 @@ public abstract class SpeedDialEntry {
         public static final int IMS_VIDEO = 2;
         public static final int DUO = 3;
 
-        public static Builder builder() {
-            return new AutoValue_SpeedDialEntry_Channel.Builder();
-        }
+        /** Whether the Channel is for an audio or video call. */
+        @Retention(RetentionPolicy.SOURCE)
+        @IntDef({UNKNOWN, VOICE, IMS_VIDEO, DUO})
+        public @interface Technology {}
 
         public boolean isVideoTechnology() {
             return technology() == IMS_VIDEO || technology() == DUO;
@@ -116,32 +102,21 @@ public abstract class SpeedDialEntry {
          */
         public abstract String number();
 
-        /**
-         * @see Phone#TYPE
-         */
+        /** @see Phone#TYPE */
         public abstract int phoneType();
 
-        /**
-         * @see Phone#LABEL
-         */
+        /** @see Phone#LABEL */
         public abstract String label();
 
-        public abstract @Technology
-        int technology();
+        public abstract @Technology int technology();
 
         public abstract Builder toBuilder();
 
-        /**
-         * Whether the Channel is for an audio or video call.
-         */
-        @Retention(RetentionPolicy.SOURCE)
-        @IntDef({UNKNOWN, VOICE, IMS_VIDEO, DUO})
-        public @interface Technology {
+        public static Builder builder() {
+            return new AutoValue_SpeedDialEntry_Channel.Builder();
         }
 
-        /**
-         * Builder class for {@link Channel}.
-         */
+        /** Builder class for {@link Channel}. */
         @AutoValue.Builder
         public abstract static class Builder {
 

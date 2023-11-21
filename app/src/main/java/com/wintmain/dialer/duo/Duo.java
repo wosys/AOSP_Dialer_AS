@@ -20,51 +20,40 @@ import android.content.Context;
 import android.content.Intent;
 import android.telecom.Call;
 import android.telecom.PhoneAccountHandle;
-
 import androidx.annotation.DrawableRes;
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
-
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.util.concurrent.ListenableFuture;
-
 import java.util.List;
 
-/**
- * Interface for Duo video call integration.
- */
+/** Interface for Duo video call integration. */
 @SuppressWarnings("Guava")
 public interface Duo {
 
-    /**
-     * @return true if the Duo integration is enabled on this device.
-     */
+    /** @return true if the Duo integration is enabled on this device. */
     boolean isEnabled(@NonNull Context context);
 
-    /**
-     * @return true if Duo is installed on this device.
-     */
+    /** @return true if Duo is installed on this device. */
     boolean isInstalled(@NonNull Context context);
 
     /**
      * @return true if Duo is installed and the user has gone through the set-up flow confirming their
-     * phone number.
+     *     phone number.
      */
     boolean isActivated(@NonNull Context context);
 
-    /**
-     * @return true if the parameter number is reachable on Duo.
-     */
+    /** @return true if the parameter number is reachable on Duo. */
     @MainThread
     boolean isReachable(@NonNull Context context, @Nullable String number);
 
     /**
      * @return true if the number supports upgrading a voice call to a Duo video call. Returns {@code
-     * null} if result is unknown.
+     *     null} if result is unknown.
      */
     @MainThread
     Optional<Boolean> supportsUpgrade(
@@ -72,9 +61,7 @@ public interface Duo {
             @Nullable String number,
             @Nullable PhoneAccountHandle phoneAccountHandle);
 
-    /**
-     * Starts a task to update the reachability of the parameter numbers asynchronously.
-     */
+    /** Starts a task to update the reachability of the parameter numbers asynchronously. */
     @MainThread
     ListenableFuture<ImmutableMap<String, ReachabilityData>> updateReachability(
             @NonNull Context context, @NonNull List<String> numbers);
@@ -97,88 +84,52 @@ public interface Duo {
 
     /**
      * @return an Intent to start a Duo video call with the parameter number. Must be started using
-     * startActivityForResult.
+     *     startActivityForResult.
      */
     @MainThread
     Optional<Intent> getCallIntent(@NonNull String number);
 
-    /**
-     * @return an Intent to setup duo. Must be started using startActivityForResult.
-     */
+    /** @return an Intent to setup duo. Must be started using startActivityForResult. */
     Optional<Intent> getActivateIntent();
 
     /**
      * @return an Intent to invite the parameter number to use duo. Must be started using
-     * startActivityForResult.
+     *     startActivityForResult.
      */
     Optional<Intent> getInviteIntent(String number);
 
     Optional<Intent> getInstallDuoIntent();
 
-    /**
-     * Requests upgrading the parameter ongoing call to a Duo video call.
-     */
+    /** Requests upgrading the parameter ongoing call to a Duo video call. */
     @MainThread
     void requestUpgrade(@NonNull Context context, Call call);
 
-    /**
-     * Registers a listener for reachability data changes.
-     */
+    /** Registers a listener for reachability data changes. */
     @MainThread
     void registerListener(@NonNull DuoListener listener);
 
-    /**
-     * Unregisters a listener for reachability data changes.
-     */
+    /** Unregisters a listener for reachability data changes. */
     @MainThread
     void unregisterListener(@NonNull DuoListener listener);
 
-    /**
-     * The string resource to use for outgoing Duo call entries in call details.
-     */
+    /** The string resource to use for outgoing Duo call entries in call details. */
     @StringRes
     @MainThread
     int getOutgoingCallTypeText();
 
-    /**
-     * The string resource to use for incoming Duo call entries in call details.
-     */
+    /** The string resource to use for incoming Duo call entries in call details. */
     @StringRes
     @MainThread
     int getIncomingCallTypeText();
 
-    /**
-     * The ID of the drawable resource of a Duo logo.
-     */
+    /** The ID of the drawable resource of a Duo logo. */
     @DrawableRes
     @MainThread
     int getLogo();
 
-    /**
-     * Reachability information for a number.
-     */
+    /** Reachability information for a number. */
     @AutoValue
     abstract class ReachabilityData {
-        public static ReachabilityData create(
-                Status status,
-                String number,
-                boolean audioCallable,
-                boolean videoCallable,
-                boolean supportsUpgrade) {
-            return new AutoValue_Duo_ReachabilityData(
-                    status, number, audioCallable, videoCallable, supportsUpgrade);
-        }
-
-        public abstract Status status();
-
-        public abstract String number();
-
-        public abstract boolean audioCallable();
-
-        public abstract boolean videoCallable();
-
-        public abstract boolean supportsUpgrade();
-
         public enum Status {
             UNKNOWN,
 
@@ -188,9 +139,7 @@ public interface Duo {
              */
             CALL,
 
-            /**
-             * The number is not callable. Apps can send an invite to the contact via INVITE intent.
-             */
+            /** The number is not callable. Apps can send an invite to the contact via INVITE intent. */
             INVITE,
 
             /**
@@ -204,6 +153,26 @@ public interface Duo {
              * calling.
              */
             SETUP_AND_CALL
+        }
+
+        public abstract Status status();
+
+        public abstract String number();
+
+        public abstract boolean audioCallable();
+
+        public abstract boolean videoCallable();
+
+        public abstract boolean supportsUpgrade();
+
+        public static ReachabilityData create(
+                Status status,
+                String number,
+                boolean audioCallable,
+                boolean videoCallable,
+                boolean supportsUpgrade) {
+            return new AutoValue_Duo_ReachabilityData(
+                    status, number, audioCallable, videoCallable, supportsUpgrade);
         }
     }
 }
