@@ -30,23 +30,17 @@ import android.provider.ContactsContract.CommonDataKinds.StructuredName;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Xml;
-
 import androidx.annotation.VisibleForTesting;
-
 import com.android.contacts.common.model.dataitem.DataKind;
-import com.wintmain.dialer.R;
 import com.wintmain.dialer.common.LogUtil;
-
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-
+import com.wintmain.dialer.R;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 
-/**
- * A general contacts account type descriptor.
- */
+/** A general contacts account type descriptor. */
 public class ExternalAccountType extends BaseAccountType {
 
     private static final String TAG = "ExternalAccountType";
@@ -61,7 +55,7 @@ public class ExternalAccountType extends BaseAccountType {
      * update the corresponding list in ContactsProvider/PhotoPriorityResolver
      */
     private static final String[] METADATA_CONTACTS_NAMES =
-            new String[]{
+            new String[] {
                     "android.provider.ALTERNATE_CONTACTS_STRUCTURE", "android.provider.CONTACTS_STRUCTURE"
             };
 
@@ -111,7 +105,7 @@ public class ExternalAccountType extends BaseAccountType {
      * Constructor used for testing to initialize with any arbitrary XML.
      *
      * @param injectedMetadata If non-null, it'll be used to initialize the type. Only set by tests.
-     *                         If null, the metadata is loaded from the specified package.
+     *     If null, the metadata is loaded from the specified package.
      */
     ExternalAccountType(
             Context context,
@@ -151,7 +145,7 @@ public class ExternalAccountType extends BaseAccountType {
         } catch (DefinitionException e) {
             final StringBuilder error = new StringBuilder();
             error.append("Problem reading XML");
-            if (needLineNumberInErrorLog) {
+            if (needLineNumberInErrorLog && (parser != null)) {
                 error.append(" in line ");
                 error.append(parser.getLineNumber());
             }
@@ -166,7 +160,7 @@ public class ExternalAccountType extends BaseAccountType {
             }
         }
 
-        mExtensionPackageNames = new ArrayList<>();
+        mExtensionPackageNames = new ArrayList<String>();
         mInviteActionLabelResId =
                 resolveExternalResId(
                         context,
@@ -231,9 +225,7 @@ public class ExternalAccountType extends BaseAccountType {
         return null;
     }
 
-    /**
-     * Returns {@code TRUE} if the package contains CONTACTS_STRUCTURE metadata.
-     */
+    /** Returns {@code TRUE} if the package contains CONTACTS_STRUCTURE metadata. */
     public static boolean hasContactsXml(Context context, String resPackageName) {
         return loadContactsXml(context, resPackageName) != null;
     }
@@ -244,9 +236,9 @@ public class ExternalAccountType extends BaseAccountType {
      *
      * <p>If the argument is in the invalid format or isn't a resource name, it returns -1.
      *
-     * @param context          context
-     * @param resourceName     Resource name in the "@xxx/yyy" format, e.g. "@string/invite_lavbel"
-     * @param packageName      name of the package containing the resource.
+     * @param context context
+     * @param resourceName Resource name in the "@xxx/yyy" format, e.g. "@string/invite_lavbel"
+     * @param packageName name of the package containing the resource.
      * @param xmlAttributeName attribute name which the resource came from. Used for logging.
      */
     @VisibleForTesting
@@ -296,9 +288,7 @@ public class ExternalAccountType extends BaseAccountType {
         return mHasEditSchema;
     }
 
-    /**
-     * Whether this account type has the android.provider.CONTACTS_STRUCTURE metadata xml.
-     */
+    /** Whether this account type has the android.provider.CONTACTS_STRUCTURE metadata xml. */
     public boolean hasContactsMetadata() {
         return mHasContactsMetadata;
     }

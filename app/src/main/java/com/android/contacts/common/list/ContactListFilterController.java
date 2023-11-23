@@ -17,18 +17,13 @@ package com.android.contacts.common.list;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-
-import androidx.preference.PreferenceManager;
-
+import android.preference.PreferenceManager;
 import com.android.contacts.common.model.AccountTypeManager;
 import com.android.contacts.common.model.account.AccountWithDataSet;
-
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Manages {@link ContactListFilter}. All methods must be called from UI thread.
- */
+/** Manages {@link ContactListFilter}. All methods must be called from UI thread. */
 public abstract class ContactListFilterController {
 
     // singleton to cache the filter controller
@@ -46,16 +41,14 @@ public abstract class ContactListFilterController {
 
     public abstract void removeListener(ContactListFilterListener listener);
 
-    /**
-     * Return the currently-active filter.
-     */
+    /** Return the currently-active filter. */
     public abstract ContactListFilter getFilter();
 
     /**
-     * @param filter     the filter
+     * @param filter the filter
      * @param persistent True when the given filter should be saved soon. False when the filter should
-     *                   not be saved. The latter case may happen when some Intent requires a certain type of UI
-     *                   (e.g. single contact) temporarily.
+     *     not be saved. The latter case may happen when some Intent requires a certain type of UI
+     *     (e.g. single contact) temporarily.
      */
     public abstract void setContactListFilter(ContactListFilter filter, boolean persistent);
 
@@ -84,7 +77,7 @@ class ContactListFilterControllerImpl extends ContactListFilterController {
 
     private final Context mAppContext;
     private final List<ContactListFilterListener> mListeners =
-            new ArrayList<>();
+            new ArrayList<ContactListFilterListener>();
     private ContactListFilter mFilter;
 
     public ContactListFilterControllerImpl(Context context) {
@@ -167,9 +160,7 @@ class ContactListFilterControllerImpl extends ContactListFilterController {
         }
     }
 
-    /**
-     * @return true if the Account for the current filter exists.
-     */
+    /** @return true if the Account for the current filter exists. */
     private boolean filterAccountExists() {
         final AccountTypeManager accountTypeManager = AccountTypeManager.getInstance(mAppContext);
         final AccountWithDataSet filterAccount =

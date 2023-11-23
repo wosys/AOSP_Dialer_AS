@@ -23,7 +23,6 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
-
 import com.wintmain.dialer.R;
 
 public class ViewPagerTabStrip extends LinearLayout {

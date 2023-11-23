@@ -24,11 +24,7 @@ import android.os.Parcelable;
 import android.provider.ContactsContract.RawContacts;
 import android.text.TextUtils;
 
-import androidx.annotation.NonNull;
-
-/**
- * Contact list filter parameters.
- */
+/** Contact list filter parameters. */
 public final class ContactListFilter implements Comparable<ContactListFilter>, Parcelable {
 
     public static final int FILTER_TYPE_DEFAULT = -1;
@@ -140,7 +136,7 @@ public final class ContactListFilter implements Comparable<ContactListFilter>, P
         return new ContactListFilter(filterType, accountType, accountName, dataSet, null);
     }
 
-    public static String filterTypeToString(int filterType) {
+    public static final String filterTypeToString(int filterType) {
         switch (filterType) {
             case FILTER_TYPE_DEFAULT:
                 return "FILTER_TYPE_DEFAULT";
@@ -161,14 +157,11 @@ public final class ContactListFilter implements Comparable<ContactListFilter>, P
         }
     }
 
-    /**
-     * Returns true if this filter is based on data and may become invalid over time.
-     */
+    /** Returns true if this filter is based on data and may become invalid over time. */
     public boolean isValidationRequired() {
         return filterType == FILTER_TYPE_ACCOUNT;
     }
 
-    @NonNull
     @Override
     public String toString() {
         switch (filterType) {
@@ -253,9 +246,7 @@ public final class ContactListFilter implements Comparable<ContactListFilter>, P
         return 0;
     }
 
-    /**
-     * Returns a string that can be used as a stable persistent identifier for this filter.
-     */
+    /** Returns a string that can be used as a stable persistent identifier for this filter. */
     public String getId() {
         if (mId == null) {
             StringBuilder sb = new StringBuilder();
@@ -293,11 +284,14 @@ public final class ContactListFilter implements Comparable<ContactListFilter>, P
 
     public String toDebugString() {
         final StringBuilder builder = new StringBuilder();
-        builder.append("[filter type: ").append(filterType).append(" (").append(filterTypeToString(filterType)).append(")");
+        builder.append("[filter type: " + filterType + " (" + filterTypeToString(filterType) + ")");
         if (filterType == FILTER_TYPE_ACCOUNT) {
-            builder.append(", accountType: ").append(accountType).append(", accountName: ").append(accountName).append(", dataSet: ").append(dataSet);
+            builder
+                    .append(", accountType: " + accountType)
+                    .append(", accountName: " + accountName)
+                    .append(", dataSet: " + dataSet);
         }
-        builder.append(", icon: ").append(icon).append("]");
+        builder.append(", icon: " + icon + "]");
         return builder.toString();
     }
 }

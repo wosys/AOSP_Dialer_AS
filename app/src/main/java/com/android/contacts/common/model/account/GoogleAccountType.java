@@ -18,16 +18,16 @@ package com.android.contacts.common.model.account;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.provider.ContactsContract.CommonDataKinds.Email;
 import android.provider.ContactsContract.CommonDataKinds.Event;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.CommonDataKinds.Relation;
-
 import com.android.contacts.common.model.dataitem.DataKind;
 import com.android.contacts.common.util.CommonDateUtils;
-import com.wintmain.dialer.R;
 import com.wintmain.dialer.common.LogUtil;
-
+import com.wintmain.dialer.R;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -64,8 +64,8 @@ public class GoogleAccountType extends BaseAccountType {
             addDataKindPhoto(context);
             addDataKindNote(context);
             addDataKindWebsite(context);
-            addDataKindSipAddress();
-            addDataKindGroupMembership();
+            addDataKindSipAddress(context);
+            addDataKindGroupMembership(context);
             addDataKindRelation(context);
             addDataKindEvent(context);
 
@@ -121,7 +121,7 @@ public class GoogleAccountType extends BaseAccountType {
         return kind;
     }
 
-    private void addDataKindRelation(Context context) throws DefinitionException {
+    private DataKind addDataKindRelation(Context context) throws DefinitionException {
         DataKind kind =
                 addKind(
                         new DataKind(
@@ -157,9 +157,10 @@ public class GoogleAccountType extends BaseAccountType {
         kind.fieldList = new ArrayList<>();
         kind.fieldList.add(new EditField(Relation.DATA, R.string.relationLabelsGroup, FLAGS_RELATION));
 
+        return kind;
     }
 
-    private void addDataKindEvent(Context context) throws DefinitionException {
+    private DataKind addDataKindEvent(Context context) throws DefinitionException {
         DataKind kind =
                 addKind(
                         new DataKind(Event.CONTENT_ITEM_TYPE, R.string.eventLabelsGroup, Weight.EVENT, true));
@@ -182,6 +183,7 @@ public class GoogleAccountType extends BaseAccountType {
         kind.fieldList = new ArrayList<>();
         kind.fieldList.add(new EditField(Event.DATA, R.string.eventLabelsGroup, FLAGS_EVENT));
 
+        return kind;
     }
 
     @Override
@@ -196,11 +198,28 @@ public class GoogleAccountType extends BaseAccountType {
 
     @Override
     public String getViewContactNotifyServiceClassName() {
-        return "com.google.android.syncadapters.contacts." + "SyncHighResPhotoIntentService";
+        return PLUS_EXTENSION_PACKAGE_NAME + ".people.sync.focus.SyncHighResPhotoIntentOperation";
     }
 
     @Override
     public String getViewContactNotifyServicePackageName() {
-        return "com.google.android.syncadapters.contacts";
+        return PLUS_EXTENSION_PACKAGE_NAME;
+    }
+
+    /**
+     * Sends a broadcast to the sync adapter to trigger a high res photo sync for the contact which
+     * was viewed
+     * @param context context to send broadcast in
+     * @param rawContactUri Uri of the raw contact viewed
+     */
+    public void handleRawContactViewed(Context context, Uri rawContactUri) {
+        final Intent intent = new Intent();
+        intent.setData(rawContactUri);
+        // New broadcast for syncing high res photo.
+        intent.setPackage(GoogleAccountType.PLUS_EXTENSION_PACKAGE_NAME);
+        intent.setAction(
+                "com.google.android.gms.people.sync.focus.SYNC_HIGH_RES_PHOTO");
+
+        context.sendBroadcast(intent);
     }
 }

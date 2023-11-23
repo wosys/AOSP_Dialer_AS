@@ -20,10 +20,8 @@ import android.content.AsyncQueryHandler;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
-
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
-
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -38,17 +36,6 @@ public abstract class NoNullCursorAsyncQueryHandler extends AsyncQueryHandler {
 
     public NoNullCursorAsyncQueryHandler(ContentResolver cr) {
         super(cr);
-    }
-
-    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
-    public static void setPendingQueryCountChangedListener(
-            @Nullable PendingQueryCountChangedListener listener) {
-        pendingQueryCountChangedListener = listener;
-    }
-
-    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
-    public static int getPendingQueryCount() {
-        return pendingQueryCount.get();
     }
 
     @Override
@@ -88,16 +75,23 @@ public abstract class NoNullCursorAsyncQueryHandler extends AsyncQueryHandler {
 
     protected abstract void onNotNullableQueryComplete(int token, Object cookie, Cursor cursor);
 
-    /**
-     * Callback to listen for changes in the number of queries that have not completed.
-     */
+    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
+    public static void setPendingQueryCountChangedListener(
+            @Nullable PendingQueryCountChangedListener listener) {
+        pendingQueryCountChangedListener = listener;
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
+    public static int getPendingQueryCount() {
+        return pendingQueryCount.get();
+    }
+
+    /** Callback to listen for changes in the number of queries that have not completed. */
     public interface PendingQueryCountChangedListener {
         void onPendingQueryCountChanged();
     }
 
-    /**
-     * Class to add projection to an existing cookie.
-     */
+    /** Class to add projection to an existing cookie. */
     private static class CookieWithProjection {
 
         public final Object originalCookie;

@@ -17,17 +17,12 @@ package com.android.contacts.common.list;
 
 import android.app.ActionBar;
 import android.net.Uri;
-
 import com.wintmain.dialer.callintent.CallSpecificAppData;
 
-/**
- * Action callbacks that can be sent by a phone number picker.
- */
+/** Action callbacks that can be sent by a phone number picker. */
 public interface OnPhoneNumberPickerActionListener {
 
-    /**
-     * Returns the selected phone number uri to the requester.
-     */
+    /** Returns the selected phone number uri to the requester. */
     void onPickDataUri(Uri dataUri, boolean isVideoCall, CallSpecificAppData callSpecificAppData);
 
     /**
@@ -37,8 +32,6 @@ public interface OnPhoneNumberPickerActionListener {
     void onPickPhoneNumber(
             String phoneNumber, boolean isVideoCall, CallSpecificAppData callSpecificAppData);
 
-    /**
-     * Called when home menu in {@link ActionBar} is clicked by the user.
-     */
+    /** Called when home menu in {@link ActionBar} is clicked by the user. */
     void onHomeInActionBarSelected();
 }

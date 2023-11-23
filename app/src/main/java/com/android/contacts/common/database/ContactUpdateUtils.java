@@ -22,9 +22,7 @@ import android.content.Context;
 import android.provider.ContactsContract;
 import android.util.Log;
 
-/**
- * Static methods to update contact information.
- */
+/** Static methods to update contact information. */
 public class ContactUpdateUtils {
 
     private static final String TAG = ContactUpdateUtils.class.getSimpleName();

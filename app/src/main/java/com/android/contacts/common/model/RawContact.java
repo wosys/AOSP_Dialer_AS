@@ -25,13 +25,9 @@ import android.os.Parcelable;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Data;
 import android.provider.ContactsContract.RawContacts;
-
-import androidx.annotation.NonNull;
-
 import com.android.contacts.common.model.account.AccountType;
 import com.android.contacts.common.model.account.AccountWithDataSet;
 import com.android.contacts.common.model.dataitem.DataItem;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -47,9 +43,7 @@ import java.util.Objects;
  */
 public final class RawContact implements Parcelable {
 
-    /**
-     * Create for building the parcelable.
-     */
+    /** Create for building the parcelable. */
     public static final Parcelable.Creator<RawContact> CREATOR =
             new Parcelable.Creator<RawContact>() {
 
@@ -68,16 +62,14 @@ public final class RawContact implements Parcelable {
     private final ArrayList<NamedDataItem> mDataItems;
     private AccountTypeManager mAccountTypeManager;
 
-    /**
-     * A RawContact object can be created with or without a context.
-     */
+    /** A RawContact object can be created with or without a context. */
     public RawContact() {
         this(new ContentValues());
     }
 
     public RawContact(ContentValues values) {
         mValues = values;
-        mDataItems = new ArrayList<>();
+        mDataItems = new ArrayList<NamedDataItem>();
     }
 
     /**
@@ -124,30 +116,22 @@ public final class RawContact implements Parcelable {
         return mValues;
     }
 
-    /**
-     * Returns the id of the raw contact.
-     */
+    /** Returns the id of the raw contact. */
     public Long getId() {
         return getValues().getAsLong(RawContacts._ID);
     }
 
-    /**
-     * Returns the account name of the raw contact.
-     */
+    /** Returns the account name of the raw contact. */
     public String getAccountName() {
         return getValues().getAsString(RawContacts.ACCOUNT_NAME);
     }
 
-    /**
-     * Returns the account type of the raw contact.
-     */
+    /** Returns the account type of the raw contact. */
     public String getAccountTypeString() {
         return getValues().getAsString(RawContacts.ACCOUNT_TYPE);
     }
 
-    /**
-     * Returns the data set of the raw contact.
-     */
+    /** Returns the data set of the raw contact. */
     public String getDataSet() {
         return getValues().getAsString(RawContacts.DATA_SET);
     }
@@ -236,9 +220,7 @@ public final class RawContact implements Parcelable {
         setAccount(null, null, null);
     }
 
-    /**
-     * Creates and inserts a DataItem object that wraps the content values, and returns it.
-     */
+    /** Creates and inserts a DataItem object that wraps the content values, and returns it. */
     public void addDataItemValues(ContentValues values) {
         addNamedDataItemValues(Data.CONTENT_URI, values);
     }
@@ -269,7 +251,6 @@ public final class RawContact implements Parcelable {
         return list;
     }
 
-    @NonNull
     public String toString() {
         final StringBuilder sb = new StringBuilder();
         sb.append("RawContact: ").append(mValues);

@@ -14,14 +14,21 @@
 
 package com.android.contacts.common.extensions;
 
-import androidx.annotation.NonNull;
+import android.content.Context;
+import android.net.Uri;
+import androidx.annotation.Nullable;
 
-/**
- * This interface should be implemented by the Application subclass. It allows the contacts module
- * to get references to the PhoneDirectoryExtender.
- */
-public interface PhoneDirectoryExtenderFactory {
+/** No-op implementation for phone directory extender. */
+class PhoneDirectoryExtenderStub implements PhoneDirectoryExtender {
 
-    @NonNull
-    PhoneDirectoryExtender newPhoneDirectoryExtender();
+    @Override
+    public boolean isEnabled(Context context) {
+        return false;
+    }
+
+    @Nullable
+    @Override
+    public Uri getContentUri() {
+        return null;
+    }
 }

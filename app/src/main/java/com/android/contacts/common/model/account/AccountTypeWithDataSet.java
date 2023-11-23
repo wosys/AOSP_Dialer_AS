@@ -23,31 +23,22 @@ import android.provider.BaseColumns;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.RawContacts;
 import android.text.TextUtils;
-
-import androidx.annotation.NonNull;
-
 import java.util.Objects;
 
-/**
- * Encapsulates an "account type" string and a "data set" string.
- */
+/** Encapsulates an "account type" string and a "data set" string. */
 public class AccountTypeWithDataSet {
 
-    private static final String[] ID_PROJECTION = new String[]{BaseColumns._ID};
+    private static final String[] ID_PROJECTION = new String[] {BaseColumns._ID};
     private static final Uri RAW_CONTACTS_URI_LIMIT_1 =
             RawContacts.CONTENT_URI
                     .buildUpon()
                     .appendQueryParameter(ContactsContract.LIMIT_PARAM_KEY, "1")
                     .build();
 
-    /**
-     * account type. Can be null for fallback type.
-     */
+    /** account type. Can be null for fallback type. */
     public final String accountType;
 
-    /**
-     * dataSet may be null, but never be "".
-     */
+    /** dataSet may be null, but never be "". */
     public final String dataSet;
 
     private AccountTypeWithDataSet(String accountType, String dataSet) {
@@ -69,10 +60,10 @@ public class AccountTypeWithDataSet {
         final String[] args;
         if (TextUtils.isEmpty(dataSet)) {
             selection = BASE_SELECTION + " AND " + RawContacts.DATA_SET + " IS NULL";
-            args = new String[]{accountType};
+            args = new String[] {accountType};
         } else {
             selection = BASE_SELECTION + " AND " + RawContacts.DATA_SET + " = ?";
-            args = new String[]{accountType, dataSet};
+            args = new String[] {accountType, dataSet};
         }
 
         final Cursor c =
@@ -105,8 +96,6 @@ public class AccountTypeWithDataSet {
                 ^ (dataSet == null ? 0 : dataSet.hashCode());
     }
 
-
-    @NonNull
     @Override
     public String toString() {
         return "[" + accountType + "/" + dataSet + "]";

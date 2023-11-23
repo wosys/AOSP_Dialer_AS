@@ -19,12 +19,9 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.telecom.PhoneAccount;
-
 import androidx.annotation.Nullable;
 
-/**
- * Compatiblity class for {@link android.telecom.PhoneAccount}
- */
+/** Compatiblity class for {@link android.telecom.PhoneAccount} */
 public class PhoneAccountCompat {
 
     /**
@@ -32,7 +29,7 @@ public class PhoneAccountCompat {
      * interface.
      *
      * @param phoneAccount the PhoneAccount from which to build the icon.
-     * @param context      A {@code Context} to use for loading Drawables.
+     * @param context A {@code Context} to use for loading Drawables.
      * @return An icon for this PhoneAccount, or null
      */
     @Nullable

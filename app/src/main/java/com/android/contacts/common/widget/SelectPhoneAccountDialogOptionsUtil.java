@@ -17,18 +17,14 @@
 package com.android.contacts.common.widget;
 
 import android.telecom.PhoneAccountHandle;
-
 import com.wintmain.dialer.common.Assert;
 import com.wintmain.dialer.telecom.TelecomUtil;
 
 import java.util.Collection;
 
-/**
- * Provides common operation on a {@link SelectPhoneAccountDialogOptions}
- */
+/** Provides common operation on a {@link SelectPhoneAccountDialogOptions} */
 public final class SelectPhoneAccountDialogOptionsUtil {
-    private SelectPhoneAccountDialogOptionsUtil() {
-    }
+  private SelectPhoneAccountDialogOptionsUtil() {}
 
     public static PhoneAccountHandle getPhoneAccountHandle(
             SelectPhoneAccountDialogOptions.Entry entry) {
@@ -46,15 +42,15 @@ public final class SelectPhoneAccountDialogOptionsUtil {
         return entryBuilder;
     }
 
-    public static SelectPhoneAccountDialogOptions.Builder builderWithAccounts(
-            Collection<PhoneAccountHandle> phoneAccountHandles) {
-        SelectPhoneAccountDialogOptions.Builder optionsBuilder =
-                SelectPhoneAccountDialogOptions.newBuilder();
-        for (PhoneAccountHandle phoneAccountHandle : phoneAccountHandles) {
-            optionsBuilder.addEntries(
-                    SelectPhoneAccountDialogOptionsUtil.setPhoneAccountHandle(
-                            SelectPhoneAccountDialogOptions.Entry.newBuilder(), phoneAccountHandle));
-        }
-        return optionsBuilder;
+  public static SelectPhoneAccountDialogOptions.Builder builderWithAccounts(
+      Collection<PhoneAccountHandle> phoneAccountHandles) {
+    SelectPhoneAccountDialogOptions.Builder optionsBuilder =
+        SelectPhoneAccountDialogOptions.newBuilder();
+    for (PhoneAccountHandle phoneAccountHandle : phoneAccountHandles) {
+      optionsBuilder.addEntries(
+          SelectPhoneAccountDialogOptionsUtil.setPhoneAccountHandle(
+              SelectPhoneAccountDialogOptions.Entry.newBuilder(), phoneAccountHandle));
     }
+    return optionsBuilder;
+  }
 }

@@ -20,7 +20,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.LinearLayout;
-
 import com.wintmain.dialer.util.TouchPointManager;
 
 /**
@@ -30,15 +29,15 @@ import com.wintmain.dialer.util.TouchPointManager;
  */
 public class ActivityTouchLinearLayout extends LinearLayout {
 
-    public ActivityTouchLinearLayout(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
+  public ActivityTouchLinearLayout(Context context, AttributeSet attrs) {
+    super(context, attrs);
+  }
 
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-            TouchPointManager.getInstance().setPoint((int) ev.getRawX(), (int) ev.getRawY());
-        }
-        return false;
+  @Override
+  public boolean onInterceptTouchEvent(MotionEvent ev) {
+    if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+      TouchPointManager.getInstance().setPoint((int) ev.getRawX(), (int) ev.getRawY());
     }
+    return false;
+  }
 }

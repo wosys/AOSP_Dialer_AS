@@ -22,14 +22,10 @@ import android.provider.ContactsContract.CommonDataKinds.Photo;
 import android.provider.ContactsContract.Data;
 import android.provider.ContactsContract.Directory;
 import android.provider.ContactsContract.DisplayNameSources;
-
-import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
-
 import com.android.contacts.common.GroupMetaData;
 import com.android.contacts.common.model.account.AccountType;
 import com.google.common.collect.ImmutableList;
-
 import java.util.ArrayList;
 
 /**
@@ -81,9 +77,7 @@ public class Contact {
      */
     private byte[] mThumbnailPhotoBinaryData;
 
-    /**
-     * Constructor for special results, namely "no contact found" and "error".
-     */
+    /** Constructor for special results, namely "no contact found" and "error". */
     private Contact(Uri requestedUri, Contact.Status status, Exception exception) {
         if (status == Status.ERROR && exception == null) {
             throw new IllegalArgumentException("ERROR result must have exception");
@@ -112,9 +106,7 @@ public class Contact {
         mIsUserProfile = false;
     }
 
-    /**
-     * Constructor to call when contact was found
-     */
+    /** Constructor to call when contact was found */
     public Contact(
             Uri requestedUri,
             Uri uri,
@@ -202,9 +194,7 @@ public class Contact {
         return new Contact(requestedUri, Status.NOT_FOUND, null);
     }
 
-    /**
-     * @param exportSupport See {@link Directory#EXPORT_SUPPORT}.
-     */
+    /** @param exportSupport See {@link Directory#EXPORT_SUPPORT}. */
     public void setDirectoryMetaData(
             String displayName,
             String directoryType,
@@ -241,9 +231,7 @@ public class Contact {
         return mUri;
     }
 
-    /**
-     * Returns the contact ID.
-     */
+    /** Returns the contact ID. */
     @VisibleForTesting
     public long getId() {
         return mId;
@@ -251,7 +239,7 @@ public class Contact {
 
     /**
      * @return true when an exception happened during loading, in which case {@link #getException}
-     * returns the actual exception object.
+     *     returns the actual exception object.
      */
     public boolean isError() {
         return mStatus == Status.ERROR;
@@ -261,9 +249,7 @@ public class Contact {
         return mException;
     }
 
-    /**
-     * @return true if the specified contact is successfully loaded.
-     */
+    /** @return true if the specified contact is successfully loaded. */
     public boolean isLoaded() {
         return mStatus == Status.LOADED;
     }
@@ -374,7 +360,6 @@ public class Contact {
         return mIsUserProfile;
     }
 
-    @NonNull
     @Override
     public String toString() {
         return "{requested="
@@ -389,17 +374,11 @@ public class Contact {
     }
 
     private enum Status {
-        /**
-         * Contact is successfully loaded
-         */
+        /** Contact is successfully loaded */
         LOADED,
-        /**
-         * There was an error loading the contact
-         */
+        /** There was an error loading the contact */
         ERROR,
-        /**
-         * Contact is not found
-         */
+        /** Contact is not found */
         NOT_FOUND,
     }
 }

@@ -27,7 +27,7 @@ import android.database.CursorIndexOutOfBoundsException;
  */
 public final class EmptyCursor extends AbstractCursor {
 
-    private final String[] mColumns;
+    private String[] mColumns;
 
     public EmptyCursor(String[] columns) {
         this.mColumns = columns;

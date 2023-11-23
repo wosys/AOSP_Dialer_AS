@@ -29,12 +29,10 @@ import android.provider.ContactsContract.CommonDataKinds.Photo;
 import android.provider.ContactsContract.CommonDataKinds.StructuredName;
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal;
 import android.provider.ContactsContract.CommonDataKinds.Website;
-
 import com.android.contacts.common.model.dataitem.DataKind;
 import com.android.contacts.common.util.CommonDateUtils;
-import com.wintmain.dialer.R;
 import com.wintmain.dialer.common.LogUtil;
-
+import com.wintmain.dialer.R;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -65,7 +63,7 @@ public class ExchangeAccountType extends BaseAccountType {
             addDataKindNote(context);
             addDataKindEvent(context);
             addDataKindWebsite(context);
-            addDataKindGroupMembership();
+            addDataKindGroupMembership(context);
 
             mIsInitialized = true;
         } catch (DefinitionException e) {
@@ -80,7 +78,7 @@ public class ExchangeAccountType extends BaseAccountType {
     }
 
     @Override
-    protected void addDataKindStructuredName(Context context) throws DefinitionException {
+    protected DataKind addDataKindStructuredName(Context context) throws DefinitionException {
         DataKind kind =
                 addKind(
                         new DataKind(
@@ -110,10 +108,11 @@ public class ExchangeAccountType extends BaseAccountType {
                 new EditField(
                         StructuredName.PHONETIC_GIVEN_NAME, R.string.name_phonetic_given, FLAGS_PHONETIC));
 
+        return kind;
     }
 
     @Override
-    protected void addDataKindDisplayName(Context context) throws DefinitionException {
+    protected DataKind addDataKindDisplayName(Context context) throws DefinitionException {
         DataKind kind =
                 addKind(
                         new DataKind(
@@ -151,10 +150,11 @@ public class ExchangeAccountType extends BaseAccountType {
                 new EditField(StructuredName.SUFFIX, R.string.name_suffix, FLAGS_PERSON_NAME)
                         .setOptional(true));
 
+        return kind;
     }
 
     @Override
-    protected void addDataKindPhoneticName(Context context) throws DefinitionException {
+    protected DataKind addDataKindPhoneticName(Context context) throws DefinitionException {
         DataKind kind =
                 addKind(
                         new DataKind(
@@ -175,6 +175,7 @@ public class ExchangeAccountType extends BaseAccountType {
                 new EditField(
                         StructuredName.PHONETIC_GIVEN_NAME, R.string.name_phonetic_given, FLAGS_PHONETIC));
 
+        return kind;
     }
 
     @Override
@@ -319,7 +320,7 @@ public class ExchangeAccountType extends BaseAccountType {
         return kind;
     }
 
-    protected void addDataKindEvent(Context context) throws DefinitionException {
+    protected DataKind addDataKindEvent(Context context) throws DefinitionException {
         DataKind kind =
                 addKind(
                         new DataKind(Event.CONTENT_ITEM_TYPE, R.string.eventLabelsGroup, Weight.EVENT, true));
@@ -337,6 +338,7 @@ public class ExchangeAccountType extends BaseAccountType {
         kind.fieldList = new ArrayList<>();
         kind.fieldList.add(new EditField(Event.DATA, R.string.eventLabelsGroup, FLAGS_EVENT));
 
+        return kind;
     }
 
     @Override

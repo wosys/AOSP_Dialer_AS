@@ -19,7 +19,6 @@ package com.android.contacts.common;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.provider.ContactsContract.StatusUpdates;
-
 import androidx.core.content.ContextCompat;
 
 /**
@@ -27,24 +26,24 @@ import androidx.core.content.ContextCompat;
  */
 public class ContactPresenceIconUtil {
 
-    /**
-     * Get the presence icon resource according the status.
-     *
-     * @return null means don't show the status icon.
-     */
-    public static Drawable getPresenceIcon(Context context, int status) {
-        // We don't show the offline status in Contacts
-        switch (status) {
-            case StatusUpdates.AVAILABLE:
-            case StatusUpdates.IDLE:
-            case StatusUpdates.AWAY:
-            case StatusUpdates.DO_NOT_DISTURB:
-            case StatusUpdates.INVISIBLE:
-                return ContextCompat.getDrawable(context, StatusUpdates.getPresenceIconResourceId(status));
-            case StatusUpdates.OFFLINE:
-                // The undefined status is treated as OFFLINE in getPresenceIconResourceId();
-            default:
-                return null;
-        }
+  /**
+   * Get the presence icon resource according the status.
+   *
+   * @return null means don't show the status icon.
+   */
+  public static Drawable getPresenceIcon(Context context, int status) {
+    // We don't show the offline status in Contacts
+    switch (status) {
+      case StatusUpdates.AVAILABLE:
+      case StatusUpdates.IDLE:
+      case StatusUpdates.AWAY:
+      case StatusUpdates.DO_NOT_DISTURB:
+      case StatusUpdates.INVISIBLE:
+        return ContextCompat.getDrawable(context, StatusUpdates.getPresenceIconResourceId(status));
+      case StatusUpdates.OFFLINE:
+        // The undefined status is treated as OFFLINE in getPresenceIconResourceId();
+      default:
+        return null;
     }
+  }
 }

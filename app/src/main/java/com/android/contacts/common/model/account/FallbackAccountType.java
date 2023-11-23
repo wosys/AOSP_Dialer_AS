@@ -17,10 +17,9 @@
 package com.android.contacts.common.model.account;
 
 import android.content.Context;
-
 import com.android.contacts.common.model.dataitem.DataKind;
-import com.wintmain.dialer.R;
 import com.wintmain.dialer.common.LogUtil;
+import com.wintmain.dialer.R;
 
 public class FallbackAccountType extends BaseAccountType {
 
@@ -49,8 +48,8 @@ public class FallbackAccountType extends BaseAccountType {
             addDataKindPhoto(context);
             addDataKindNote(context);
             addDataKindWebsite(context);
-            addDataKindSipAddress();
-            addDataKindGroupMembership();
+            addDataKindSipAddress(context);
+            addDataKindGroupMembership(context);
 
             mIsInitialized = true;
         } catch (DefinitionException e) {

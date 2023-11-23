@@ -25,16 +25,15 @@ import android.provider.ContactsContract.CommonDataKinds.StructuredPostal;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.RawContacts;
 import android.util.ArrayMap;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-
-import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.core.content.ContextCompat;
-
 import com.android.contacts.common.model.dataitem.DataKind;
 import com.wintmain.dialer.R;
-
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -49,26 +48,17 @@ import java.util.Map;
 public abstract class AccountType {
 
     private static final String TAG = "AccountType";
-    /**
-     * {@link Comparator} to sort by {@link DataKind#weight}.
-     */
-    private static final Comparator<DataKind> sWeightComparator =
-            (object1, object2) -> object1.weight - object2.weight;
-    /**
-     * Set of {@link DataKind} supported by this source.
-     */
-    private final ArrayList<DataKind> mKinds = new ArrayList<>();
-    /**
-     * Lookup map of {@link #mKinds} on {@link DataKind#mimeType}.
-     */
-    private final Map<String, DataKind> mMimeKinds = new ArrayMap<>();
-    /**
-     * The {@link RawContacts#ACCOUNT_TYPE} these constraints apply to.
-     */
+    /** {@link Comparator} to sort by {@link DataKind#weight}. */
+    private static Comparator<DataKind> sWeightComparator =
+            new Comparator<DataKind>() {
+                @Override
+                public int compare(DataKind object1, DataKind object2) {
+                    return object1.weight - object2.weight;
+                }
+            };
+    /** The {@link RawContacts#ACCOUNT_TYPE} these constraints apply to. */
     public String accountType = null;
-    /**
-     * The {@link RawContacts#DATA_SET} these constraints apply to.
-     */
+    /** The {@link RawContacts#DATA_SET} these constraints apply to. */
     public String dataSet = null;
     /**
      * Package that resources should be loaded from. Will be null for embedded types, in which case
@@ -89,9 +79,14 @@ public abstract class AccountType {
      * the sync adapter (for external type, including extensions).
      */
     public String syncAdapterPackageName;
+
     public int titleRes;
     public int iconRes;
     protected boolean mIsInitialized;
+    /** Set of {@link DataKind} supported by this source. */
+    private ArrayList<DataKind> mKinds = new ArrayList<>();
+    /** Lookup map of {@link #mKinds} on {@link DataKind#mimeType}. */
+    private Map<String, DataKind> mMimeKinds = new ArrayMap<>();
 
     /**
      * Return a string resource loaded from the given package (or the current package if {@code
@@ -130,15 +125,15 @@ public abstract class AccountType {
      * the package name associated with the account type could not be found.
      */
     public final boolean isInitialized() {
-        return !mIsInitialized;
+        return mIsInitialized;
     }
 
     /**
      * @return Whether this type is an "embedded" type. i.e. any of {@link FallbackAccountType},
-     * {@link GoogleAccountType} or {@link ExternalAccountType}.
-     * <p>If an embedded type cannot be initialized (i.e. if {@link #isInitialized()} returns
-     * {@code false}) it's considered critical, and the application will crash. On the other hand
-     * if it's not an embedded type, we just skip loading the type.
+     *     {@link GoogleAccountType} or {@link ExternalAccountType}.
+     *     <p>If an embedded type cannot be initialized (i.e. if {@link #isInitialized()} returns
+     *     {@code false}) it's considered critical, and the application will crash. On the other hand
+     *     if it's not an embedded type, we just skip loading the type.
      */
     public boolean isEmbedded() {
         return true;
@@ -150,8 +145,8 @@ public abstract class AccountType {
 
     /**
      * @return True if contacts can be created and edited using this app. If false, there could still
-     * be an external editor as provided by {@link #getEditContactActivityClassName()} or {@link
-     * #getCreateContactActivityClassName()}
+     *     be an external editor as provided by {@link #getEditContactActivityClassName()} or {@link
+     *     #getCreateContactActivityClassName()}
      */
     public abstract boolean areContactsWritable();
 
@@ -207,9 +202,7 @@ public abstract class AccountType {
         return syncAdapterPackageName;
     }
 
-    /**
-     * Returns an optional Activity string that can be used to view the group.
-     */
+    /** Returns an optional Activity string that can be used to view the group. */
     public String getViewGroupActivity() {
         return null;
     }
@@ -219,23 +212,17 @@ public abstract class AccountType {
         return getResourceText(context, syncAdapterPackageName, titleRes, accountType);
     }
 
-    /**
-     * @return resource ID for the "invite contact" action label, or -1 if not defined.
-     */
+    /** @return resource ID for the "invite contact" action label, or -1 if not defined. */
     protected int getInviteContactActionResId() {
         return -1;
     }
 
-    /**
-     * @return resource ID for the "view group" label, or -1 if not defined.
-     */
+    /** @return resource ID for the "view group" label, or -1 if not defined. */
     protected int getViewGroupLabelResId() {
         return -1;
     }
 
-    /**
-     * Returns {@link AccountTypeWithDataSet} for this type.
-     */
+    /** Returns {@link AccountTypeWithDataSet} for this type. */
     public AccountTypeWithDataSet getAccountTypeAndDataSet() {
         return AccountTypeWithDataSet.get(accountType, dataSet);
     }
@@ -247,7 +234,7 @@ public abstract class AccountType {
      * the account.
      */
     public List<String> getExtensionPackageNames() {
-        return new ArrayList<>();
+        return new ArrayList<String>();
     }
 
     /**
@@ -275,30 +262,22 @@ public abstract class AccountType {
         return getDisplayIcon(context, titleRes, iconRes, syncAdapterPackageName);
     }
 
-    /**
-     * Whether or not groups created under this account type have editable membership lists.
-     */
+    /** Whether or not groups created under this account type have editable membership lists. */
     public abstract boolean isGroupMembershipEditable();
 
-    /**
-     * Return list of {@link DataKind} supported, sorted by {@link DataKind#weight}.
-     */
+    /** Return list of {@link DataKind} supported, sorted by {@link DataKind#weight}. */
     public ArrayList<DataKind> getSortedDataKinds() {
         // TODO: optimize by marking if already sorted
-        mKinds.sort(sWeightComparator);
+        Collections.sort(mKinds, sWeightComparator);
         return mKinds;
     }
 
-    /**
-     * Find the {@link DataKind} for a specific MIME-type, if it's handled by this data source.
-     */
+    /** Find the {@link DataKind} for a specific MIME-type, if it's handled by this data source. */
     public DataKind getKindForMimetype(String mimeType) {
         return this.mMimeKinds.get(mimeType);
     }
 
-    /**
-     * Add given {@link DataKind} to list of those provided by this source.
-     */
+    /** Add given {@link DataKind} to list of those provided by this source. */
     public DataKind addKind(DataKind kind) throws DefinitionException {
         if (kind.mimeType == null) {
             throw new DefinitionException("null is not a valid mime type");
@@ -341,8 +320,8 @@ public abstract class AccountType {
      */
     public static class EditType {
 
-        public final int rawValue;
-        public final int labelRes;
+        public int rawValue;
+        public int labelRes;
         public boolean secondary;
         /**
          * The number of entries allowed for the type. -1 if not specified.
@@ -388,8 +367,6 @@ public abstract class AccountType {
             return rawValue;
         }
 
-
-        @NonNull
         @Override
         public String toString() {
             return this.getClass().getSimpleName()
@@ -423,8 +400,6 @@ public abstract class AccountType {
             return this;
         }
 
-
-        @NonNull
         @Override
         public String toString() {
             return super.toString() + " mYearOptional=" + mYearOptional;
@@ -437,8 +412,8 @@ public abstract class AccountType {
      */
     public static final class EditField {
 
-        public final String column;
-        public final int titleRes;
+        public String column;
+        public int titleRes;
         public int inputType;
         public int minLines;
         public boolean optional;
@@ -470,8 +445,15 @@ public abstract class AccountType {
             return this;
         }
 
+        public EditField setMinLines(int minLines) {
+            this.minLines = minLines;
+            return this;
+        }
 
-        @NonNull
+        public boolean isMultiLine() {
+            return (inputType & EditorInfo.TYPE_TEXT_FLAG_MULTI_LINE) != 0;
+        }
+
         @Override
         public String toString() {
             return this.getClass().getSimpleName()
@@ -493,4 +475,28 @@ public abstract class AccountType {
         }
     }
 
+    /**
+     * Compare two {@link AccountType} by their {@link AccountType#getDisplayLabel} with the current
+     * locale.
+     */
+    public static class DisplayLabelComparator implements Comparator<AccountType> {
+
+        private final Context mContext;
+        /** {@link Comparator} for the current locale. */
+        private final Collator mCollator = Collator.getInstance();
+
+        public DisplayLabelComparator(Context context) {
+            mContext = context;
+        }
+
+        private String getDisplayLabel(AccountType type) {
+            CharSequence label = type.getDisplayLabel(mContext);
+            return (label == null) ? "" : label.toString();
+        }
+
+        @Override
+        public int compare(AccountType lhs, AccountType rhs) {
+            return mCollator.compare(getDisplayLabel(lhs), getDisplayLabel(rhs));
+        }
+    }
 }

@@ -30,13 +30,9 @@ import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-
 import com.wintmain.dialer.R;
-
-import java.util.Objects;
 
 /**
  * Lightweight implementation of ViewPager tabs. This looks similar to traditional actionBar tabs,
@@ -56,7 +52,7 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
     private static final int TAB_SIDE_PADDING_IN_DPS = 10;
     // TODO: This should use <declare-styleable> in the future
     private static final int[] ATTRS =
-            new int[]{
+            new int[] {
                     android.R.attr.textSize,
                     android.R.attr.textStyle,
                     android.R.attr.textColor,
@@ -72,10 +68,10 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
     final ColorStateList mTextColor;
     final int mTextSize;
     final boolean mTextAllCaps;
-    final int mSidePadding;
-    private final ViewPagerTabStrip mTabStrip;
     ViewPager mPager;
     int mPrevSelected = -1;
+    int mSidePadding;
+    private ViewPagerTabStrip mTabStrip;
     private int[] mTabIcons;
     // For displaying the unread count next to the tab icon.
     private int[] mUnreadCounts;
@@ -112,7 +108,7 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
 
     public void setViewPager(ViewPager viewPager) {
         mPager = viewPager;
-        addTabs(Objects.requireNonNull(mPager.getAdapter()));
+        addTabs(mPager.getAdapter());
     }
 
     /**
@@ -148,7 +144,7 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
             View iconView = layout.findViewById(R.id.icon);
             iconView.setBackgroundResource(mTabIcons[position]);
             iconView.setContentDescription(tabTitle);
-            TextView textView = layout.findViewById(R.id.count);
+            TextView textView = (TextView) layout.findViewById(R.id.count);
             if (mUnreadCounts != null && mUnreadCounts[position] > 0) {
                 textView.setText(Integer.toString(mUnreadCounts[position]));
                 textView.setVisibility(View.VISIBLE);
@@ -186,7 +182,12 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
         }
 
         tabView.setOnClickListener(
-                v -> mPager.setCurrentItem(getRtlPosition(position)));
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mPager.setCurrentItem(getRtlPosition(position));
+                    }
+                });
 
         tabView.setOnLongClickListener(new OnTabLongClickListener(position));
 
@@ -224,7 +225,7 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
     public void updateTab(int index) {
         removeTab(index);
 
-        if (index < Objects.requireNonNull(mPager.getAdapter()).getCount()) {
+        if (index < mPager.getAdapter().getCount()) {
             addTab(mPager.getAdapter().getPageTitle(index), index);
         }
     }
@@ -233,7 +234,7 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         position = getRtlPosition(position);
         int tabStripChildCount = mTabStrip.getChildCount();
-        if ((position < 0) || (position >= tabStripChildCount)) {
+        if ((tabStripChildCount == 0) || (position < 0) || (position >= tabStripChildCount)) {
             return;
         }
 
@@ -244,7 +245,7 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
     public void onPageSelected(int position) {
         position = getRtlPosition(position);
         int tabStripChildCount = mTabStrip.getChildCount();
-        if ((position < 0) || (position >= tabStripChildCount)) {
+        if ((tabStripChildCount == 0) || (position < 0) || (position >= tabStripChildCount)) {
             return;
         }
 
@@ -261,8 +262,7 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
     }
 
     @Override
-    public void onPageScrollStateChanged(int state) {
-    }
+    public void onPageScrollStateChanged(int state) {}
 
     private int getRtlPosition(int position) {
         if (getLayoutDirection() == View.LAYOUT_DIRECTION_RTL) {
@@ -271,9 +271,7 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
         return position;
     }
 
-    /**
-     * Simulates actionbar tab behavior by showing a toast with the tab title when long clicked.
-     */
+    /** Simulates actionbar tab behavior by showing a toast with the tab title when long clicked. */
     private class OnTabLongClickListener implements OnLongClickListener {
 
         final int mPosition;
@@ -293,7 +291,7 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
             final int screenWidth = context.getResources().getDisplayMetrics().widthPixels;
 
             Toast toast =
-                    Toast.makeText(context, Objects.requireNonNull(mPager.getAdapter()).getPageTitle(mPosition), Toast.LENGTH_SHORT);
+                    Toast.makeText(context, mPager.getAdapter().getPageTitle(mPosition), Toast.LENGTH_SHORT);
 
             // Show the toast under the tab
             toast.setGravity(

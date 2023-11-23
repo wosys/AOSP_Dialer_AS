@@ -19,22 +19,15 @@ package com.android.contacts.common.list;
 import android.content.Context;
 import android.net.Uri;
 import android.provider.ContactsContract.PinnedPositions;
-
 import com.wintmain.dialer.contacts.ContactsComponent;
 
-/**
- * Class to hold contact information
- */
+/** Class to hold contact information */
 public class ContactEntry {
 
     public static final ContactEntry BLANK_ENTRY = new ContactEntry();
-    /**
-     * Primary name for a Contact
-     */
+    /** Primary name for a Contact */
     public String namePrimary;
-    /**
-     * Alternative name for a Contact, e.g. last name first
-     */
+    /** Alternative name for a Contact, e.g. last name first */
     public String nameAlternative;
 
     public String phoneLabel;

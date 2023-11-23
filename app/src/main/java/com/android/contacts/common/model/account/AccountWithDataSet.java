@@ -26,17 +26,12 @@ import android.provider.BaseColumns;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.RawContacts;
 import android.text.TextUtils;
-
-import androidx.annotation.NonNull;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-/**
- * Wrapper for an account that includes a data set (which may be null).
- */
+/** Wrapper for an account that includes a data set (which may be null). */
 public class AccountWithDataSet implements Parcelable {
 
     // For Parcelable
@@ -56,7 +51,7 @@ public class AccountWithDataSet implements Parcelable {
             Pattern.compile(Pattern.quote(STRINGIFY_SEPARATOR));
     private static final Pattern ARRAY_STRINGIFY_SEPARATOR_PAT =
             Pattern.compile(Pattern.quote(ARRAY_STRINGIFY_SEPARATOR));
-    private static final String[] ID_PROJECTION = new String[]{BaseColumns._ID};
+    private static final String[] ID_PROJECTION = new String[] {BaseColumns._ID};
     private static final Uri RAW_CONTACTS_URI_LIMIT_1 =
             RawContacts.CONTENT_URI
                     .buildUpon()
@@ -85,7 +80,7 @@ public class AccountWithDataSet implements Parcelable {
         return TextUtils.isEmpty(text) ? null : text;
     }
 
-    private static void addStringified(StringBuilder sb, AccountWithDataSet account) {
+    private static StringBuilder addStringified(StringBuilder sb, AccountWithDataSet account) {
         if (!TextUtils.isEmpty(account.name)) {
             sb.append(account.name);
         }
@@ -98,10 +93,11 @@ public class AccountWithDataSet implements Parcelable {
             sb.append(account.dataSet);
         }
 
+        return sb;
     }
 
     /**
-     * Unpack a string created
+     * Unpack a string created by {@link #stringify}.
      *
      * @throws IllegalArgumentException if it's an invalid string.
      */
@@ -114,9 +110,7 @@ public class AccountWithDataSet implements Parcelable {
                 array[0], array[1], TextUtils.isEmpty(array[2]) ? null : array[2]);
     }
 
-    /**
-     * Pack a list of {@link AccountWithDataSet} into a string.
-     */
+    /** Pack a list of {@link AccountWithDataSet} into a string. */
     public static String stringifyList(List<AccountWithDataSet> accounts) {
         final StringBuilder sb = new StringBuilder();
 
@@ -143,8 +137,8 @@ public class AccountWithDataSet implements Parcelable {
 
         final String[] array = ARRAY_STRINGIFY_SEPARATOR_PAT.split(s);
 
-        for (String value : array) {
-            ret.add(unstringify(value));
+        for (int i = 0; i < array.length; i++) {
+            ret.add(unstringify(array[i]));
         }
 
         return ret;
@@ -186,10 +180,10 @@ public class AccountWithDataSet implements Parcelable {
         final String[] args;
         if (TextUtils.isEmpty(dataSet)) {
             selection = BASE_SELECTION + " AND " + RawContacts.DATA_SET + " IS NULL";
-            args = new String[]{type, name};
+            args = new String[] {type, name};
         } else {
             selection = BASE_SELECTION + " AND " + RawContacts.DATA_SET + " = ?";
-            args = new String[]{type, name, dataSet};
+            args = new String[] {type, name, dataSet};
         }
 
         final Cursor c =
@@ -224,10 +218,12 @@ public class AccountWithDataSet implements Parcelable {
         return result;
     }
 
-
-    @NonNull
     public String toString() {
         return "AccountWithDataSet {name=" + name + ", type=" + type + ", dataSet=" + dataSet + "}";
     }
 
+    /** Pack the instance into a string. */
+    public String stringify() {
+        return addStringified(new StringBuilder(), this).toString();
+    }
 }

@@ -25,22 +25,16 @@ import android.content.DialogInterface.OnClickListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
-
 import com.wintmain.dialer.R;
 import com.wintmain.dialer.util.PermissionsUtil;
 
-/**
- * Dialog that clears the frequently contacted list after confirming with the user.
- */
+/** Dialog that clears the frequently contacted list after confirming with the user. */
 public class ClearFrequentsDialog extends DialogFragment {
 
-    /**
-     * Preferred way to show this dialog
-     */
+    /** Preferred way to show this dialog */
     public static void show(FragmentManager fragmentManager) {
         ClearFrequentsDialog dialog = new ClearFrequentsDialog();
         dialog.show(fragmentManager, "clearFrequents");

@@ -22,19 +22,16 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-
 import com.android.contacts.common.MoreContactUtils;
-import com.wintmain.dialer.R;
 import com.wintmain.dialer.callintent.CallInitiationType;
 import com.wintmain.dialer.callintent.CallSpecificAppData;
 import com.wintmain.dialer.common.LogUtil;
 import com.wintmain.dialer.contactphoto.ContactPhotoManager;
 import com.wintmain.dialer.contactphoto.ContactPhotoManager.DefaultImageRequest;
 import com.wintmain.dialer.widget.BidiTextView;
+import com.wintmain.dialer.R;
 
-/**
- * A ContactTile displays a contact's picture and name
- */
+/** A ContactTile displays a contact's picture and name */
 public abstract class ContactTileView extends FrameLayout {
 
     private static final String TAG = ContactTileView.class.getSimpleName();
@@ -51,8 +48,8 @@ public abstract class ContactTileView extends FrameLayout {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        mName = findViewById(R.id.contact_tile_name);
-        mPhoto = findViewById(R.id.contact_tile_image);
+        mName = (BidiTextView) findViewById(R.id.contact_tile_name);
+        mPhoto = (ImageView) findViewById(R.id.contact_tile_image);
 
         OnClickListener listener = createClickListener();
         setOnClickListener(listener);
@@ -142,7 +139,7 @@ public abstract class ContactTileView extends FrameLayout {
      * not the contact has a user-defined photo.
      *
      * @param isDefaultImage True if the contact does not have a user-defined contact photo (which
-     *                       means a default contact image will be applied by the {@link ContactPhotoManager}
+     *     means a default contact image will be applied by the {@link ContactPhotoManager}
      */
     protected void configureViewForImage(boolean isDefaultImage) {
         // No-op by default.
@@ -153,9 +150,9 @@ public abstract class ContactTileView extends FrameLayout {
      * various image parameters defined to match their own layouts.
      *
      * @param displayName The display name of the contact
-     * @param lookupKey   The lookup key of the contact
+     * @param lookupKey The lookup key of the contact
      * @return A {@link DefaultImageRequest} object with each field configured by the subclass as
-     * desired, or {@code null}.
+     *     desired, or {@code null}.
      */
     protected DefaultImageRequest getDefaultImageRequest(String displayName, String lookupKey) {
         return new DefaultImageRequest(displayName, lookupKey, isContactPhotoCircular());
@@ -171,15 +168,11 @@ public abstract class ContactTileView extends FrameLayout {
 
     public interface Listener {
 
-        /**
-         * Notification that the contact was selected; no specific action is dictated.
-         */
+        /** Notification that the contact was selected; no specific action is dictated. */
         void onContactSelected(
                 Uri contactLookupUri, Rect viewRect, CallSpecificAppData callSpecificAppData);
 
-        /**
-         * Notification that the specified number is to be called.
-         */
+        /** Notification that the specified number is to be called. */
         void onCallNumberDirectly(String phoneNumber, CallSpecificAppData callSpecificAppData);
     }
 }
