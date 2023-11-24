@@ -52,6 +52,7 @@
     <uses-permission android:name="com.cequint.ecid.CALLER_ID_LOOKUP" />
     <uses-permission android:name="com.motorola.incallui.permission.INCOMING_CALL_VISIBILITY_CHANGED" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_PHONE_CALL" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -383,6 +384,7 @@
             android:name="com.android.incallui.InCallServiceImpl"
             android:directBootAware="true"
             android:exported="true"
+            android:foregroundServiceType="phoneCall"
             android:permission="android.permission.BIND_INCALL_SERVICE">
             <meta-data
                 android:name="android.telecom.IN_CALL_SERVICE_UI"
