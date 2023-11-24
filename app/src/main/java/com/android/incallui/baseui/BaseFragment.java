@@ -18,7 +18,6 @@ package com.android.incallui.baseui;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 /**
@@ -59,7 +58,7 @@ public abstract class BaseFragment<T extends Presenter<U>, U extends Ui> extends
         if (savedInstanceState != null) {
             presenter.onRestoreInstanceState(savedInstanceState);
             if (savedInstanceState.getBoolean(KEY_FRAGMENT_HIDDEN)) {
-                requireFragmentManager().beginTransaction().hide(this).commit();
+                getFragmentManager().beginTransaction().hide(this).commit();
             }
         }
     }
@@ -71,7 +70,7 @@ public abstract class BaseFragment<T extends Presenter<U>, U extends Ui> extends
     }
 
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
+    public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         presenter.onSaveInstanceState(outState);
         outState.putBoolean(KEY_FRAGMENT_HIDDEN, isHidden());

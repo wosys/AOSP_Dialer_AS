@@ -78,7 +78,6 @@ import com.wintmain.dialer.rtt.RttTranscriptMessage;
 import com.wintmain.dialer.util.DrawableConverter;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * RTT chat fragment to show chat bubbles.
@@ -103,6 +102,7 @@ public class RttChatFragment extends Fragment
     private InCallScreenDelegate inCallScreenDelegate;
     private RttCallScreenDelegate rttCallScreenDelegate;
     private InCallButtonUiDelegate inCallButtonUiDelegate;
+    private View endCallButton;
     private TextView nameTextView;
     private Chronometer chronometer;
     private boolean isTimerStarted;
@@ -134,7 +134,7 @@ public class RttChatFragment extends Fragment
         super.onCreate(savedInstanceState);
         LogUtil.i("RttChatFragment.onCreate", null);
         inCallButtonUiDelegate =
-                Objects.requireNonNull(FragmentUtils.getParent(this, InCallButtonUiDelegateFactory.class))
+                FragmentUtils.getParent(this, InCallButtonUiDelegateFactory.class)
                         .newInCallButtonUiDelegate();
         if (savedInstanceState != null) {
             inCallButtonUiDelegate.onRestoreInstanceState(savedInstanceState);
@@ -210,7 +210,7 @@ public class RttChatFragment extends Fragment
         recyclerView.addOnScrollListener(
                 new OnScrollListener() {
                     @Override
-                    public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int i) {
+                    public void onScrollStateChanged(RecyclerView recyclerView, int i) {
                         if (i == RecyclerView.SCROLL_STATE_DRAGGING) {
                             isUserScrolling = true;
                         } else if (i == RecyclerView.SCROLL_STATE_IDLE) {
@@ -221,9 +221,9 @@ public class RttChatFragment extends Fragment
                     }
 
                     @Override
-                    public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                         if (dy < 0 && isUserScrolling) {
-                            UiUtil.hideKeyboardFrom(Objects.requireNonNull(getContext()), editText);
+                            UiUtil.hideKeyboardFrom(getContext(), editText);
                         }
                     }
                 });
@@ -240,7 +240,7 @@ public class RttChatFragment extends Fragment
                     shouldAutoScrolling = true;
                 });
         submitButton.setEnabled(false);
-        View endCallButton = view.findViewById(R.id.rtt_end_call_button);
+        endCallButton = view.findViewById(R.id.rtt_end_call_button);
         endCallButton.setOnClickListener(
                 v -> {
                     LogUtil.i("RttChatFragment.onClick", "end call button clicked");
@@ -253,7 +253,7 @@ public class RttChatFragment extends Fragment
                         v -> {
                             // Hide keyboard when opening overflow menu. This is alternative solution since hiding
                             // keyboard after the menu is open or dialpad is shown doesn't work.
-                            UiUtil.hideKeyboardFrom(Objects.requireNonNull(getContext()), editText);
+                            UiUtil.hideKeyboardFrom(getContext(), editText);
                             overflowMenu.showAtLocation(v, Gravity.TOP | Gravity.RIGHT, 0, 0);
                         });
 
@@ -364,19 +364,18 @@ public class RttChatFragment extends Fragment
 
     @Override
     public void onRttScreenStart() {
-        inCallButtonUiDelegate.refreshMuteState();
         rttCallScreenDelegate.onRttCallScreenUiReady();
         Activity activity = getActivity();
-        Window window = Objects.requireNonNull(getActivity()).getWindow();
-        window.setStatusBarColor(Objects.requireNonNull(activity).getColor(R.color.rtt_status_bar_color));
+        Window window = getActivity().getWindow();
+        window.setStatusBarColor(activity.getColor(R.color.rtt_status_bar_color));
         window.setNavigationBarColor(activity.getColor(R.color.rtt_navigation_bar_color));
     }
 
     @Override
     public void onRttScreenStop() {
         Activity activity = getActivity();
-        Window window = Objects.requireNonNull(getActivity()).getWindow();
-        window.setStatusBarColor(Objects.requireNonNull(activity).getColor(android.R.color.transparent));
+        Window window = getActivity().getWindow();
+        window.setStatusBarColor(activity.getColor(android.R.color.transparent));
         window.setNavigationBarColor(activity.getColor(android.R.color.transparent));
         rttCallScreenDelegate.onRttCallScreenUiUnready();
     }
@@ -388,7 +387,7 @@ public class RttChatFragment extends Fragment
 
     @Override
     public String getCallId() {
-        return Assert.isNotNull(Objects.requireNonNull(getArguments()).getString(ARG_CALL_ID));
+        return Assert.isNotNull(getArguments().getString(ARG_CALL_ID));
     }
 
     @Override
@@ -407,7 +406,7 @@ public class RttChatFragment extends Fragment
             int avatarSize = getResources().getDimensionPixelSize(R.dimen.rtt_avatar_size);
             adapter.setAvatarDrawable(
                     DrawableConverter.getRoundedDrawable(
-                            Objects.requireNonNull(getContext()), primaryInfo.photo(), avatarSize, avatarSize));
+                            getContext(), primaryInfo.photo(), avatarSize, avatarSize));
         } else {
             LetterTileDrawable letterTile = new LetterTileDrawable(getResources());
             letterTile.setCanonicalDialerLetterTileDetails(
@@ -425,7 +424,7 @@ public class RttChatFragment extends Fragment
     }
 
     @Override
-    public void onAttach(@NonNull Context context) {
+    public void onAttach(Context context) {
         super.onAttach(context);
         if (savedSecondaryInfo != null) {
             setSecondary(savedSecondaryInfo);
@@ -473,7 +472,7 @@ public class RttChatFragment extends Fragment
             submitButton.setVisibility(View.VISIBLE);
             editText.setFocusableInTouchMode(true);
             if (editText.requestFocus()) {
-                UiUtil.showKeyboardFrom(Objects.requireNonNull(getContext()), editText);
+                UiUtil.showKeyboardFrom(getContext(), editText);
             }
             adapter.showAdvisory();
         }
@@ -612,17 +611,5 @@ public class RttChatFragment extends Fragment
 
     @Override
     public void onAudioRouteSelectorDismiss() {
-    }
-
-    @Override
-    public void requestCallRecordingPermissions(String[] permissions) {
-    }
-
-    @Override
-    public void setCallRecordingDuration(long duration) {
-    }
-
-    @Override
-    public void setCallRecordingState(boolean isRecording) {
     }
 }

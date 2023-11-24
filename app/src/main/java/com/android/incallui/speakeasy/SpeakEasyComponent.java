@@ -42,18 +42,14 @@ public abstract class SpeakEasyComponent {
 
     public abstract SpeakEasyCallManager speakEasyCallManager();
 
-    public abstract @SpeakEasySettingsActivity
-    Optional<PreferenceActivity>
+    public abstract @SpeakEasySettingsActivity Optional<PreferenceActivity>
     speakEasySettingsActivity();
 
-    public abstract @SpeakEasySettingsObject
-    Optional<Object> speakEasySettingsObject();
+    public abstract @SpeakEasySettingsObject Optional<Object> speakEasySettingsObject();
 
-    public abstract @SpeakEasyChipResourceId
-    Optional<Integer> speakEasyChip();
+    public abstract @SpeakEasyChipResourceId Optional<Integer> speakEasyChip();
 
-    public abstract @SpeakEasyTextResourceId
-    Optional<Integer> speakEasyTextResource();
+    public abstract @SpeakEasyTextResourceId Optional<Integer> speakEasyTextResource();
 
     /**
      * Used to refer to the root application component.

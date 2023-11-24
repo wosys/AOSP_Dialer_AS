@@ -74,7 +74,7 @@ public class ReturnToCallController implements InCallUiListener, Listener, Audio
     private final PendingIntent endCall;
     private final PendingIntent fullScreen;
     private final ContactInfoCache contactInfoCache;
-    @VisibleForTesting()
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     Bubble bubble;
     private CallAudioState audioState;
     private InCallState inCallState;
@@ -295,7 +295,7 @@ public class ReturnToCallController implements InCallUiListener, Listener, Audio
 
     private BubbleInfo generateBubbleInfo() {
         return BubbleInfo.builder()
-                .setPrimaryColor(android.R.attr.colorPrimary)
+                .setPrimaryColor(R.attr.colorPrimary)
                 .setPrimaryIcon(Icon.createWithResource(context, R.drawable.on_going_call))
                 .setStartingYPosition(
                         InCallPresenter.getInstance().shouldStartInBubbleMode()
@@ -309,7 +309,7 @@ public class ReturnToCallController implements InCallUiListener, Listener, Audio
 
     private BubbleInfo generateBubbleInfoForBackgroundCalling() {
         return BubbleInfo.builder()
-                .setPrimaryColor(android.R.attr.colorPrimary)
+                .setPrimaryColor(R.attr.colorPrimary)
                 .setPrimaryIcon(Icon.createWithResource(context, R.drawable.on_going_call))
                 .setStartingYPosition(context.getResources().getDisplayMetrics().heightPixels / 2)
                 .setActions(generateActions())

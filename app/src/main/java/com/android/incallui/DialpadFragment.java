@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.telephony.PhoneNumberUtils;
 import android.util.ArrayMap;
 import android.util.AttributeSet;
+import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,7 @@ import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.android.incallui.DialpadPresenter.DialpadUi;
 import com.android.incallui.baseui.BaseFragment;
@@ -53,6 +55,7 @@ public class DialpadFragment extends BaseFragment<DialpadPresenter, DialpadUi>
      */
     private static final Map<Integer, Character> displayMap = new ArrayMap<>();
 
+    /** Set up the static maps */
     static {
         // Map the buttons to the display characters
         displayMap.put(R.id.one, '1');
@@ -97,7 +100,7 @@ public class DialpadFragment extends BaseFragment<DialpadPresenter, DialpadUi>
         if (v.getId() == R.id.dialpad_back) {
             Logger.get(getContext())
                     .logImpression(DialerImpression.Type.IN_CALL_DIALPAD_CLOSE_BUTTON_PRESSED);
-            requireActivity().onBackPressed();
+            getActivity().onBackPressed();
         }
     }
 
@@ -198,7 +201,7 @@ public class DialpadFragment extends BaseFragment<DialpadPresenter, DialpadUi>
      * Starts the slide up animation for the Dialpad keys when the Dialpad is revealed.
      */
     public void animateShowDialpad() {
-        final DialpadView dialpadView = (DialpadView) requireView().findViewById(R.id.dialpad_view);
+        final DialpadView dialpadView = (DialpadView) getView().findViewById(R.id.dialpad_view);
         dialpadView.animateShow();
     }
 
@@ -244,8 +247,8 @@ public class DialpadFragment extends BaseFragment<DialpadPresenter, DialpadUi>
 
     private void configureKeypadListeners() {
         DialpadKeyButton dialpadKey;
-        for (int buttonId : buttonIds) {
-            dialpadKey = (DialpadKeyButton) dialpadView.findViewById(buttonId);
+        for (int i = 0; i < buttonIds.length; i++) {
+            dialpadKey = (DialpadKeyButton) dialpadView.findViewById(buttonIds[i]);
             dialpadKey.setOnKeyListener(this);
             dialpadKey.setOnClickListener(this);
             dialpadKey.setOnPressedListener(this);
@@ -257,11 +260,11 @@ public class DialpadFragment extends BaseFragment<DialpadPresenter, DialpadUi>
         if (pressed && displayMap.containsKey(view.getId())) {
             Logger.get(getContext())
                     .logImpression(DialerImpression.Type.IN_CALL_DIALPAD_NUMBER_BUTTON_PRESSED);
-            Log.d(this, "onPressed: " + true + " " + displayMap.get(view.getId()));
+            Log.d(this, "onPressed: " + pressed + " " + displayMap.get(view.getId()));
             getPresenter().processDtmf(displayMap.get(view.getId()));
         }
         if (!pressed) {
-            Log.d(this, "onPressed: " + false);
+            Log.d(this, "onPressed: " + pressed);
             getPresenter().stopDtmf();
         }
     }

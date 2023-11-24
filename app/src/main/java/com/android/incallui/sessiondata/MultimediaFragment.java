@@ -27,12 +27,10 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import androidx.fragment.app.Fragment;
-
 import com.android.incallui.maps.MapsComponent;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -80,7 +78,7 @@ public class MultimediaFragment extends Fragment implements AvatarPresenter {
                 isSpam);
     }
 
-    @VisibleForTesting()
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     public static MultimediaFragment newInstance(
             @Nullable String subject,
             @Nullable Uri imageUri,
@@ -103,7 +101,7 @@ public class MultimediaFragment extends Fragment implements AvatarPresenter {
     @Override
     public void onCreate(@Nullable Bundle bundle) {
         super.onCreate(bundle);
-        showAvatar = Objects.requireNonNull(getArguments()).getBoolean(ARG_SHOW_AVATAR);
+        showAvatar = getArguments().getBoolean(ARG_SHOW_AVATAR);
         isSpam = getArguments().getBoolean(ARG_IS_SPAM);
     }
 
@@ -120,7 +118,7 @@ public class MultimediaFragment extends Fragment implements AvatarPresenter {
         boolean hasImage = getImageUri() != null;
         boolean hasSubject = !TextUtils.isEmpty(getSubject());
         boolean hasMap = getLocation() != null;
-        if (hasMap && MapsComponent.get(Objects.requireNonNull(getContext())).getMaps().isAvailable()) {
+        if (hasMap && MapsComponent.get(getContext()).getMaps().isAvailable()) {
             if (hasImage) {
                 if (hasSubject) {
                     LogUtil.i("MultimediaFragment.onCreateView", "show text, image, location layout");
@@ -152,7 +150,7 @@ public class MultimediaFragment extends Fragment implements AvatarPresenter {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle bundle) {
+    public void onViewCreated(View view, @Nullable Bundle bundle) {
         super.onViewCreated(view, bundle);
         View container = view.findViewById(R.id.answer_message_container);
         if (container != null) {
@@ -187,7 +185,7 @@ public class MultimediaFragment extends Fragment implements AvatarPresenter {
                                         Target<Drawable> target,
                                         boolean isFirstResource) {
                                     view.findViewById(R.id.loading_spinner).setVisibility(View.GONE);
-                                    LogUtil.e("MultimediaFragment.onLoadFailed", null, Objects.requireNonNull(e));
+                                    LogUtil.e("MultimediaFragment.onLoadFailed", null, e);
                                     // TODO(a bug) handle error cases nicely
                                     return false; // Let Glide handle the rest
                                 }
@@ -211,7 +209,7 @@ public class MultimediaFragment extends Fragment implements AvatarPresenter {
         if (fragmentHolder != null) {
             fragmentHolder.setClipToOutline(true);
             Fragment mapFragment =
-                    MapsComponent.get(Objects.requireNonNull(getContext())).getMaps().createStaticMapFragment(Objects.requireNonNull(getLocation()));
+                    MapsComponent.get(requireContext()).getMaps().createStaticMapFragment(Objects.requireNonNull(getLocation()));
             getChildFragmentManager()
                     .beginTransaction()
                     .replace(R.id.answer_message_frag, mapFragment)
@@ -246,17 +244,17 @@ public class MultimediaFragment extends Fragment implements AvatarPresenter {
 
     @Nullable
     public String getSubject() {
-        return Objects.requireNonNull(getArguments()).getString(ARG_SUBJECT);
+        return getArguments().getString(ARG_SUBJECT);
     }
 
     @Nullable
     public Uri getImageUri() {
-        return Objects.requireNonNull(getArguments()).getParcelable(ARG_IMAGE);
+        return getArguments().getParcelable(ARG_IMAGE);
     }
 
     @Nullable
     public Location getLocation() {
-        return Objects.requireNonNull(getArguments()).getParcelable(ARG_LOCATION);
+        return getArguments().getParcelable(ARG_LOCATION);
     }
 
     /**

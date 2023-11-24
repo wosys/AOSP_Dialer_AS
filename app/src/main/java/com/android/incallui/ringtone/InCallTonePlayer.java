@@ -43,8 +43,7 @@ public class InCallTonePlayer {
     private final ToneGeneratorFactory toneGeneratorFactory;
     @NonNull
     private final PausableExecutor executor;
-    private @Nullable
-    CountDownLatch numPlayingTones;
+    private @Nullable CountDownLatch numPlayingTones;
 
     /**
      * Creates a new InCallTonePlayer.
@@ -82,7 +81,12 @@ public class InCallTonePlayer {
         final ToneGeneratorInfo info = getToneGeneratorInfo(tone);
         numPlayingTones = new CountDownLatch(1);
         executor.execute(
-                () -> playOnBackgroundThread(info));
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        playOnBackgroundThread(info);
+                    }
+                });
     }
 
     private ToneGeneratorInfo getToneGeneratorInfo(int tone) {
@@ -155,7 +159,6 @@ public class InCallTonePlayer {
             this.stream = stream;
         }
 
-        @NonNull
         @Override
         public String toString() {
             return "ToneGeneratorInfo{"

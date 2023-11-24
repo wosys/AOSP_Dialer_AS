@@ -81,6 +81,7 @@ import com.android.incallui.speakeasy.SpeakEasyComponent;
 import com.android.incallui.util.AccessibilityUtil;
 import com.android.incallui.video.protocol.VideoCallScreen;
 import com.android.incallui.videotech.utils.VideoUtils;
+import com.google.common.base.Optional;
 import com.wintmain.dialer.R;
 import com.wintmain.dialer.common.Assert;
 import com.wintmain.dialer.common.FragmentUtils;
@@ -91,7 +92,6 @@ import com.wintmain.dialer.logging.Logger;
 import com.wintmain.dialer.multimedia.MultimediaData;
 import com.wintmain.dialer.telecom.TelecomUtil;
 import com.wintmain.dialer.util.ViewUtil;
-import com.google.common.base.Optional;
 
 import java.util.ArrayList;
 import java.util.List;

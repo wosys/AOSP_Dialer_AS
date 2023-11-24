@@ -20,22 +20,20 @@ import android.app.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import androidx.fragment.app.Fragment;
 
 import com.android.incallui.util.AccessibilityUtil;
-import com.wintmain.dialer.R;
 import com.wintmain.dialer.common.LogUtil;
-
-import java.util.Objects;
 
 /**
  * Creates the appropriate {@link AnswerMethod} for the circumstances.
  */
 public class AnswerMethodFactory {
+    private static boolean shouldUseTwoButtonMethodForTesting;
 
     @NonNull
     public static AnswerMethod createAnswerMethod(@NonNull Activity activity) {
-
         if (needTwoButton(activity)) {
             return new TwoButtonMethod();
         } else {
@@ -50,12 +48,16 @@ public class AnswerMethodFactory {
         }
         // If we have already started showing TwoButtonMethod, we should keep showing TwoButtonMethod.
         // Otherwise check if we need to change to TwoButtonMethod
-        return !(answerMethod instanceof TwoButtonMethod) && needTwoButton(Objects.requireNonNull(answerMethod.getActivity()));
+        return !(answerMethod instanceof TwoButtonMethod) && needTwoButton(answerMethod.getActivity());
     }
 
+    @VisibleForTesting
+    public static void setShouldUseTwoButtonMethodForTesting(boolean shouldUse) {
+        shouldUseTwoButtonMethodForTesting = shouldUse;
+    }
 
     private static boolean needTwoButton(@NonNull Activity activity) {
-        if (activity.getResources().getBoolean(R.bool.two_button_show)) {
+        if (shouldUseTwoButtonMethodForTesting) {
             LogUtil.i("AnswerMethodFactory.needTwoButton", "enabled for testing");
             return true;
         }

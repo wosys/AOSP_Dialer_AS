@@ -18,10 +18,10 @@ package com.android.incallui.rtt.protocol;
 
 import androidx.annotation.NonNull;
 
+import com.google.common.base.Splitter;
 import com.wintmain.dialer.common.Assert;
 import com.wintmain.dialer.rtt.RttTranscript;
 import com.wintmain.dialer.rtt.RttTranscriptMessage;
-import com.google.common.base.Splitter;
 
 import java.util.ArrayList;
 import java.util.Iterator;

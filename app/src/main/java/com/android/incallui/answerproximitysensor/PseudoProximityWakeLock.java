@@ -21,9 +21,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-
 import androidx.annotation.Nullable;
-
 import com.wintmain.dialer.common.LogUtil;
 
 /**

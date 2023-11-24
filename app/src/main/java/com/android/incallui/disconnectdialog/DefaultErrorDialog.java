@@ -22,9 +22,7 @@ import android.content.Context;
 import android.telecom.DisconnectCause;
 import android.text.TextUtils;
 import android.util.Pair;
-
 import androidx.annotation.NonNull;
-
 import com.android.incallui.call.DialerCall;
 
 /**

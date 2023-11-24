@@ -83,8 +83,7 @@ public class Log {
             return String.valueOf(pii);
         }
 
-        if (pii instanceof Uri) {
-            Uri uri = (Uri) pii;
+        if (pii instanceof Uri uri) {
 
             // All Uri's which are not "tel" go through normal pii() method.
             if (!PhoneAccount.SCHEME_TEL.equals(uri.getScheme())) {
@@ -130,10 +129,10 @@ public class Log {
     }
 
     private static String encodeHex(byte[] bytes) {
-        StringBuilder hex = new StringBuilder(bytes.length * 2);
+        StringBuffer hex = new StringBuffer(bytes.length * 2);
 
-        for (byte aByte : bytes) {
-            int byteIntValue = aByte & 0xff;
+        for (int i = 0; i < bytes.length; i++) {
+            int byteIntValue = bytes[i] & 0xff;
             if (byteIntValue < 0x10) {
                 hex.append("0");
             }

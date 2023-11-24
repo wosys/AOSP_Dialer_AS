@@ -68,15 +68,13 @@ class FlingUpDownTouchHandler implements OnTouchListener {
     private final View target;
     @NonNull
     private final OnProgressChangedListener listener;
-    private final FlingAnimationUtils flingAnimationUtils;
-    private final float touchSlop;
-    private final float falsingThresholdPx;
     private final float acceptThresholdPx;
     private final float rejectThresholdPx;
     private final float deadZoneTopPx;
     @Nullable
     private final FalsingManager falsingManager;
     private VelocityTracker velocityTracker;
+    private final FlingAnimationUtils flingAnimationUtils;
     private boolean touchEnabled = true;
     private boolean flingEnabled = true;
     private float currentProgress;
@@ -86,13 +84,14 @@ class FlingUpDownTouchHandler implements OnTouchListener {
     private boolean hintDistanceExceeded;
     private int trackingPointer;
     private Animator progressAnimator;
+    private final float touchSlop;
     private float initialTouchY;
     private float acceptThresholdY;
     private float rejectThresholdY;
     private float zeroY;
     private boolean touchAboveFalsingThreshold;
+    private final float falsingThresholdPx;
     private boolean touchUsesFalsing;
-
     private FlingUpDownTouchHandler(
             @NonNull View target,
             @NonNull OnProgressChangedListener listener,

@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2016 The Android Open Source Project
+ * Copyright 2023 wintmain
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,8 +30,8 @@ import android.util.TypedValue;
 
 import androidx.annotation.Nullable;
 
-import com.wintmain.dialer.R;
 import com.google.android.material.textview.MaterialTextView;
+import com.wintmain.dialer.R;
 
 /**
  * A TextView that automatically scales its text to completely fill its allotted width.
@@ -56,23 +57,29 @@ public class AutoResizeTextView extends MaterialTextView {
 
     public AutoResizeTextView(Context context) {
         super(context, null, 0);
-        initialize(context, null, 0);
+        initialize(context, null, 0, 0);
     }
 
     public AutoResizeTextView(Context context, AttributeSet attrs) {
         super(context, attrs, 0);
-        initialize(context, attrs, 0);
+        initialize(context, attrs, 0, 0);
     }
 
     public AutoResizeTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initialize(context, attrs, defStyleAttr);
+        initialize(context, attrs, defStyleAttr, 0);
+    }
+
+    public AutoResizeTextView(
+            Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        initialize(context, attrs, defStyleAttr, defStyleRes);
     }
 
     private void initialize(
-            Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+            Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         TypedArray typedArray = context.getTheme().obtainStyledAttributes(
-                attrs, R.styleable.AutoResizeTextView, defStyleAttr, 0);
+                attrs, R.styleable.AutoResizeTextView, defStyleAttr, defStyleRes);
         readAttrs(typedArray);
         typedArray.recycle();
         textPaint.set(getPaint());

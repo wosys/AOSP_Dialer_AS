@@ -18,6 +18,7 @@ package com.android.incallui.videosurface.impl;
 
 import android.graphics.Point;
 import android.graphics.SurfaceTexture;
+import android.os.Build;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
@@ -82,6 +83,12 @@ public class VideoSurfaceTextureImpl implements VideoSurfaceTexture {
         this.surfaceDimensions = surfaceDimensions;
         if (surfaceDimensions != null && savedSurfaceTexture != null) {
             // Only do this on O (not at least O) because we expect this issue to be fixed in OMR1
+            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.O && isPixel2017) {
+                LogUtil.i(
+                        "VideoSurfaceTextureImpl.setSurfaceDimensions",
+                        "skip setting default buffer size on Pixel 2017 ODR");
+                return;
+            }
             savedSurfaceTexture.setDefaultBufferSize(surfaceDimensions.x, surfaceDimensions.y);
         }
     }
@@ -169,7 +176,6 @@ public class VideoSurfaceTextureImpl implements VideoSurfaceTexture {
         }
     }
 
-    @NonNull
     @Override
     public String toString() {
         return String.format(

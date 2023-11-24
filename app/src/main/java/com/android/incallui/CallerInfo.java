@@ -30,8 +30,6 @@ import android.provider.ContactsContract.RawContacts;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 
-import androidx.annotation.NonNull;
-
 import com.android.contacts.common.ContactsUtils;
 import com.android.contacts.common.ContactsUtils.UserType;
 import com.android.contacts.common.util.TelephonyManagerUtils;
@@ -105,8 +103,7 @@ public class CallerInfo {
     public String lookupKeyOrNull;
     public boolean needUpdate;
     public Uri contactRefUri;
-    public @UserType
-    long userType;
+    public @UserType long userType;
     /**
      * Contact display photo URI. If a contact has no display photo but a thumbnail, it'll be the
      * thumbnail URI instead.
@@ -293,7 +290,9 @@ public class CallerInfo {
 
         // Determine userType by directoryId and contactId
         final String directory =
-                contactRef.getQueryParameter(ContactsContract.DIRECTORY_PARAM_KEY);
+                contactRef == null
+                        ? null
+                        : contactRef.getQueryParameter(ContactsContract.DIRECTORY_PARAM_KEY);
         Long directoryId = null;
         if (directory != null) {
             try {
@@ -402,6 +401,8 @@ public class CallerInfo {
 
         Log.v(TAG, "- getColumnIndexForPersonId: contactRef URI = '" + contactRef + "'...");
         // Warning: Do not enable the following logging (due to ANR risk.)
+        // if (VDBG) Rlog.v(TAG, "- MIME type: "
+        //                 + context.getContentResolver().getType(contactRef));
 
         String url = contactRef.toString();
         String columnName = null;
@@ -512,14 +513,44 @@ public class CallerInfo {
     /**
      * @return a string debug representation of this instance.
      */
-
-    @NonNull
     @Override
     public String toString() {
+        // Warning: never check in this file with VERBOSE_DEBUG = true
+        // because that will result in PII in the system log.
+        final boolean VERBOSE_DEBUG = false;
 
-        return super.toString() + " { " +
-                "name " + ((name == null) ? "null" : "non-null") +
-                ", phoneNumber " + ((phoneNumber == null) ? "null" : "non-null") +
-                " }";
+        if (VERBOSE_DEBUG) {
+            return super.toString() + " { " +
+                    "\nname: " + name +
+                    "\nphoneNumber: " + phoneNumber +
+                    "\nnormalizedNumber: " + normalizedNumber +
+                    "\forwardingNumber: " + forwardingNumber +
+                    "\ngeoDescription: " + geoDescription +
+                    "\ncnapName: " + cnapName +
+                    "\nnumberPresentation: " + numberPresentation +
+                    "\nnamePresentation: " + namePresentation +
+                    "\ncontactExists: " + contactExists +
+                    "\nphoneLabel: " + phoneLabel +
+                    "\nnumberType: " + numberType +
+                    "\nnumberLabel: " + numberLabel +
+                    "\nphotoResource: " + photoResource +
+                    "\ncontactIdOrZero: " + contactIdOrZero +
+                    "\nneedUpdate: " + needUpdate +
+                    "\ncontactRefUri: " + contactRefUri +
+                    "\ncontactRingtoneUri: " + contactRingtoneUri +
+                    "\ncontactDisplayPhotoUri: " + contactDisplayPhotoUri +
+                    "\nshouldSendToVoicemail: " + shouldSendToVoicemail +
+                    "\ncachedPhoto: " + cachedPhoto +
+                    "\nisCachedPhotoCurrent: " + isCachedPhotoCurrent +
+                    "\nemergency: " + isEmergency +
+                    "\nvoicemail: " + isVoiceMail +
+                    "\nuserType: " + userType +
+                    " }";
+        } else {
+            return super.toString() + " { " +
+                    "name " + ((name == null) ? "null" : "non-null") +
+                    ", phoneNumber " + ((phoneNumber == null) ? "null" : "non-null") +
+                    " }";
+        }
     }
 }

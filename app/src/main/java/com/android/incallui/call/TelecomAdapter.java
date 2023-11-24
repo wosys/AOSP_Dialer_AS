@@ -16,19 +16,17 @@
 
 package com.android.incallui.call;
 
+import android.annotation.TargetApi;
 import android.app.Notification;
 import android.bluetooth.BluetoothDevice;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Looper;
 import android.telecom.InCallService;
-
 import androidx.annotation.MainThread;
 import androidx.annotation.VisibleForTesting;
-
 import com.wintmain.dialer.common.Assert;
 import com.wintmain.dialer.common.LogUtil;
-
 import java.util.List;
 
 /**
@@ -201,6 +199,7 @@ public class TelecomAdapter implements InCallServiceListener {
         }
     }
 
+    @TargetApi(28)
     public void requestBluetoothAudio(BluetoothDevice bluetoothDevice) {
         if (inCallService != null) {
             inCallService.requestBluetoothAudio(bluetoothDevice);

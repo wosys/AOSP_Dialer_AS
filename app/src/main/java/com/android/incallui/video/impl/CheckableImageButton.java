@@ -23,7 +23,6 @@ import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.SoundEffectConstants;
 import android.widget.Checkable;
-
 import com.wintmain.dialer.R;
 
 /**
@@ -37,7 +36,6 @@ public class CheckableImageButton extends androidx.appcompat.widget.AppCompatIma
     private OnCheckedChangeListener onCheckedChangeListener;
     private CharSequence contentDescriptionChecked;
     private CharSequence contentDescriptionUnchecked;
-
     public CheckableImageButton(Context context) {
         this(context, null);
     }

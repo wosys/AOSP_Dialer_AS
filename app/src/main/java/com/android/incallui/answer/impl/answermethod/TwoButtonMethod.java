@@ -42,8 +42,6 @@ import com.wintmain.dialer.R;
 import com.wintmain.dialer.common.Assert;
 import com.wintmain.dialer.common.LogUtil;
 
-import java.util.Objects;
-
 /**
  * Answer method that shows two buttons for answer/reject.
  */
@@ -74,7 +72,7 @@ public class TwoButtonMethod extends AnswerMethod
     }
 
     @Override
-    public void onSaveInstanceState(@NonNull Bundle bundle) {
+    public void onSaveInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);
         bundle.putBoolean(STATE_INCOMING_WILL_DISCONNECT, incomingWillDisconnect);
         bundle.putCharSequence(STATE_HINT_TEXT, hintText);
@@ -86,7 +84,7 @@ public class TwoButtonMethod extends AnswerMethod
             LayoutInflater layoutInflater, @Nullable ViewGroup viewGroup, @Nullable Bundle bundle) {
         View view = layoutInflater.inflate(R.layout.two_button_method, viewGroup, false);
 
-        hintTextView = view.findViewById(R.id.two_button_hint_text);
+        hintTextView = (TextView) view.findViewById(R.id.two_button_hint_text);
         updateHintText();
 
         answerButton = view.findViewById(R.id.two_button_answer_button);
@@ -101,7 +99,7 @@ public class TwoButtonMethod extends AnswerMethod
         answerButton.setOnClickListener(this);
         declineButton.setOnClickListener(this);
 
-        if (AccessibilityUtil.isTouchExplorationEnabled(Objects.requireNonNull(getContext()))) {
+        if (AccessibilityUtil.isTouchExplorationEnabled(getContext())) {
             /* Falsing already handled by AccessibilityManager */
             touchHandler =
                     FlingUpDownTouchHandler.attach(
@@ -168,7 +166,7 @@ public class TwoButtonMethod extends AnswerMethod
         if (hintTextView == null) {
             return;
         }
-        hintTextView.setVisibility(Objects.requireNonNull(getActivity()).isInMultiWindowMode() ? View.GONE : View.VISIBLE);
+        hintTextView.setVisibility(getActivity().isInMultiWindowMode() ? View.GONE : View.VISIBLE);
         if (!TextUtils.isEmpty(hintText) && !buttonClicked) {
             hintTextView.setText(hintText);
             hintTextView.animate().alpha(1f).start();

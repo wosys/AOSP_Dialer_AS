@@ -30,10 +30,8 @@ import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ViewAnimator;
-
 import androidx.annotation.Nullable;
 import androidx.core.view.ViewCompat;
-
 import com.android.incallui.incall.protocol.ContactPhotoType;
 import com.android.incallui.incall.protocol.PrimaryCallState;
 import com.android.incallui.incall.protocol.PrimaryInfo;
@@ -46,7 +44,6 @@ import com.wintmain.dialer.glidephotomanager.PhotoInfo;
 import com.wintmain.dialer.lettertile.LetterTileDrawable;
 import com.wintmain.dialer.util.DrawableConverter;
 import com.wintmain.dialer.widget.BidiTextView;
-
 import java.util.List;
 import java.util.Objects;
 

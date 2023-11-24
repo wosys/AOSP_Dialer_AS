@@ -35,7 +35,6 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.os.BuildCompat;
@@ -43,12 +42,12 @@ import androidx.core.os.BuildCompat;
 import com.android.incallui.call.CallList;
 import com.android.incallui.call.DialerCall;
 import com.android.incallui.call.TelecomAdapter;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.wintmain.dialer.R;
 import com.wintmain.dialer.common.FragmentUtils;
 import com.wintmain.dialer.common.LogUtil;
 import com.wintmain.dialer.logging.DialerImpression;
 import com.wintmain.dialer.logging.Logger;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -71,13 +70,11 @@ public class AudioRouteSelectorDialogFragment extends BottomSheetDialogFragment 
     }
 
     @Override
-    public void onAttach(@NonNull Context context) {
+    public void onAttach(Context context) {
         super.onAttach(context);
         FragmentUtils.checkParent(this, AudioRouteSelectorPresenter.class);
     }
 
-
-    @NonNull
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
         LogUtil.i("AudioRouteSelectorDialogFragment.onCreateDialog", null);
@@ -99,8 +96,8 @@ public class AudioRouteSelectorDialogFragment extends BottomSheetDialogFragment 
     @SuppressLint("NewApi")
     public View onCreateView(
             LayoutInflater layoutInflater, @Nullable ViewGroup viewGroup, @Nullable Bundle bundle) {
-        View view = layoutInflater.inflate(R.layout.audioroute_selector, null, false);
-        CallAudioState audioState = requireArguments().getParcelable(ARG_AUDIO_STATE);
+        View view = layoutInflater.inflate(R.layout.audioroute_selector, viewGroup, false);
+        CallAudioState audioState = getArguments().getParcelable(ARG_AUDIO_STATE);
 
         if (BuildCompat.isAtLeastP()) {
             // Create items for all connected Bluetooth devices
@@ -147,7 +144,7 @@ public class AudioRouteSelectorDialogFragment extends BottomSheetDialogFragment 
     }
 
     @Override
-    public void onCancel(@NonNull DialogInterface dialogInterface) {
+    public void onCancel(DialogInterface dialogInterface) {
         super.onCancel(dialogInterface);
         FragmentUtils.getParentUnsafe(
                         AudioRouteSelectorDialogFragment.this, AudioRouteSelectorPresenter.class)

@@ -58,6 +58,7 @@ import com.android.incallui.answer.impl.answermethod.FlingUpDownTouchHandler.OnP
 import com.android.incallui.answer.impl.classifier.FalsingManager;
 import com.android.incallui.answer.impl.hint.AnswerHint;
 import com.android.incallui.answer.impl.hint.AnswerHintFactory;
+import com.android.incallui.answer.impl.hint.PawImageLoaderImpl;
 import com.wintmain.dialer.R;
 import com.wintmain.dialer.common.DpUtil;
 import com.wintmain.dialer.common.LogUtil;
@@ -67,7 +68,6 @@ import com.wintmain.dialer.util.ViewUtil;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.Objects;
 
 /**
  * Answer method that swipes up to answer or down to reject.
@@ -120,8 +120,8 @@ public class FlingUpDownMethod extends AnswerMethod implements OnProgressChanged
         view.setTranslationY(MathUtil.lerp(view.getTranslationY(), newY, SWIPE_LERP_PROGRESS_FACTOR));
     }
 
-    private static void moveTowardX(View view) {
-        view.setTranslationX(MathUtil.lerp(view.getTranslationX(), (float) 0, SWIPE_LERP_PROGRESS_FACTOR));
+    private static void moveTowardX(View view, float newX) {
+        view.setTranslationX(MathUtil.lerp(view.getTranslationX(), newX, SWIPE_LERP_PROGRESS_FACTOR));
     }
 
     private static void fadeToward(View view, float newAlpha) {
@@ -135,7 +135,7 @@ public class FlingUpDownMethod extends AnswerMethod implements OnProgressChanged
     @Override
     public void onCreate(@Nullable Bundle bundle) {
         super.onCreate(bundle);
-        falsingManager = new FalsingManager(Objects.requireNonNull(getContext()));
+        falsingManager = new FalsingManager(getContext());
     }
 
     @Override
@@ -162,7 +162,7 @@ public class FlingUpDownMethod extends AnswerMethod implements OnProgressChanged
         Trace.beginSection("FlingUpDownMethod.onStop");
         endAnimation();
         falsingManager.onScreenOff();
-        if (Objects.requireNonNull(getActivity()).isFinishing()) {
+        if (getActivity().isFinishing()) {
             setAnimationState(AnimationState.COMPLETED);
         }
         super.onStop();
@@ -223,7 +223,7 @@ public class FlingUpDownMethod extends AnswerMethod implements OnProgressChanged
         touchHandler = FlingUpDownTouchHandler.attach(view, this, falsingManager);
 
         answerHint =
-                new AnswerHintFactory()
+                new AnswerHintFactory(new PawImageLoaderImpl())
                         .create(getContext(), ANIMATE_DURATION_LONG_MILLIS, BOUNCE_ANIMATION_DELAY);
         answerHint.onCreateView(
                 layoutInflater,
@@ -235,7 +235,7 @@ public class FlingUpDownMethod extends AnswerMethod implements OnProgressChanged
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle bundle) {
+    public void onViewCreated(View view, @Nullable Bundle bundle) {
         super.onViewCreated(view, bundle);
         setAnimationState(AnimationState.ENTRY);
     }
@@ -293,18 +293,16 @@ public class FlingUpDownMethod extends AnswerMethod implements OnProgressChanged
         if (contactPuckContainer == null) {
             return false;
         }
-        int width = contactPuckContainer.getWidth();
-        int width2 = width / 2;
-        int height = contactPuckContainer.getHeight();
-        int height2 = height / 2;
-        float puckCenterX = contactPuckContainer.getX() + (width2);
-        float puckCenterY = contactPuckContainer.getY() + (height2);
+
+        float puckCenterX = contactPuckContainer.getX() + (contactPuckContainer.getWidth() / 2);
+        float puckCenterY = contactPuckContainer.getY() + (contactPuckContainer.getHeight() / 2);
+        double radius = contactPuckContainer.getHeight() / 2;
 
         // Squaring a number is more performant than taking a sqrt, so we compare the square of the
         // distance with the square of the radius.
         double distSq =
                 Math.pow(downEvent.getX() - puckCenterX, 2) + Math.pow(downEvent.getY() - puckCenterY, 2);
-        return distSq >= Math.pow(height2, 2);
+        return distSq >= Math.pow(radius, 2);
     }
 
     @Override
@@ -419,13 +417,13 @@ public class FlingUpDownMethod extends AnswerMethod implements OnProgressChanged
         fadeToward(incomingDisconnectText, incomingWillDisconnect ? swipeTextAlpha : 0);
 
         // Move swipe text back to zero.
-        moveTowardX(swipeToAnswerText  /* newX */);
+        moveTowardX(swipeToAnswerText, 0 /* newX */);
         moveTowardY(swipeToAnswerText, 0 /* newY */);
 
         // Animate puck color
         @ColorInt
         int destPuckColor =
-                Objects.requireNonNull(getContext())
+                getContext()
                         .getColor(
                                 isAcceptingFlow ? R.color.call_accept_background : R.color.call_hangup_background);
         destPuckColor =
@@ -582,7 +580,7 @@ public class FlingUpDownMethod extends AnswerMethod implements OnProgressChanged
                 ObjectAnimator.ofFloat(
                         swipeToAnswerText,
                         View.TRANSLATION_Y,
-                        DpUtil.dpToPx(Objects.requireNonNull(getContext()), 192 /* dp */),
+                        DpUtil.dpToPx(getContext(), 192 /* dp */),
                         DpUtil.dpToPx(getContext(), -20 /* dp */));
         textUp.setDuration(ANIMATE_DURATION_NORMAL_MILLIS);
         textUp.setInterpolator(new LinearOutSlowInInterpolator());
@@ -691,7 +689,7 @@ public class FlingUpDownMethod extends AnswerMethod implements OnProgressChanged
         LogUtil.i("FlingUpDownMethod.startSwipeToAnswerBounceAnimation", "Swipe bounce animation.");
         endAnimation();
 
-        if (ViewUtil.areAnimationsDisabled(Objects.requireNonNull(getContext()))) {
+        if (ViewUtil.areAnimationsDisabled(getContext())) {
             swipeToAnswerText.setTranslationY(0);
             contactPuckContainer.setTranslationY(0);
             contactPuckBackground.setScaleY(1f);
@@ -735,7 +733,7 @@ public class FlingUpDownMethod extends AnswerMethod implements OnProgressChanged
 
     private Animator createBreatheAnimation() {
         AnimatorSet breatheAnimation = new AnimatorSet();
-        float textOffset = DpUtil.dpToPx(Objects.requireNonNull(getContext()), 42 /* dp */);
+        float textOffset = DpUtil.dpToPx(getContext(), 42 /* dp */);
         Animator textUp =
                 ObjectAnimator.ofFloat(
                         swipeToAnswerText, View.TRANSLATION_Y, 0 /* begin pos */, -textOffset);
@@ -835,17 +833,17 @@ public class FlingUpDownMethod extends AnswerMethod implements OnProgressChanged
         iconRotation.setDuration(SETTLE_ANIMATION_DURATION_MILLIS);
 
         ObjectAnimator swipeToAnswerTextFade =
-                createFadeAnimation(swipeToAnswerText, 1);
+                createFadeAnimation(swipeToAnswerText, 1, SETTLE_ANIMATION_DURATION_MILLIS);
 
         ObjectAnimator contactPuckContainerFade =
-                createFadeAnimation(contactPuckContainer, 1);
+                createFadeAnimation(contactPuckContainer, 1, SETTLE_ANIMATION_DURATION_MILLIS);
 
         ObjectAnimator contactPuckBackgroundFade =
-                createFadeAnimation(contactPuckBackground, 1);
+                createFadeAnimation(contactPuckBackground, 1, SETTLE_ANIMATION_DURATION_MILLIS);
 
         ObjectAnimator contactPuckIconFade =
                 createFadeAnimation(
-                        contactPuckIcon, shouldShowPhotoInPuck() ? 0 : 1);
+                        contactPuckIcon, shouldShowPhotoInPuck() ? 0 : 1, SETTLE_ANIMATION_DURATION_MILLIS);
 
         ObjectAnimator contactPuckTranslation =
                 ObjectAnimator.ofPropertyValuesHolder(
@@ -891,9 +889,9 @@ public class FlingUpDownMethod extends AnswerMethod implements OnProgressChanged
         }
     }
 
-    private ObjectAnimator createFadeAnimation(View target, float targetAlpha) {
+    private ObjectAnimator createFadeAnimation(View target, float targetAlpha, long duration) {
         ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(target, View.ALPHA, targetAlpha);
-        objectAnimator.setDuration(FlingUpDownMethod.SETTLE_ANIMATION_DURATION_MILLIS);
+        objectAnimator.setDuration(duration);
         return objectAnimator;
     }
 
@@ -905,7 +903,7 @@ public class FlingUpDownMethod extends AnswerMethod implements OnProgressChanged
         endAnimation();
         resetTouchState();
 
-        if (ViewUtil.areAnimationsDisabled(Objects.requireNonNull(getContext()))) {
+        if (ViewUtil.areAnimationsDisabled(getContext())) {
             onHintAnimationDone(false);
             return;
         }
@@ -941,9 +939,7 @@ public class FlingUpDownMethod extends AnswerMethod implements OnProgressChanged
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         super.onAnimationEnd(animation);
-                        int height = contactPuckContainer.getHeight();
-                        int height2 = height / 2;
-                        contactPuckContainer.setPivotY(height2);
+                        contactPuckContainer.setPivotY(contactPuckContainer.getHeight() / 2);
                     }
                 });
 
@@ -1160,6 +1156,7 @@ public class FlingUpDownMethod extends AnswerMethod implements OnProgressChanged
         private static final long RAMP_DOWN_END_MS = RAMP_DOWN_BEGIN_MS + RAMP_DOWN_DURATION_MS;
         private static final long RAMP_TOTAL_TIME_MS = RAMP_DOWN_END_MS;
         private final float ampMax;
+        private final float freqMax = 80;
         private final Interpolator sliderInterpolator = new FastOutSlowInInterpolator();
 
         VibrateInterpolator(Context context) {
@@ -1190,7 +1187,6 @@ public class FlingUpDownMethod extends AnswerMethod implements OnProgressChanged
             }
 
             float ampNormalized = ampMax * slider;
-            float freqMax = 80;
             float freqNormalized = freqMax * slider;
 
             return (float) (ampNormalized * Math.sin(time * freqNormalized));

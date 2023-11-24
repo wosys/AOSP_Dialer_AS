@@ -18,12 +18,14 @@ package com.android.incallui.answer.impl.hint;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 
 import com.android.incallui.util.AccessibilityUtil;
+import com.wintmain.dialer.common.Assert;
 import com.wintmain.dialer.common.LogUtil;
 import com.wintmain.dialer.configprovider.ConfigProviderComponent;
 import com.wintmain.dialer.storage.StorageComponent;
@@ -34,10 +36,10 @@ import com.wintmain.dialer.storage.StorageComponent;
  */
 public class AnswerHintFactory {
 
-    @VisibleForTesting()
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     static final String CONFIG_ANSWER_HINT_ANSWERED_THRESHOLD_KEY = "answer_hint_answered_threshold";
 
-    @VisibleForTesting()
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     static final String CONFIG_ANSWER_HINT_WHITELISTED_DEVICES_KEY =
             "answer_hint_whitelisted_devices";
     @VisibleForTesting
@@ -48,7 +50,11 @@ public class AnswerHintFactory {
             "/hammerhead//bullhead//angler//shamu//gm4g//gm4g_s//AQ4501//gce_x86_phone//gm4gtkc_s/"
                     + "/Sparkle_V//Mi-498//AQ4502//imobileiq2//A65//H940//m8_google//m0xx//A10//ctih220/"
                     + "/Mi438S//bacon/";
+    private final PawImageLoader pawImageLoader;
 
+    public AnswerHintFactory(@NonNull PawImageLoader pawImageLoader) {
+        this.pawImageLoader = Assert.isNotNull(pawImageLoader);
+    }
 
     public static void increaseAnsweredCount(Context context) {
         SharedPreferences sharedPreferences = StorageComponent.get(context).unencryptedSharedPrefs();
@@ -57,13 +63,15 @@ public class AnswerHintFactory {
     }
 
     @VisibleForTesting
-    static boolean shouldShowAnswerHint(Context context) {
+    static boolean shouldShowAnswerHint(Context context, String device) {
         if (AccessibilityUtil.isTouchExplorationEnabled(context)) {
             return false;
         }
         // Devices that has the legacy dialer installed are whitelisted as they are likely to go through
         // a UX change during updates.
-
+        if (!isDeviceWhitelisted(context, device)) {
+            return false;
+        }
 
         // If the user has gone through the process a few times we can assume they have learnt the
         // method.
@@ -84,8 +92,9 @@ public class AnswerHintFactory {
     }
 
     /**
-     * @param device should be the value of{@link Build#PRODUCT}.
-     *               string.
+     * @param device         should be the value of{@link Build#PRODUCT}.
+     * @param configProvider should provide a list of devices quoted with '/' concatenated to a
+     *                       string.
      */
     private static boolean isDeviceWhitelisted(Context context, String device) {
         return ConfigProviderComponent.get(context)
@@ -96,9 +105,16 @@ public class AnswerHintFactory {
 
     @NonNull
     public AnswerHint create(Context context, long puckUpDuration, long puckUpDelay) {
-        if (shouldShowAnswerHint(context)) {
+        if (shouldShowAnswerHint(context, Build.PRODUCT)) {
             return new DotAnswerHint(context, puckUpDuration, puckUpDelay);
         }
+
+        // Display the event answer hint if the payload is available.
+        Drawable eventPayload = pawImageLoader.loadPayload(context);
+        if (eventPayload != null) {
+            return new PawAnswerHint(context, eventPayload, puckUpDuration, puckUpDelay);
+        }
+
         return new EmptyAnswerHint();
     }
 }

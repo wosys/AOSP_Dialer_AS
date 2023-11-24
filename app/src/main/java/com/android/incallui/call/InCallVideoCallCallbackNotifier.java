@@ -18,7 +18,6 @@ package com.android.incallui.call;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
@@ -39,7 +38,7 @@ public class InCallVideoCallCallbackNotifier {
      * resizing, 1 means we only expect a single thread to access the map so make only a single shard
      */
     private final Set<SurfaceChangeListener> surfaceChangeListeners =
-            Collections.newSetFromMap(new ConcurrentHashMap<>(8, 0.9f, 1));
+            Collections.newSetFromMap(new ConcurrentHashMap<SurfaceChangeListener, Boolean>(8, 0.9f, 1));
 
     /**
      * Private constructor. Instance should only be acquired through getRunningInstance().

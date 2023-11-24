@@ -31,11 +31,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class InCallCameraManager {
 
     private final Set<Listener> cameraSelectionListeners =
-            Collections.newSetFromMap(new ConcurrentHashMap<>(8, 0.9f, 1));
-    /**
-     * The context.
-     */
-    private final Context context;
+            Collections.newSetFromMap(new ConcurrentHashMap<Listener, Boolean>(8, 0.9f, 1));
     /**
      * The camera ID for the front facing camera.
      */
@@ -53,6 +49,10 @@ public class InCallCameraManager {
      * a video call is present.
      */
     private boolean isInitialized = false;
+    /**
+     * The context.
+     */
+    private final Context context;
 
     /**
      * Initializes the InCall CameraManager.
@@ -121,7 +121,7 @@ public class InCallCameraManager {
 
         Log.v(this, "initializeCameraList");
 
-        CameraManager cameraManager;
+        CameraManager cameraManager = null;
         try {
             cameraManager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
         } catch (Exception e) {
@@ -133,7 +133,7 @@ public class InCallCameraManager {
             return;
         }
 
-        String[] cameraIds;
+        String[] cameraIds = {};
         try {
             cameraIds = cameraManager.getCameraIdList();
         } catch (CameraAccessException e) {
@@ -142,10 +142,10 @@ public class InCallCameraManager {
             return;
         }
 
-        for (String cameraId : cameraIds) {
+        for (int i = 0; i < cameraIds.length; i++) {
             CameraCharacteristics c = null;
             try {
-                c = cameraManager.getCameraCharacteristics(cameraId);
+                c = cameraManager.getCameraCharacteristics(cameraIds[i]);
             } catch (IllegalArgumentException e) {
                 // Device Id is unknown.
             } catch (CameraAccessException e) {
@@ -154,9 +154,9 @@ public class InCallCameraManager {
             if (c != null) {
                 int facingCharacteristic = c.get(CameraCharacteristics.LENS_FACING);
                 if (facingCharacteristic == CameraCharacteristics.LENS_FACING_FRONT) {
-                    frontFacingCameraId = cameraId;
+                    frontFacingCameraId = cameraIds[i];
                 } else if (facingCharacteristic == CameraCharacteristics.LENS_FACING_BACK) {
-                    rearFacingCameraId = cameraId;
+                    rearFacingCameraId = cameraIds[i];
                 }
             }
         }

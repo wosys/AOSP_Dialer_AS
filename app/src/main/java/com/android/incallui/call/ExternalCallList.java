@@ -20,13 +20,10 @@ import android.os.Handler;
 import android.os.Looper;
 import android.telecom.Call;
 import android.util.ArraySet;
-
 import androidx.annotation.NonNull;
-
 import com.android.contacts.common.compat.CallCompat;
 import com.wintmain.dialer.common.Assert;
 import com.wintmain.dialer.common.LogUtil;
-
 import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -40,7 +37,7 @@ public class ExternalCallList {
 
     private final Set<Call> externalCalls = new ArraySet<>();
     private final Set<ExternalCallListener> externalCallListeners =
-            Collections.newSetFromMap(new ConcurrentHashMap<>(8, 0.9f, 1));
+            Collections.newSetFromMap(new ConcurrentHashMap<ExternalCallListener, Boolean>(8, 0.9f, 1));
 
     /**
      * Begins tracking an external call and notifies listeners of the new call.
@@ -51,7 +48,16 @@ public class ExternalCallList {
         externalCalls.add(telecomCall);
         telecomCall.registerCallback(telecomCallCallback, new Handler(Looper.getMainLooper()));
         notifyExternalCallAdded(telecomCall);
-    }
+    }    /**
+     * Handles {@link android.telecom.Call.Callback} callbacks.
+     */
+    private final Call.Callback telecomCallCallback =
+            new Call.Callback() {
+                @Override
+                public void onDetailsChanged(Call call, Call.Details details) {
+                    notifyExternalCallUpdated(call);
+                }
+            };
 
     /**
      * Stops tracking an external call and notifies listeners of the removal of the call.
@@ -97,16 +103,7 @@ public class ExternalCallList {
         for (ExternalCallListener listener : externalCallListeners) {
             listener.onExternalCallAdded(call);
         }
-    }    /**
-     * Handles {@link android.telecom.Call.Callback} callbacks.
-     */
-    private final Call.Callback telecomCallCallback =
-            new Call.Callback() {
-                @Override
-                public void onDetailsChanged(Call call, Call.Details details) {
-                    notifyExternalCallUpdated(call);
-                }
-            };
+    }
 
     /**
      * Notifies listeners of the removal of an external call.
@@ -151,8 +148,4 @@ public class ExternalCallList {
 
         void onExternalCallPulled(Call call);
     }
-
-
-
-
 }

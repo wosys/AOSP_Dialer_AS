@@ -101,4 +101,13 @@
     <color name="md_theme_dark_inverseOnSurface">#1B1B1F</color>
     <color name="md_theme_dark_inverseSurface">#E4E2E6</color>
     <color name="md_theme_dark_inversePrimary">#2A56C6</color>
+    <color name="incall_background_gradient_spam_top_ext">#2A56C6</color>
+    <color name="incall_background_gradient_spam_middle_ext">#2A56C7</color>
+    <color name="incall_background_gradient_spam_bottom_ext">#2A56C6</color>
+    <color name="incall_background_multiwindow_spam_ext">#B8E551</color>
+    <color name="incall_background_gradient_top_ext">#E91141</color>
+    <color name="incall_background_gradient_middle_ext">#E91141</color>
+    <color name="incall_background_multiwindow_ext">#CC229F</color>
+    <color name="incall_background_gradient_bottom_ext">#CC229F</color>
+    <color name="statusbar_background_color">?android:attr/colorPrimary</color>
 </resources>

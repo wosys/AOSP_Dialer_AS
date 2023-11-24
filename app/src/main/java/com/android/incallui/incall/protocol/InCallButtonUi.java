@@ -40,12 +40,6 @@ public interface InCallButtonUi {
 
     void setAudioState(CallAudioState audioState);
 
-    void setCallRecordingState(boolean isRecording);
-
-    void setCallRecordingDuration(long durationMs);
-
-    void requestCallRecordingPermissions(String[] permissions);
-
     /**
      * Once showButton() has been called on each of the individual buttons in the UI, call this to
      * configure the overflow menu appropriately.

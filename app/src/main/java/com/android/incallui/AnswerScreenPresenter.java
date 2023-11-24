@@ -22,6 +22,7 @@ import android.telecom.VideoProfile;
 
 import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
+import androidx.core.os.UserManagerCompat;
 
 import com.android.incallui.answer.protocol.AnswerScreen;
 import com.android.incallui.answer.protocol.AnswerScreenDelegate;
@@ -31,15 +32,15 @@ import com.android.incallui.call.CallList;
 import com.android.incallui.call.DialerCall;
 import com.android.incallui.call.DialerCallListener;
 import com.android.incallui.incalluilock.InCallUiLock;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
 import com.wintmain.dialer.common.Assert;
 import com.wintmain.dialer.common.LogUtil;
 import com.wintmain.dialer.common.concurrent.DialerExecutorComponent;
 import com.wintmain.dialer.common.concurrent.ThreadUtil;
 import com.wintmain.dialer.logging.DialerImpression;
 import com.wintmain.dialer.logging.Logger;
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
 
 import java.util.Objects;
 
@@ -123,7 +124,7 @@ public class AnswerScreenPresenter
                     }
 
                     @Override
-                    public void onFailure(@NonNull Throwable t) {
+                    public void onFailure(Throwable t) {
                         onAnswerCallback(answerVideoAsAudio);
                         // TODO(erfanian): Enumerate all error states and specify recovery strategies.
                         throw new RuntimeException("Failed to successfully complete pre call tasks.", t);
@@ -227,11 +228,11 @@ public class AnswerScreenPresenter
     @Override
     public void updateWindowBackgroundColor(@FloatRange(from = -1f, to = 1.0f) float progress) {
         answerScreen.getAnswerScreenFragment().getActivity();
-
     }
 
     private boolean isSmsResponseAllowed(DialerCall call) {
-        return call.can(android.telecom.Call.Details.CAPABILITY_RESPOND_VIA_TEXT);
+        return UserManagerCompat.isUserUnlocked(context)
+                && call.can(android.telecom.Call.Details.CAPABILITY_RESPOND_VIA_TEXT);
     }
 
     private void addTimeoutCheck() {

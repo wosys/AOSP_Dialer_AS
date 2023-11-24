@@ -68,7 +68,6 @@ public class CallerInfoAsyncQuery {
     private static final boolean ENABLE_UNKNOWN_NUMBER_GEO_DESCRIPTION = true;
     /* Directory lookup related code - START */
     private static final String[] DIRECTORY_PROJECTION = new String[]{Directory._ID};
-
     /**
      * Private constructor for factory methods.
      */
@@ -196,7 +195,8 @@ public class CallerInfoAsyncQuery {
         // in AsyncQueryHandler.
         // intermediateListener.onQueryComplete is also called from the same caller thread.
         // TODO(a bug): use thread pool instead of single thread.
-        for (long directoryId : directoryIds) {
+        for (int i = 0; i < size; i++) {
+            long directoryId = directoryIds[i];
             Uri uri = ContactInfoHelper.getContactInfoLookupUri(info.phoneNumber, directoryId);
             if (DBG) {
                 Log.d(LOG_TAG, "directoryId: " + directoryId + " uri: " + uri);

@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2016 The Android Open Source Project
+ * Copyright 2023 wintmain
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,9 +32,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.animation.Interpolator;
-
 import androidx.annotation.Nullable;
-
 import com.android.incallui.answer.impl.utils.FlingAnimationUtils;
 import com.android.incallui.answer.impl.utils.Interpolators;
 import com.wintmain.dialer.R;
@@ -54,42 +53,25 @@ public class SwipeButtonView extends androidx.appcompat.widget.AppCompatImageVie
     private final int normalColor;
     private final ArgbEvaluator colorInterpolator;
     private final FlingAnimationUtils flingAnimationUtils;
-    private final int[] tempPoint = new int[2];
-    private final int circleColor;
     private float circleRadius;
     private int centerX;
     private int centerY;
     private ValueAnimator circleAnimator;
-    private final AnimatorListenerAdapter circleEndListener =
-            new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    circleAnimator = null;
-                }
-            };
     private ValueAnimator alphaAnimator;
-    private final AnimatorListenerAdapter alphaEndListener =
-            new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    alphaAnimator = null;
-                }
-            };
     private ValueAnimator scaleAnimator;
-    private final AnimatorListenerAdapter scaleEndListener =
-            new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    scaleAnimator = null;
-                }
-            };
     private float circleStartValue;
     private boolean circleWillBeHidden;
+    private final int[] tempPoint = new int[2];
     private float tmageScale = 1f;
+    private final int circleColor;
     private View previewView;
     private float circleStartRadius;
     private float maxCircleSize;
     private Animator previewClipper;
+    private float restingAlpha = SwipeButtonHelper.SWIPE_RESTING_ALPHA_AMOUNT;
+    private boolean finishing;
+    private boolean launchingAffordance;
+
     private final AnimatorListenerAdapter clipEndListener =
             new AnimatorListenerAdapter() {
                 @Override
@@ -97,9 +79,27 @@ public class SwipeButtonView extends androidx.appcompat.widget.AppCompatImageVie
                     previewClipper = null;
                 }
             };
-    private float restingAlpha = SwipeButtonHelper.SWIPE_RESTING_ALPHA_AMOUNT;
-    private boolean finishing;
-    private boolean launchingAffordance;
+    private final AnimatorListenerAdapter circleEndListener =
+            new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    circleAnimator = null;
+                }
+            };
+    private final AnimatorListenerAdapter scaleEndListener =
+            new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    scaleAnimator = null;
+                }
+            };
+    private final AnimatorListenerAdapter alphaEndListener =
+            new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    alphaAnimator = null;
+                }
+            };
 
     public SwipeButtonView(Context context) {
         this(context, null);
@@ -142,9 +142,7 @@ public class SwipeButtonView extends androidx.appcompat.widget.AppCompatImageVie
     protected void onDraw(Canvas canvas) {
         drawBackgroundCircle(canvas);
         canvas.save();
-        int width = getWidth() / 2;
-        int height = getHeight() / 2;
-        canvas.scale(tmageScale, tmageScale, width, height);
+        canvas.scale(tmageScale, tmageScale, getWidth() / 2, getHeight() / 2);
         super.onDraw(canvas);
         canvas.restore();
     }
@@ -333,10 +331,13 @@ public class SwipeButtonView extends androidx.appcompat.widget.AppCompatImageVie
         circleStartValue = this.circleRadius;
         circleWillBeHidden = circleRadius == 0.0f;
         animator.addUpdateListener(
-                animation -> {
-                    SwipeButtonView.this.circleRadius = (float) animation.getAnimatedValue();
-                    updateIconColor();
-                    invalidate();
+                new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        SwipeButtonView.this.circleRadius = (float) animation.getAnimatedValue();
+                        updateIconColor();
+                        invalidate();
+                    }
                 });
         animator.addListener(circleEndListener);
         return animator;
@@ -371,9 +372,12 @@ public class SwipeButtonView extends androidx.appcompat.widget.AppCompatImageVie
             ValueAnimator animator = ValueAnimator.ofFloat(tmageScale, imageScale);
             scaleAnimator = animator;
             animator.addUpdateListener(
-                    animation -> {
-                        tmageScale = (float) animation.getAnimatedValue();
-                        invalidate();
+                    new ValueAnimator.AnimatorUpdateListener() {
+                        @Override
+                        public void onAnimationUpdate(ValueAnimator animation) {
+                            tmageScale = (float) animation.getAnimatedValue();
+                            invalidate();
+                        }
                     });
             animator.addListener(scaleEndListener);
             if (interpolator == null) {
@@ -437,12 +441,15 @@ public class SwipeButtonView extends androidx.appcompat.widget.AppCompatImageVie
             ValueAnimator animator = ValueAnimator.ofInt(currentAlpha, endAlpha);
             alphaAnimator = animator;
             animator.addUpdateListener(
-                    animation -> {
-                        int alpha1 = (int) animation.getAnimatedValue();
-                        if (background != null) {
-                            background.mutate().setAlpha(alpha1);
+                    new ValueAnimator.AnimatorUpdateListener() {
+                        @Override
+                        public void onAnimationUpdate(ValueAnimator animation) {
+                            int alpha = (int) animation.getAnimatedValue();
+                            if (background != null) {
+                                background.mutate().setAlpha(alpha);
+                            }
+                            setImageAlpha(alpha);
                         }
-                        setImageAlpha(alpha1);
                     });
             animator.addListener(alphaEndListener);
             if (interpolator == null) {

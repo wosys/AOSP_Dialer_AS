@@ -22,9 +22,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.provider.CallLog;
-
 import androidx.core.content.ContextCompat;
-
 import com.wintmain.dialer.common.LogUtil;
 import com.wintmain.dialer.telecom.TelecomUtil;
 

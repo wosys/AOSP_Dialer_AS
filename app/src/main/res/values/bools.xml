@@ -14,4 +14,6 @@
     <bool name="two_button_show">false</bool>
     <bool name="video_call_auto_fullscreen">true</bool>
     <bool name="enable_forward_lookup">true</bool>
+    <!-- Whether or not the landscape mode layout is currently being used -->
+    <bool name="is_layout_landscape">false</bool>
 </resources>

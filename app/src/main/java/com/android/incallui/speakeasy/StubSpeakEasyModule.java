@@ -38,27 +38,23 @@ import dagger.Provides;
 public abstract class StubSpeakEasyModule {
 
     @Provides
-    static @SpeakEasySettingsActivity
-    Optional<PreferenceActivity>
+    static @SpeakEasySettingsActivity Optional<PreferenceActivity>
     provideSpeakEasySettingsActivity() {
         return Optional.absent();
     }
 
     @Provides
-    static @SpeakEasySettingsObject
-    Optional<Object> provideSpeakEasySettingsObject() {
+    static @SpeakEasySettingsObject Optional<Object> provideSpeakEasySettingsObject() {
         return Optional.absent();
     }
 
     @Provides
-    static @SpeakEasyChipResourceId
-    Optional<Integer> provideSpeakEasyChip() {
+    static @SpeakEasyChipResourceId Optional<Integer> provideSpeakEasyChip() {
         return Optional.absent();
     }
 
     @Provides
-    static @SpeakEasyTextResourceId
-    Optional<Integer> provideSpeakEasyTextResource() {
+    static @SpeakEasyTextResourceId Optional<Integer> provideSpeakEasyTextResource() {
         return Optional.absent();
     }
 

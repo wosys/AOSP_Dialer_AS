@@ -17,9 +17,7 @@
 package com.android.incallui.maps;
 
 import android.content.Context;
-
 import com.wintmain.dialer.inject.HasRootComponent;
-
 import dagger.Subcomponent;
 
 /**

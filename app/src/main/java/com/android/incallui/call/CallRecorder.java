@@ -27,9 +27,7 @@ import android.os.RemoteException;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
-
 import com.android.incallui.call.state.DialerCallState;
 import com.wintmain.dialer.R;
 import com.wintmain.dialer.callrecord.CallRecording;
@@ -37,10 +35,8 @@ import com.wintmain.dialer.callrecord.CallRecordingDataStore;
 import com.wintmain.dialer.callrecord.ICallRecorderService;
 import com.wintmain.dialer.callrecord.impl.CallRecorderService;
 import com.wintmain.dialer.location.GeoUtil;
-
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
-
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;

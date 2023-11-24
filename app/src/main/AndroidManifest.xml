@@ -452,5 +452,14 @@
             android:authorities="com.wintmain.dialer.lookup"
             android:exported="false"
             android:multiprocess="false" />
+
+        <receiver
+            android:name="com.android.incallui.answer.impl.hint.PawSecretCodeListener"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SECRET_CODE" />
+                <data android:scheme="android_secret_code" />
+            </intent-filter>
+        </receiver>
     </application>
 </manifest>

@@ -31,8 +31,6 @@ import com.android.incallui.answer.impl.utils.FlingAnimationUtils;
 import com.android.incallui.answer.impl.utils.Interpolators;
 import com.wintmain.dialer.R;
 
-import java.util.Objects;
-
 /**
  * A touch handler of the swipe buttons
  */
@@ -67,6 +65,7 @@ public class SwipeButtonHelper {
     private boolean motionCancelled;
     private int touchTargetSize;
     private View targetedView;
+    private boolean touchSlopExeeded;
     private final AnimatorListenerAdapter flingEndListener =
             new AnimatorListenerAdapter() {
                 @Override
@@ -76,7 +75,6 @@ public class SwipeButtonHelper {
                     targetedView = null;
                 }
             };
-    private boolean touchSlopExeeded;
 
     public SwipeButtonHelper(Callback callback, Context context) {
         this.context = context;
@@ -212,25 +210,24 @@ public class SwipeButtonHelper {
     }
 
     private View getIconAtPosition(float x, float y) {
-        if (leftSwipePossible() && isOnIcon(Objects.requireNonNull(leftIcon), x, y)) {
+        if (leftSwipePossible() && isOnIcon(leftIcon, x, y)) {
             return leftIcon;
         }
-        if (rightSwipePossible() && isOnIcon(Objects.requireNonNull(rightIcon), x, y)) {
+        if (rightSwipePossible() && isOnIcon(rightIcon, x, y)) {
             return rightIcon;
         }
         return null;
     }
 
     public boolean isOnAffordanceIcon(float x, float y) {
-        return isOnIcon(Objects.requireNonNull(leftIcon), x, y) || isOnIcon(Objects.requireNonNull(rightIcon), x, y);
+        return isOnIcon(leftIcon, x, y) || isOnIcon(rightIcon, x, y);
     }
 
     private boolean isOnIcon(View icon, float x, float y) {
         float iconX = icon.getX() + icon.getWidth() / 2.0f;
         float iconY = icon.getY() + icon.getHeight() / 2.0f;
         double distance = Math.hypot(x - iconX, y - iconY);
-        int radius2 = touchTargetSize / 2;
-        return distance <= radius2;
+        return distance <= touchTargetSize / 2;
     }
 
     private void endMotion(boolean forceSnapBack, float lastX, float lastY) {
@@ -334,12 +331,15 @@ public class SwipeButtonHelper {
         }
         ValueAnimator animator = ValueAnimator.ofFloat(targetView.getCircleRadius(), radius);
         animator.addUpdateListener(
-                animation -> {
-                    float newRadius = (float) animation.getAnimatedValue();
-                    targetView.setCircleRadiusWithoutAnimation(newRadius);
-                    float translation = getTranslationFromRadius(newRadius);
-                    SwipeButtonHelper.this.translation = right ? -translation : translation;
-                    updateIconsFromTranslation(targetView);
+                new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        float newRadius = (float) animation.getAnimatedValue();
+                        targetView.setCircleRadiusWithoutAnimation(newRadius);
+                        float translation = getTranslationFromRadius(newRadius);
+                        SwipeButtonHelper.this.translation = right ? -translation : translation;
+                        updateIconsFromTranslation(targetView);
+                    }
                 });
         return animator;
     }
@@ -380,7 +380,12 @@ public class SwipeButtonHelper {
         ValueAnimator animator = ValueAnimator.ofFloat(translation, target);
         flingAnimationUtils.apply(animator, translation, target, vel);
         animator.addUpdateListener(
-                animation -> translation = (float) animation.getAnimatedValue());
+                new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        translation = (float) animation.getAnimatedValue();
+                    }
+                });
         animator.addListener(flingEndListener);
         if (!snapBack) {
             startFinishingCircleAnimation(vel * 0.375f, new AnimationEndRunnable(right), right);

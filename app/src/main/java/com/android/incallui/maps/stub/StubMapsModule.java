@@ -17,16 +17,12 @@
 package com.android.incallui.maps.stub;
 
 import android.location.Location;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-
 import com.android.incallui.maps.Maps;
 import com.wintmain.dialer.common.Assert;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import dagger.Binds;
 import dagger.Module;
 

@@ -21,7 +21,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
 import com.android.incallui.call.TelecomAdapter;
@@ -47,7 +46,6 @@ public class PostCharDialogFragment extends DialogFragment {
         this.postDialStr = postDialStr;
     }
 
-    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreateDialog(savedInstanceState);
@@ -57,31 +55,43 @@ public class PostCharDialogFragment extends DialogFragment {
             postDialStr = savedInstanceState.getString(STATE_POST_CHARS);
         }
 
-        String buf = getResources().getText(R.string.wait_prompt_str) +
-                postDialStr;
+        final StringBuilder buf = new StringBuilder();
+        buf.append(getResources().getText(R.string.wait_prompt_str));
+        buf.append(postDialStr);
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(buf);
+        builder.setMessage(buf.toString());
 
         builder.setPositiveButton(
                 R.string.pause_prompt_yes,
-                (dialog, whichButton) -> TelecomAdapter.getInstance().postDialContinue(callId, true));
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        TelecomAdapter.getInstance().postDialContinue(callId, true);
+                    }
+                });
         builder.setNegativeButton(
                 R.string.pause_prompt_no,
-                (dialog, whichButton) -> dialog.cancel());
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.cancel();
+                    }
+                });
 
-        return builder.create();
+        final AlertDialog dialog = builder.create();
+        return dialog;
     }
 
     @Override
-    public void onCancel(@NonNull DialogInterface dialog) {
+    public void onCancel(DialogInterface dialog) {
         super.onCancel(dialog);
 
         TelecomAdapter.getInstance().postDialContinue(callId, false);
     }
 
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
+    public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
         outState.putString(STATE_CALL_ID, callId);

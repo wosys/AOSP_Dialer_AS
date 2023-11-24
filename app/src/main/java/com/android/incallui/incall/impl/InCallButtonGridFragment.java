@@ -23,7 +23,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.ColorInt;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
@@ -63,18 +62,18 @@ public class InCallButtonGridFragment extends Fragment {
             LayoutInflater inflater, @Nullable ViewGroup parent, @Nullable Bundle bundle) {
         View view = inflater.inflate(R.layout.incall_button_grid, parent, false);
 
-        buttons[0] = view.findViewById(R.id.incall_first_button);
-        buttons[1] = view.findViewById(R.id.incall_second_button);
-        buttons[2] = view.findViewById(R.id.incall_third_button);
-        buttons[3] = view.findViewById(R.id.incall_fourth_button);
-        buttons[4] = view.findViewById(R.id.incall_fifth_button);
-        buttons[5] = view.findViewById(R.id.incall_sixth_button);
+        buttons[0] = ((CheckableLabeledButton) view.findViewById(R.id.incall_first_button));
+        buttons[1] = ((CheckableLabeledButton) view.findViewById(R.id.incall_second_button));
+        buttons[2] = ((CheckableLabeledButton) view.findViewById(R.id.incall_third_button));
+        buttons[3] = ((CheckableLabeledButton) view.findViewById(R.id.incall_fourth_button));
+        buttons[4] = ((CheckableLabeledButton) view.findViewById(R.id.incall_fifth_button));
+        buttons[5] = ((CheckableLabeledButton) view.findViewById(R.id.incall_sixth_button));
 
         return view;
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle bundle) {
+    public void onViewCreated(View view, @Nullable Bundle bundle) {
         super.onViewCreated(view, bundle);
         buttonGridListener.onButtonGridCreated(this);
     }

@@ -81,7 +81,10 @@ public class DialerRingtoneManager {
         return Settings.System.getInt(resolver, Settings.System.VIBRATE_WHEN_RINGING, 0) != 0;
     }
 
-
+    /**
+     * The incoming callState is never set as {@link DialerCallState#CALL_WAITING} because {@link
+     * DialerCall#translateState(int)} doesn't account for that case, check for it here
+     */
     private int translateCallStateForCallWaiting(int callState) {
         if (callState != DialerCallState.INCOMING) {
             return callState;

@@ -17,9 +17,9 @@
 package com.android.incallui.answer.impl.classifier;
 
 class Point {
-    public final float x;
-    public final float y;
-    public final long timeOffsetNano;
+    public float x;
+    public float y;
+    public long timeOffsetNano;
 
     public Point(float x, float y) {
         this.x = x;
@@ -35,17 +35,16 @@ class Point {
 
     @Override
     public boolean equals(Object other) {
-        if (!(other instanceof Point)) {
+        if (!(other instanceof Point otherPoint)) {
             return false;
         }
-        Point otherPoint = ((Point) other);
         return x == otherPoint.x && y == otherPoint.y;
     }
 
     @Override
     public int hashCode() {
-        int result = (x != 0.0f ? Float.floatToIntBits(x) : 0);
-        result = 31 * result + (y != 0.0f ? Float.floatToIntBits(y) : 0);
+        int result = (x != +0.0f ? Float.floatToIntBits(x) : 0);
+        result = 31 * result + (y != +0.0f ? Float.floatToIntBits(y) : 0);
         return result;
     }
 

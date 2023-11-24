@@ -22,8 +22,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import androidx.annotation.NonNull;
-
 import com.android.incallui.ConferenceManagerPresenter.ConferenceManagerUi;
 import com.android.incallui.baseui.BaseFragment;
 import com.android.incallui.call.CallList;
@@ -71,7 +69,7 @@ public class ConferenceManagerFragment
         final View parent = inflater.inflate(R.layout.conference_manager_fragment, container, false);
 
         conferenceParticipantList = (ListView) parent.findViewById(R.id.participantList);
-        contactPhotoManager = ContactPhotoManager.getInstance(Objects.requireNonNull(getActivity()).getApplicationContext());
+        contactPhotoManager = ContactPhotoManager.getInstance(getActivity().getApplicationContext());
 
         return parent;
     }
@@ -87,7 +85,7 @@ public class ConferenceManagerFragment
     }
 
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
+    public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
     }
 

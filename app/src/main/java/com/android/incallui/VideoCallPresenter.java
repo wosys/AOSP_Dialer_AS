@@ -137,29 +137,33 @@ public class VideoCallPresenter
      */
     private boolean autoFullScreenPending = false;
     /**
+     * Whether if the call is remotely held.
+     */
+    private boolean isRemotelyHeld = false;
+    /**
      * Runnable which is posted to schedule automatically entering fullscreen mode. Will not auto
      * enter fullscreen mode if the dialpad is visible (doing so would make it impossible to exit the
      * dialpad).
      */
     private final Runnable autoFullscreenRunnable =
-            () -> {
-                if (autoFullScreenPending
-                        && !InCallPresenter.getInstance().isDialpadVisible()
-                        && isVideoMode) {
+            new Runnable() {
+                @Override
+                public void run() {
+                    if (autoFullScreenPending
+                            && !InCallPresenter.getInstance().isDialpadVisible()
+                            && isVideoMode) {
 
-                    LogUtil.v("VideoCallPresenter.mAutoFullScreenRunnable", "entering fullscreen mode");
-                    InCallPresenter.getInstance().setFullScreen(true);
-                    autoFullScreenPending = false;
-                } else {
-                    LogUtil.v(
-                            "VideoCallPresenter.mAutoFullScreenRunnable",
-                            "skipping scheduled fullscreen mode.");
+                        LogUtil.v("VideoCallPresenter.mAutoFullScreenRunnable", "entering fullscreen mode");
+                        InCallPresenter.getInstance().setFullScreen(true);
+                        autoFullScreenPending = false;
+                    } else {
+                        LogUtil.v(
+                                "VideoCallPresenter.mAutoFullScreenRunnable",
+                                "skipping scheduled fullscreen mode.");
+                    }
                 }
             };
-    /**
-     * Whether if the call is remotely held.
-     */
-    private boolean isRemotelyHeld = false;
+
     private boolean isVideoCallScreenUiReady;
 
     private static boolean isCameraRequired(int videoState, int sessionModificationState) {
@@ -239,7 +243,7 @@ public class VideoCallPresenter
 
         // Infer the camera direction from the video state and store it,
         // if this is an outgoing video call.
-        else if (isOutgoingVideoCall(call) && isCameraDirectionSet(call)) {
+        else if (isOutgoingVideoCall(call) && !isCameraDirectionSet(call)) {
             cameraDir = toCameraDirection(call.getVideoState());
             call.setCameraDir(cameraDir);
         }
@@ -252,7 +256,7 @@ public class VideoCallPresenter
 
         // Infer the camera direction from the video state and store it,
         // if this is an active video call and camera direction is not set.
-        else if (isActiveVideoCall(call) && isCameraDirectionSet(call)) {
+        else if (isActiveVideoCall(call) && !isCameraDirectionSet(call)) {
             cameraDir = toCameraDirection(call.getVideoState());
             call.setCameraDir(cameraDir);
         }
@@ -287,7 +291,7 @@ public class VideoCallPresenter
     }
 
     private static boolean isCameraDirectionSet(DialerCall call) {
-        return !isVideoCall(call) || call.getCameraDir() == CameraDirection.CAMERA_DIRECTION_UNKNOWN;
+        return isVideoCall(call) && call.getCameraDir() != CameraDirection.CAMERA_DIRECTION_UNKNOWN;
     }
 
     private static String toSimpleString(DialerCall call) {
@@ -400,6 +404,17 @@ public class VideoCallPresenter
         InCallPresenter.InCallState inCallState = InCallPresenter.getInstance().getInCallState();
         onStateChange(inCallState, inCallState, CallList.getInstance());
         isVideoCallScreenUiReady = true;
+
+        Point sourceVideoDimensions = getRemoteVideoSurfaceTexture().getSourceVideoDimensions();
+        if (sourceVideoDimensions != null && primaryCall != null) {
+            int width = primaryCall.getPeerDimensionWidth();
+            int height = primaryCall.getPeerDimensionHeight();
+            boolean updated = DialerCall.UNKNOWN_PEER_DIMENSIONS != width
+                    && DialerCall.UNKNOWN_PEER_DIMENSIONS != height;
+            if (updated && (sourceVideoDimensions.x != width || sourceVideoDimensions.y != height)) {
+                onUpdatePeerDimensions(primaryCall, width, height);
+            }
+        }
     }
 
     /**
@@ -497,6 +512,11 @@ public class VideoCallPresenter
                 primaryCall.getVideoTech().getSessionModificationState(),
                 primaryCall.isRemotelyHeld());
         InCallPresenter.getInstance().getInCallCameraManager().onCameraPermissionGranted();
+    }
+
+    @Override
+    public boolean isFullscreen() {
+        return InCallPresenter.getInstance().isFullscreen();
     }
 
     /**
@@ -984,7 +1004,7 @@ public class VideoCallPresenter
         }
 
         // Change size of display surface to match the peer aspect ratio
-        if (width > 0 && height > 0) {
+        if (width > 0 && height > 0 && videoCallScreen != null) {
             getRemoteVideoSurfaceTexture().setSourceVideoDimensions(new Point(width, height));
             videoCallScreen.onRemoteVideoDimensionsChanged();
         }

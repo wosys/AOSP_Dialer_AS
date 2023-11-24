@@ -23,10 +23,10 @@ import androidx.annotation.NonNull;
 import com.android.incallui.call.CallList;
 import com.android.incallui.call.DialerCall;
 import com.android.incallui.call.state.DialerCallState;
-import com.wintmain.dialer.activecalls.ActiveCallInfo;
-import com.wintmain.dialer.activecalls.ActiveCallsComponent;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
+import com.wintmain.dialer.activecalls.ActiveCallInfo;
+import com.wintmain.dialer.activecalls.ActiveCallsComponent;
 
 /**
  * Updates {@link com.wintmain.dialer.activecalls.ActiveCalls}

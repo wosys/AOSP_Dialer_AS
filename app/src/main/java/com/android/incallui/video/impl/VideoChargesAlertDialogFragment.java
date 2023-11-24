@@ -115,7 +115,7 @@ public class VideoChargesAlertDialogFragment extends DialogFragment {
         super.onCreateDialog(bundle);
 
         if (!VideoChargesAlertDialogFragment.shouldShow(
-                requireActivity(), requireArguments().getString(ARG_CALL_ID))) {
+                getActivity(), getArguments().getString(ARG_CALL_ID))) {
             throw new IllegalStateException(
                     "shouldShow indicated VideoChargesAlertDialogFragment should not have showed");
         }
@@ -124,7 +124,7 @@ public class VideoChargesAlertDialogFragment extends DialogFragment {
 
         CheckBox alertCheckBox = dialogView.findViewById(R.id.do_not_show);
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(requireActivity());
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         AlertDialog alertDialog =
                 new AlertDialog.Builder(getActivity())
                         .setView(dialogView)
@@ -142,7 +142,7 @@ public class VideoChargesAlertDialogFragment extends DialogFragment {
         preferences.edit().putBoolean(KEY_DO_NOT_SHOW_VIDEO_CHARGES_ALERT, isChecked).apply();
 
         DialerCall dialerCall =
-                CallList.getInstance().getCallById(requireArguments().getString(ARG_CALL_ID));
+                CallList.getInstance().getCallById(getArguments().getString(ARG_CALL_ID));
         if (dialerCall != null) {
             dialerCall.setDidDismissVideoChargesAlertDialog(true);
         }

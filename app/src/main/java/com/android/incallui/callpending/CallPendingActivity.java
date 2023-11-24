@@ -16,20 +16,19 @@
 
 package com.android.incallui.callpending;
 
-import static com.wintmain.dialer.app.settings.DialerSettingsActivity.PrefsFragment.getThemeButtonBehavior;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.telecom.CallAudioState;
 import android.telecom.TelecomManager;
 
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.FragmentActivity;
-
 import com.android.incallui.audiomode.AudioModeProvider;
 import com.android.incallui.call.state.DialerCallState;
 import com.android.incallui.incall.bindings.InCallBindings;
@@ -44,16 +43,13 @@ import com.android.incallui.incall.protocol.InCallScreenDelegateFactory;
 import com.android.incallui.incall.protocol.PrimaryCallState;
 import com.android.incallui.incall.protocol.PrimaryInfo;
 import com.wintmain.dialer.R;
-import com.wintmain.dialer.app.settings.DialerSettingsActivity;
 import com.wintmain.dialer.common.LogUtil;
 import com.wintmain.dialer.enrichedcall.EnrichedCallComponent;
 import com.wintmain.dialer.enrichedcall.Session;
-import com.wintmain.dialer.main.impl.MainActivityPeer;
 import com.wintmain.dialer.multimedia.MultimediaData;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.Objects;
 
 /**
  * Activity useful for showing the incall ui without an actual call being placed.
@@ -122,19 +118,13 @@ public class CallPendingActivity extends FragmentActivity
         return new Intent(ACTION_FINISH_BROADCAST);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        DialerSettingsActivity.PrefsFragment.ThemeButtonBehavior mThemeBehavior = getThemeButtonBehavior(MainActivityPeer.themeprefs);
-
-        if (mThemeBehavior == DialerSettingsActivity.PrefsFragment.ThemeButtonBehavior.DARK) {
-            getTheme().applyStyle(R.style.DialerDark, true);
-        }
-        if (mThemeBehavior == DialerSettingsActivity.PrefsFragment.ThemeButtonBehavior.LIGHT) {
-            getTheme().applyStyle(R.style.DialerLight, true);
-        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pending_incall_screen);
-        registerReceiver(finishReceiver, new IntentFilter(ACTION_FINISH_BROADCAST));
+        registerReceiver(finishReceiver, new IntentFilter(ACTION_FINISH_BROADCAST),
+                Context.RECEIVER_NOT_EXPORTED);
     }
 
     @Override
@@ -162,7 +152,7 @@ public class CallPendingActivity extends FragmentActivity
     private void setupInCallScreen() {
         InCallScreen inCallScreen =
                 (InCallScreen) getSupportFragmentManager().findFragmentByTag(TAG_IN_CALL_SCREEN);
-        Objects.requireNonNull(inCallScreen).setPrimary(createPrimaryInfo());
+        inCallScreen.setPrimary(createPrimaryInfo());
         inCallScreen.setCallState(
                 PrimaryCallState.builder()
                         .setState(DialerCallState.CALL_PENDING)
@@ -252,10 +242,6 @@ public class CallPendingActivity extends FragmentActivity
                     }
 
                     @Override
-                    public void refreshMuteState() {
-                    }
-
-                    @Override
                     public void addCallClicked() {
                     }
 
@@ -273,10 +259,6 @@ public class CallPendingActivity extends FragmentActivity
 
                     @Override
                     public void swapClicked() {
-                    }
-
-                    @Override
-                    public void callRecordClicked(boolean checked) {
                     }
 
                     @Override

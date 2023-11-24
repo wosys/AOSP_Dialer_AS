@@ -17,10 +17,8 @@
 package com.android.incallui.calllocation.stub;
 
 import android.content.Context;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-
 import com.android.incallui.calllocation.CallLocation;
 import com.wintmain.dialer.common.Assert;
 import com.wintmain.dialer.inject.DialerVariant;
@@ -48,7 +46,7 @@ public abstract class StubCallLocationModule {
 
         @Override
         public boolean canGetLocation(@NonNull Context context) {
-            return true;
+            return false;
         }
 
         @Override

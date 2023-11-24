@@ -18,14 +18,10 @@ package com.android.incallui.incall.protocol;
 
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.wintmain.dialer.common.LogUtil;
 import com.wintmain.dialer.multimedia.MultimediaData;
 import com.google.auto.value.AutoValue;
-
 import java.util.Locale;
 
 /**
@@ -102,7 +98,6 @@ public abstract class PrimaryInfo {
 
     public abstract int numberPresentation();
 
-    @NonNull
     @Override
     public String toString() {
         return String.format(

@@ -129,13 +129,13 @@ public class FalsingManager implements SensorEventListener {
         sessionActive = true;
 
         if (humanInteractionClassifier.isEnabled()) {
-            registerSensors();
+            registerSensors(CLASSIFIER_SENSORS);
         }
     }
 
-    private void registerSensors() {
+    private void registerSensors(int[] sensors) {
         Trace.beginSection("FalsingManager.registerSensors");
-        for (int sensorType : FalsingManager.CLASSIFIER_SENSORS) {
+        for (int sensorType : sensors) {
             Trace.beginSection("get sensor " + sensorType);
             Sensor s = sensorManager.getDefaultSensor(sensorType);
             Trace.endSection();

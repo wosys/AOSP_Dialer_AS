@@ -90,7 +90,7 @@ public class InCallPagerAdapter extends FragmentStatePagerAdapter {
 
     //this is called when notifyDataSetChanged() is called
     @Override
-    public int getItemPosition(@NonNull Object object) {
+    public int getItemPosition(Object object) {
         // refresh all fragments when data set changed
         return PagerAdapter.POSITION_NONE;
     }

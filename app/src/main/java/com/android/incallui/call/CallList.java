@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2017 The Android Open Source Project
+ * Copyright 2023 wintmain
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +35,9 @@ import androidx.annotation.VisibleForTesting;
 import com.android.incallui.call.state.DialerCallState;
 import com.android.incallui.latencyreport.LatencyReport;
 import com.android.incallui.videotech.utils.SessionModificationState;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
 import com.wintmain.dialer.blocking.FilteredNumberAsyncQueryHandler;
 import com.wintmain.dialer.common.Assert;
 import com.wintmain.dialer.common.LogUtil;
@@ -49,9 +53,6 @@ import com.wintmain.dialer.shortcuts.ShortcutUsageReporter;
 import com.wintmain.dialer.spam.SpamComponent;
 import com.wintmain.dialer.spam.status.SpamStatus;
 import com.wintmain.dialer.telecom.TelecomCallUtil;
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -84,10 +85,10 @@ public class CallList implements DialerCallDelegate {
      * resizing, 1 means we only expect a single thread to access the map so make only a single shard
      */
     private final Set<Listener> listeners =
-            Collections.newSetFromMap(new ConcurrentHashMap<>(8, 0.9f, 1));
+            Collections.newSetFromMap(new ConcurrentHashMap<Listener, Boolean>(8, 0.9f, 1));
 
     private final Set<DialerCall> pendingDisconnectCalls =
-            Collections.newSetFromMap(new ConcurrentHashMap<>(8, 0.9f, 1));
+            Collections.newSetFromMap(new ConcurrentHashMap<DialerCall, Boolean>(8, 0.9f, 1));
 
     private UiListener uiListeners;
 
@@ -109,7 +110,22 @@ public class CallList implements DialerCallDelegate {
      */
     public static CallList getInstance() {
         return instance;
-    }
+    }    /**
+     * Handles the timeout for destroying disconnected calls.
+     */
+    @SuppressLint("HandlerLeak")
+    private final Handler handler =
+            new Handler() {
+                @Override
+                public void handleMessage(Message msg) {
+                    if (msg.what == EVENT_DISCONNECTED_TIMEOUT) {
+                        LogUtil.d("CallList.handleMessage", "EVENT_DISCONNECTED_TIMEOUT ", msg.obj);
+                        finishDisconnectedCall((DialerCall) msg.obj);
+                    } else {
+                        LogUtil.e("CallList.handleMessage", "Message not expected: " + msg.what);
+                    }
+                }
+            };
 
     public void onCallAdded(
             final Context context, final android.telecom.Call telecomCall, LatencyReport latencyReport) {
@@ -169,7 +185,7 @@ public class CallList implements DialerCallDelegate {
                         }
 
                         @Override
-                        public void onFailure(@NonNull Throwable t) {
+                        public void onFailure(Throwable t) {
                             LogUtil.e("CallList.onFailure", "unable to query spam status", t);
                         }
                     },
@@ -185,10 +201,13 @@ public class CallList implements DialerCallDelegate {
                 new FilteredNumberAsyncQueryHandler(context);
 
         filteredNumberAsyncQueryHandler.isBlockedNumber(
-                id -> {
-                    if (id != null && id != FilteredNumberAsyncQueryHandler.INVALID_ID) {
-                        call.setBlockedStatus(true);
-                        // No need to update UI since it's only used for logging.
+                new FilteredNumberAsyncQueryHandler.OnCheckBlockedListener() {
+                    @Override
+                    public void onCheckComplete(Integer id) {
+                        if (id != null && id != FilteredNumberAsyncQueryHandler.INVALID_ID) {
+                            call.setBlockedStatus(true);
+                            // No need to update UI since it's only used for logging.
+                        }
                     }
                 },
                 call.getNumber(),
@@ -198,7 +217,7 @@ public class CallList implements DialerCallDelegate {
         if (call.getState() == DialerCallState.INCOMING
                 || call.getState() == DialerCallState.CALL_WAITING) {
             if (call.isActiveRttCall()) {
-                if (call.isPhoneAccountRttCapable()) {
+                if (!call.isPhoneAccountRttCapable()) {
                     RttPromotion.setEnabled(context);
                 }
                 Logger.get(context)
@@ -244,7 +263,7 @@ public class CallList implements DialerCallDelegate {
                 impression = DialerImpression.Type.VOICE_CALL_WITH_INCOMING_VOICE_CALL;
             }
         }
-        Assert.checkArgument(true);
+        Assert.checkArgument(impression != null);
         Logger.get(context)
                 .logCallImpression(
                         impression, incomingCall.getUniqueCallId(), incomingCall.getTimeAddedMs());
@@ -253,27 +272,12 @@ public class CallList implements DialerCallDelegate {
     @Override
     public DialerCall getDialerCallFromTelecomCall(Call telecomCall) {
         return callByTelecomCall.get(telecomCall);
-    }    /**
-     * Handles the timeout for destroying disconnected calls.
-     */
-    @SuppressLint("HandlerLeak")
-    private final Handler handler =
-            new Handler() {
-                @Override
-                public void handleMessage(Message msg) {
-                    if (msg.what == EVENT_DISCONNECTED_TIMEOUT) {
-                        LogUtil.d("CallList.handleMessage", "EVENT_DISCONNECTED_TIMEOUT ", msg.obj);
-                        finishDisconnectedCall((DialerCall) msg.obj);
-                    } else {
-                        LogUtil.e("CallList.handleMessage", "Message not expected: " + msg.what);
-                    }
-                }
-            };
+    }
 
     public void onCallRemoved(Context context, android.telecom.Call telecomCall) {
         if (callByTelecomCall.containsKey(telecomCall)) {
             DialerCall call = callByTelecomCall.get(telecomCall);
-            Assert.checkArgument(!Objects.requireNonNull(call).isExternalCall());
+            Assert.checkArgument(!call.isExternalCall());
 
             EnrichedCallManager manager = EnrichedCallComponent.get(context).getEnrichedCallManager();
             manager.unregisterCapabilitiesListener(call);
@@ -316,6 +320,9 @@ public class CallList implements DialerCallDelegate {
 
     /**
      * Handles the case where an internal call has become an exteral call. We need to
+     *
+     * @param context
+     * @param telecomCall
      */
     public void onInternalCallMadeExternal(Context context, android.telecom.Call telecomCall) {
 
@@ -542,15 +549,6 @@ public class CallList implements DialerCallDelegate {
         return retval;
     }
 
-    public DialerCall getCallWithStateAndNumber(int state, String number) {
-        for (DialerCall call : callById.values()) {
-            if (TextUtils.equals(call.getNumber(), number) && call.getState() == state) {
-                return call;
-            }
-        }
-        return null;
-    }
-
     /**
      * Return if there is any active or background call which was not a parent call (never had a child
      * call)
@@ -746,6 +744,16 @@ public class CallList implements DialerCallDelegate {
         }
     }
 
+    // TBD
+    public DialerCall getCallWithStateAndNumber(int state, String number) {
+        for (DialerCall call : callById.values()) {
+            if (TextUtils.equals(call.getNumber(), number) && call.getState() == state) {
+                return call;
+            }
+        }
+        return null;
+    }
+
     /**
      * Listener interface for any class that wants to be notified of changes to the call list.
      */
@@ -915,8 +923,6 @@ public class CallList implements DialerCallDelegate {
             }
         }
     }
-
-
 
 
 }

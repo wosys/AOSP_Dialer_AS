@@ -32,7 +32,7 @@ import javax.annotation.concurrent.Immutable;
  * Determines where logical buttons should be placed in the {@link InCallFragment} based on the
  * provided mapping.
  *
- * <p>The button placement returned by a call tot, Set)} is created as
+ * <p>The button placement returned by a call to {@link #getButtonPlacement(int, Set)} is created as
  * follows: one button is placed at each UI slot, using the provided mapping to resolve conflicts.
  * Any allowed buttons that were not chosen for their desired slot are filled in at the end of the
  * list until it becomes the proper size.
@@ -84,7 +84,7 @@ final class ButtonChooser {
         for (int i = 0; i < configuredSlots.size() && placedButtons.size() < numUiButtons; ++i) {
             int slotNumber = configuredSlots.get(i);
             List<Integer> potentialButtons = config.getButtonsForSlot(slotNumber);
-            potentialButtons.sort(config.getSlotComparator());
+            Collections.sort(potentialButtons, config.getSlotComparator());
             for (int j = 0; j < potentialButtons.size(); ++j) {
                 if (allowedButtons.contains(potentialButtons.get(j))) {
                     placedButtons.add(potentialButtons.get(j));
@@ -101,7 +101,7 @@ final class ButtonChooser {
             @NonNull Set<Integer> disabledButtons,
             @NonNull List<Integer> placedButtons,
             @NonNull List<Integer> conflicts) {
-        conflicts.sort(config.getConflictComparator());
+        Collections.sort(conflicts, config.getConflictComparator());
         for (Integer conflict : conflicts) {
             if (placedButtons.size() >= numUiButtons) {
                 return;

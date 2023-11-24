@@ -49,7 +49,13 @@ public class BlockedNumberContentObserver extends ContentObserver
     private final Handler handler;
     private final String number;
     private final long timeAddedMillis;
-    private final AsyncTaskExecutor asyncTaskExecutor = AsyncTaskExecutors.createThreadPoolExecutor();
+    private final AsyncTaskExecutor asyncTaskExecutor = AsyncTaskExecutors.createThreadPoolExecutor();    private final Runnable timeoutRunnable =
+            new Runnable() {
+                @Override
+                public void run() {
+                    unregister();
+                }
+            };
 
     /**
      * Creates the BlockedNumberContentObserver to delete the new {@link CallLog} entry from the given
@@ -104,10 +110,5 @@ public class BlockedNumberContentObserver extends ContentObserver
         LogUtil.i("BlockedNumberContentObserver.unregister", null);
         handler.removeCallbacks(timeoutRunnable);
         context.getContentResolver().unregisterContentObserver(this);
-    }    private final Runnable timeoutRunnable =
-            () -> unregister();
-
-
-
-
+    }
 }

@@ -32,20 +32,37 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Locale;
 
-/** State of the primary call. */
+/**
+ * State of the primary call.
+ */
 @AutoValue
 public abstract class PrimaryCallState {
 
-    /**
-     * Button state that will be invisible if not supported, visible but invalid if disabled, or
-     * visible if enabled.
-     */
-    @Retention(RetentionPolicy.SOURCE)
-    @IntDef({ButtonState.NOT_SUPPORT, ButtonState.DISABLED, ButtonState.ENABLED})
-    public @interface ButtonState {
-        int NOT_SUPPORT = 0;
-        int DISABLED = 1;
-        int ENABLED = 2;
+    public static Builder builder() {
+        return new AutoValue_PrimaryCallState.Builder()
+                .setState(DialerCallState.IDLE)
+                .setIsVideoCall(false)
+                .setSessionModificationState(SessionModificationState.NO_REQUEST)
+                .setDisconnectCause(new DisconnectCause(DisconnectCause.UNKNOWN))
+                .setIsWifi(false)
+                .setIsConference(false)
+                .setIsWorkCall(false)
+                .setIsHdAttempting(false)
+                .setIsHdAudioCall(false)
+                .setIsForwardedNumber(false)
+                .setShouldShowContactPhoto(false)
+                .setConnectTimeMillis(0)
+                .setIsVoiceMailNumber(false)
+                .setIsRemotelyHeld(false)
+                .setIsBusinessNumber(false)
+                .setSupportsCallOnHold(true)
+                .setSwapToSecondaryButtonState(ButtonState.NOT_SUPPORT)
+                .setIsAssistedDialed(false)
+                .setPrimaryColor(0);
+    }
+
+    public static PrimaryCallState empty() {
+        return PrimaryCallState.builder().build();
     }
 
     public abstract int state();
@@ -111,30 +128,27 @@ public abstract class PrimaryCallState {
     @Nullable
     public abstract TransformationInfo assistedDialingExtras();
 
-    public static Builder builder() {
-        return new AutoValue_PrimaryCallState.Builder()
-                .setState(DialerCallState.IDLE)
-                .setIsVideoCall(false)
-                .setSessionModificationState(SessionModificationState.NO_REQUEST)
-                .setDisconnectCause(new DisconnectCause(DisconnectCause.UNKNOWN))
-                .setIsWifi(false)
-                .setIsConference(false)
-                .setIsWorkCall(false)
-                .setIsHdAttempting(false)
-                .setIsHdAudioCall(false)
-                .setIsForwardedNumber(false)
-                .setShouldShowContactPhoto(false)
-                .setConnectTimeMillis(0)
-                .setIsVoiceMailNumber(false)
-                .setIsRemotelyHeld(false)
-                .setIsBusinessNumber(false)
-                .setSupportsCallOnHold(true)
-                .setSwapToSecondaryButtonState(ButtonState.NOT_SUPPORT)
-                .setIsAssistedDialed(false)
-                .setPrimaryColor(0);
+    @Override
+    public String toString() {
+        return String.format(
+                Locale.US, "PrimaryCallState, state: %d, connectionLabel: %s", state(), connectionLabel());
     }
 
-    /** Builder class for primary call state info. */
+    /**
+     * Button state that will be invisible if not supported, visible but invalid if disabled, or
+     * visible if enabled.
+     */
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({ButtonState.NOT_SUPPORT, ButtonState.DISABLED, ButtonState.ENABLED})
+    public @interface ButtonState {
+        int NOT_SUPPORT = 0;
+        int DISABLED = 1;
+        int ENABLED = 2;
+    }
+
+    /**
+     * Builder class for primary call state info.
+     */
     @AutoValue.Builder
     public abstract static class Builder {
         public abstract Builder setState(int state);
@@ -202,15 +216,5 @@ public abstract class PrimaryCallState {
             }
             return primaryCallState;
         }
-    }
-
-    public static PrimaryCallState empty() {
-        return PrimaryCallState.builder().build();
-    }
-
-    @Override
-    public String toString() {
-        return String.format(
-                Locale.US, "PrimaryCallState, state: %d, connectionLabel: %s", state(), connectionLabel());
     }
 }

@@ -22,9 +22,7 @@ import android.content.Context;
 import android.telecom.DisconnectCause;
 import android.telecom.PhoneAccountHandle;
 import android.util.Pair;
-
 import androidx.annotation.NonNull;
-
 import com.android.incallui.call.DialerCall;
 import com.wintmain.dialer.R;
 import com.wintmain.dialer.callintent.CallInitiationType;

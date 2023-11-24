@@ -18,10 +18,13 @@ package com.android.incallui.call;
 
 import android.Manifest.permission;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.hardware.camera2.CameraCharacteristics;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.os.SystemClock;
@@ -59,9 +62,13 @@ import com.android.incallui.videotech.duo.DuoVideoTech;
 import com.android.incallui.videotech.empty.EmptyVideoTech;
 import com.android.incallui.videotech.ims.ImsVideoTech;
 import com.android.incallui.videotech.utils.VideoUtils;
+import com.google.common.base.Optional;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.MoreExecutors;
 import com.wintmain.dialer.R;
 import com.wintmain.dialer.assisteddialing.ConcreteCreator;
 import com.wintmain.dialer.assisteddialing.TransformationInfo;
+import com.wintmain.dialer.blocking.FilteredNumbersUtil;
 import com.wintmain.dialer.callintent.CallInitiationType;
 import com.wintmain.dialer.callintent.CallIntentParser;
 import com.wintmain.dialer.callintent.CallSpecificAppData;
@@ -91,9 +98,6 @@ import com.wintmain.dialer.telecom.TelecomCallUtil;
 import com.wintmain.dialer.telecom.TelecomUtil;
 import com.wintmain.dialer.time.Clock;
 import com.wintmain.dialer.util.PermissionsUtil;
-import com.google.common.base.Optional;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.MoreExecutors;
 
 import java.io.IOException;
 import java.lang.annotation.Retention;
@@ -121,9 +125,9 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
     @VisibleForTesting
     public static final String CONFIG_EMERGENCY_CALLBACK_WINDOW_MILLIS =
             "emergency_callback_window_millis";
+    public static final int UNKNOWN_PEER_DIMENSIONS = -1;
     private static final String ID_PREFIX = "DialerCall_";
     private static int idCounter = 0;
-
     /**
      * A counter used to append to restricted/private/hidden calls so that users can identify them in
      * a conversation. This value is reset in {@link CallList#onCallRemoved(Context, Call)} when there
@@ -149,15 +153,17 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
     private final List<CannedTextResponsesLoadedListener> cannedTextResponsesLoadedListeners =
             new CopyOnWriteArrayList<>();
     private final VideoTechManager videoTechManager;
-    private final long timeAddedMs;
+
     private boolean isSpeakEasyCall;
     private boolean isEmergencyCall;
     private Uri handle;
     private int state = DialerCallState.INVALID;
     private DisconnectCause disconnectCause;
+
     private boolean hasShownLteToWiFiHandoverToast;
     private boolean hasShownWiFiToLteHandoverToast;
     private boolean doNotShowDialogForHandoffToWifiFailure;
+
     private String childNumber;
     private String lastForwardedNumber;
     private boolean isCallForwarded;
@@ -166,9 +172,11 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
     private PhoneAccountHandle phoneAccountHandle;
     @CallHistoryStatus
     private int callHistoryStatus = CALL_HISTORY_STATUS_UNKNOWN;
+
     @Nullable
     private SpamStatus spamStatus;
     private boolean isBlocked;
+
     private boolean didShowCameraPermission;
     private boolean didDismissVideoChargesAlertDialog;
     private PersistableBundle carrierConfig;
@@ -177,19 +185,24 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
     private int cameraDirection = CameraDirection.CAMERA_DIRECTION_UNKNOWN;
     private EnrichedCallCapabilities enrichedCallCapabilities;
     private Session enrichedCallSession;
+
     private int answerAndReleaseButtonDisplayedTimes = 0;
     private boolean releasedByAnsweringSecondCall = false;
     // Times when a second call is received but AnswerAndRelease button is not shown
     // since it's not supported.
     private int secondCallWithoutAnswerAndReleasedButtonTimes = 0;
     private VideoTech videoTech;
+
     private com.wintmain.dialer.logging.VideoTech.Type selectedAvailableVideoTechType =
             com.wintmain.dialer.logging.VideoTech.Type.NONE;
     private boolean isVoicemailNumber;
     private List<PhoneAccountHandle> callCapableAccounts;
     private String countryIso;
+
     private volatile boolean feedbackRequested = false;
+
     private Clock clock = System::currentTimeMillis;
+
     @Nullable
     private PreferredAccountRecorder preferredAccountRecorder;
     private boolean isCallRemoved;
@@ -199,18 +212,19 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
      * device.
      */
     private boolean isRemotelyHeld;
-
     /**
      * Indicates whether this call is currently in the process of being merged into a conference.
      */
     private boolean isMergeInProcess;
-
     /**
      * Indicates whether the phone account associated with this call supports specifying a call
      * subject.
      */
     private boolean isCallSubjectSupported;
     private RttTranscript rttTranscript;
+    private final long timeAddedMs;
+    private int peerDimensionWidth = UNKNOWN_PEER_DIMENSIONS;
+    private int peerDimensionHeight = UNKNOWN_PEER_DIMENSIONS;
 
     public DialerCall(
             Context context,
@@ -243,64 +257,6 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
         parseCallSpecificAppData();
 
         updateEnrichedCallSession();
-    }
-
-    public static String getNumberFromHandle(Uri handle) {
-        return handle == null ? "" : handle.getSchemeSpecificPart();
-    }
-
-    private static int translateState(int state) {
-        switch (state) {
-            case Call.STATE_NEW:
-            case Call.STATE_CONNECTING:
-                return DialerCallState.CONNECTING;
-            case Call.STATE_SELECT_PHONE_ACCOUNT:
-                return DialerCallState.SELECT_PHONE_ACCOUNT;
-            case Call.STATE_DIALING:
-                return DialerCallState.DIALING;
-            case Call.STATE_PULLING_CALL:
-                return DialerCallState.PULLING;
-            case Call.STATE_RINGING:
-                return DialerCallState.INCOMING;
-            case Call.STATE_ACTIVE:
-                return DialerCallState.ACTIVE;
-            case Call.STATE_HOLDING:
-                return DialerCallState.ONHOLD;
-            case Call.STATE_DISCONNECTED:
-                return DialerCallState.DISCONNECTED;
-            case Call.STATE_DISCONNECTING:
-                return DialerCallState.DISCONNECTING;
-            default:
-                return DialerCallState.INVALID;
-        }
-    }
-
-    public static boolean areSame(DialerCall call1, DialerCall call2) {
-        if (call1 == null && call2 == null) {
-            return true;
-        } else if (call1 == null || call2 == null) {
-            return false;
-        }
-
-        // otherwise compare call Ids
-        return call1.getId().equals(call2.getId());
-    }
-
-    public static void clearRestrictedCount() {
-        hiddenCounter = 0;
-    }
-
-    public RttTranscript getRttTranscript() {
-        return rttTranscript;
-    }
-
-    public void setRttTranscript(RttTranscript rttTranscript) {
-        this.rttTranscript = rttTranscript;
-    }
-
-    public void addListener(DialerCallListener listener) {
-        Assert.isMainThread();
-        listeners.add(listener);
     }    private final Call.Callback telecomCallCallback =
             new Call.Callback() {
                 @Override
@@ -412,6 +368,7 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
                         // now update the UI to possibly re-enable the Merge button based on the number of
                         // currently conferenceable calls available or Connection Capabilities.
                         case android.telecom.Connection.EVENT_CALL_MERGE_FAILED:
+                            isMergeInProcess = false;
                             update();
                             break;
                         case TelephonyManagerCompat.EVENT_HANDOVER_VIDEO_FROM_WIFI_TO_LTE:
@@ -454,6 +411,64 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
                     }
                 }
             };
+
+    public static String getNumberFromHandle(Uri handle) {
+        return handle == null ? "" : handle.getSchemeSpecificPart();
+    }
+
+    private static int translateState(int state) {
+        switch (state) {
+            case Call.STATE_NEW:
+            case Call.STATE_CONNECTING:
+                return DialerCallState.CONNECTING;
+            case Call.STATE_SELECT_PHONE_ACCOUNT:
+                return DialerCallState.SELECT_PHONE_ACCOUNT;
+            case Call.STATE_DIALING:
+                return DialerCallState.DIALING;
+            case Call.STATE_PULLING_CALL:
+                return DialerCallState.PULLING;
+            case Call.STATE_RINGING:
+                return DialerCallState.INCOMING;
+            case Call.STATE_ACTIVE:
+                return DialerCallState.ACTIVE;
+            case Call.STATE_HOLDING:
+                return DialerCallState.ONHOLD;
+            case Call.STATE_DISCONNECTED:
+                return DialerCallState.DISCONNECTED;
+            case Call.STATE_DISCONNECTING:
+                return DialerCallState.DISCONNECTING;
+            default:
+                return DialerCallState.INVALID;
+        }
+    }
+
+    public static boolean areSame(DialerCall call1, DialerCall call2) {
+        if (call1 == null && call2 == null) {
+            return true;
+        } else if (call1 == null || call2 == null) {
+            return false;
+        }
+
+        // otherwise compare call Ids
+        return call1.getId().equals(call2.getId());
+    }
+
+    public static void clearRestrictedCount() {
+        hiddenCounter = 0;
+    }
+
+    public RttTranscript getRttTranscript() {
+        return rttTranscript;
+    }
+
+    public void setRttTranscript(RttTranscript rttTranscript) {
+        this.rttTranscript = rttTranscript;
+    }
+
+    public void addListener(DialerCallListener listener) {
+        Assert.isMainThread();
+        listeners.add(listener);
+    }
 
     public void removeListener(DialerCallListener listener) {
         Assert.isMainThread();
@@ -650,6 +665,9 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
         if (!PermissionsUtil.hasPermission(context, permission.READ_PHONE_STATE)) {
             return;
         }
+        if (VERSION.SDK_INT < VERSION_CODES.O) {
+            return;
+        }
         // TODO(a bug): This may take several seconds to complete, revisit it to move it to worker
         // thread.
         carrierConfig =
@@ -666,6 +684,11 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
      * @return {@code true} if the bundle is corrupted, {@code false} otherwise.
      */
     protected boolean areCallExtrasCorrupted(Bundle callExtras) {
+        /**
+         * There's currently a bug in Telephony service (a bug) that could corrupt the extras
+         * bundle, resulting in a IllegalArgumentException while validating data under {@link
+         * Bundle#containsKey(String)}.
+         */
         try {
             callExtras.containsKey(Connection.EXTRA_CHILD_ADDRESS);
             return false;
@@ -678,6 +701,10 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
 
     protected void updateFromCallExtras(Bundle callExtras) {
         if (callExtras == null || areCallExtrasCorrupted(callExtras)) {
+            /**
+             * If the bundle is corrupted, abandon information update as a work around. These are not
+             * critical for the dialer to function.
+             */
             return;
         }
         // Check for a change in the child address and notify any listeners.
@@ -799,6 +826,10 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
         }
 
         // Call.EXTRA_LAST_EMERGENCY_CALLBACK_TIME_MILLIS is available starting in O
+        if (VERSION.SDK_INT < VERSION_CODES.O) {
+            long timestampMillis = FilteredNumbersUtil.getLastEmergencyCallTimeMillis(context);
+            return isInEmergencyCallbackWindow(timestampMillis);
+        }
 
         // We want to treat any incoming call that arrives a short time after an outgoing emergency call
         // as a potential emergency callback.
@@ -806,7 +837,7 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
                 && getExtras().getLong(Call.EXTRA_LAST_EMERGENCY_CALLBACK_TIME_MILLIS, 0) > 0) {
             long lastEmergencyCallMillis =
                     getExtras().getLong(Call.EXTRA_LAST_EMERGENCY_CALLBACK_TIME_MILLIS, 0);
-            return isInEmergencyCallbackWindow(lastEmergencyCallMillis);
+          return isInEmergencyCallbackWindow(lastEmergencyCallMillis);
         }
         return false;
     }
@@ -960,6 +991,7 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
     /**
      * Checks if the call supports the given set of capabilities supplied as a bit mask.
      */
+    @TargetApi(28)
     public boolean can(int capabilities) {
         int supportedCapabilities = telecomCall.getDetails().getCallCapabilities();
 
@@ -1006,6 +1038,7 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
      * the same time that is logged as the start time in the Call Log (see {@link
      * android.provider.CallLog.Calls#DATE}).
      */
+    @TargetApi(VERSION_CODES.O)
     public long getCreationTimeMillis() {
         return telecomCall.getDetails().getCreationTimeMillis();
     }
@@ -1051,6 +1084,7 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
         return getVideoTech().isTransmittingOrReceiving() || VideoProfile.isVideo(getVideoState());
     }
 
+    @TargetApi(28)
     public boolean isActiveRttCall() {
         if (BuildCompat.isAtLeastP()) {
             return getTelecomCall().isRttActive();
@@ -1059,6 +1093,7 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
         }
     }
 
+    @TargetApi(28)
     @Nullable
     public RttCall getRttCall() {
         if (!isActiveRttCall()) {
@@ -1067,16 +1102,18 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
         return getTelecomCall().getRttCall();
     }
 
+    @TargetApi(28)
     public boolean isPhoneAccountRttCapable() {
         PhoneAccount phoneAccount = getPhoneAccount();
         if (phoneAccount == null) {
-            return true;
+            return false;
         }
-        return !phoneAccount.hasCapabilities(PhoneAccount.CAPABILITY_RTT);
+      return phoneAccount.hasCapabilities(PhoneAccount.CAPABILITY_RTT);
     }
 
+    @TargetApi(28)
     public boolean canUpgradeToRttCall() {
-        if (isPhoneAccountRttCapable()) {
+        if (!isPhoneAccountRttCapable()) {
             return false;
         }
         if (isActiveRttCall()) {
@@ -1088,13 +1125,15 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
         if (isConferenceCall()) {
             return false;
         }
-        return !CallList.getInstance().hasActiveRttCall();
+      return !CallList.getInstance().hasActiveRttCall();
     }
 
+    @TargetApi(28)
     public void sendRttUpgradeRequest() {
         getTelecomCall().sendRttRequest();
     }
 
+    @TargetApi(28)
     public void respondToRttRequest(boolean accept, int rttRequestId) {
         Logger.get(context)
                 .logCallImpression(
@@ -1106,6 +1145,7 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
         getTelecomCall().respondToRttRequest(rttRequestId, accept);
     }
 
+    @TargetApi(28)
     private void saveRttTranscript() {
         if (!BuildCompat.isAtLeastP()) {
             return;
@@ -1207,7 +1247,6 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
         }
     }
 
-    @NonNull
     @Override
     public String toString() {
         if (telecomCall == null) {
@@ -1278,7 +1317,7 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
             return false;
         }
 
-        return !isPotentialEmergencyCallback();
+      return !isPotentialEmergencyCallback();
     }
 
     public boolean isBlocked() {
@@ -1316,9 +1355,9 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
             // placing the outgoing call.
             //
             // The existence of the assisted dialing extras indicates that assisted dialing took place.
-            return getIntentExtras().getBoolean(TelephonyManagerCompat.USE_ASSISTED_DIALING, false)
-                    && getAssistedDialingExtras() != null
-                    && VERSION.SDK_INT <= ConcreteCreator.BUILD_CODE_CEILING;
+          return getIntentExtras().getBoolean(TelephonyManagerCompat.USE_ASSISTED_DIALING, false)
+                  && getAssistedDialingExtras() != null
+                  && VERSION.SDK_INT <= ConcreteCreator.BUILD_CODE_CEILING;
         }
 
         return false;
@@ -1527,6 +1566,8 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
 
     @Override
     public void onPeerDimensionsChanged(int width, int height) {
+        peerDimensionWidth = width;
+        peerDimensionHeight = height;
         InCallVideoCallCallbackNotifier.getInstance().peerDimensionsChanged(this, width, height);
     }
 
@@ -1677,7 +1718,7 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
         return preferredAccountRecorder;
     }
 
-    public void setPreferredAccountRecorder(@Nullable PreferredAccountRecorder preferredAccountRecorder) {
+    public void setPreferredAccountRecorder(PreferredAccountRecorder preferredAccountRecorder) {
         this.preferredAccountRecorder = preferredAccountRecorder;
     }
 
@@ -1740,9 +1781,25 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
      */
     public void setIsSpeakEasyCall(boolean isSpeakEasyCall) {
         this.isSpeakEasyCall = isSpeakEasyCall;
-        for (DialerCallListener listener : listeners) {
-            listener.onDialerCallSpeakEasyStateChange();
+        if (listeners != null) {
+            for (DialerCallListener listener : listeners) {
+                listener.onDialerCallSpeakEasyStateChange();
+            }
         }
+    }
+
+    /**
+     * Gets peer dimension width.
+     */
+    public int getPeerDimensionWidth() {
+        return peerDimensionWidth;
+    }
+
+    /**
+     * Gets peer dimension height.
+     */
+    public int getPeerDimensionHeight() {
+        return peerDimensionHeight;
     }
 
     /**
@@ -1856,7 +1913,6 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
             }
         }
 
-        @NonNull
         @Override
         public String toString() {
             return String.format(
@@ -1951,8 +2007,4 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
             }
         }
     }
-
-
-
-
 }

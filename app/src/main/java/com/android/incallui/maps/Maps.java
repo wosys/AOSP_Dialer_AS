@@ -17,7 +17,6 @@
 package com.android.incallui.maps;
 
 import android.location.Location;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 

@@ -16,6 +16,7 @@
 
 package com.android.incallui.answerproximitysensor;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.hardware.display.DisplayManager;
 import android.hardware.display.DisplayManager.DisplayListener;
@@ -31,7 +32,7 @@ import com.wintmain.dialer.common.LogUtil;
  */
 public class SystemProximityWakeLock implements AnswerProximityWakeLock, DisplayListener {
 
-    private static final String TAG = "Dialer:SystemProximityWakeLock";
+    private static final String TAG = "SystemProximityWakeLock";
 
     private final Context context;
     private final PowerManager.WakeLock wakeLock;
@@ -39,6 +40,7 @@ public class SystemProximityWakeLock implements AnswerProximityWakeLock, Display
     @Nullable
     private ScreenOnListener listener;
 
+    @SuppressLint("InvalidWakeLockTag")
     public SystemProximityWakeLock(Context context) {
         this.context = context;
         wakeLock =
@@ -55,7 +57,7 @@ public class SystemProximityWakeLock implements AnswerProximityWakeLock, Display
 
     @Override
     public void acquire() {
-        wakeLock.acquire(10 * 60 * 1000L /*10 minutes*/);
+        wakeLock.acquire();
         context.getSystemService(DisplayManager.class).registerDisplayListener(this, null);
     }
 

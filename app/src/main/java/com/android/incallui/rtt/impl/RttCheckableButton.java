@@ -37,7 +37,6 @@ public class RttCheckableButton extends androidx.appcompat.widget.AppCompatButto
     private OnCheckedChangeListener onCheckedChangeListener;
     private CharSequence contentDescriptionChecked;
     private CharSequence contentDescriptionUnchecked;
-
     public RttCheckableButton(Context context) {
         this(context, null);
     }

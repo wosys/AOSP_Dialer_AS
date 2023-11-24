@@ -42,7 +42,6 @@ public class SpeakerButtonInfo {
     public final int label;
     public final boolean nonBluetoothMode;
     public final boolean isChecked;
-
     public SpeakerButtonInfo(CallAudioState audioState) {
         if ((audioState.getSupportedRouteMask() & CallAudioState.ROUTE_BLUETOOTH)
                 == CallAudioState.ROUTE_BLUETOOTH) {

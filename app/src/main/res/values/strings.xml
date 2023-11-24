@@ -792,8 +792,9 @@
     <string name="voicemailMultiSelectActionBarTitle" translatable="false">%1$s selected</string>
     <string name="voicemail_string" translatable="false">Voicemail</string>
     <string name="voicemail_transcription_rating" translatable="false">Rate transcription quality</string>
-    <string name="wait_prompt_str" translatable="false">"Send the following tones?
-"</string>
+    <string name="wait_prompt_str" translatable="false">"Send the following tones?"</string>
     <string name="want_to_chat" translatable="false">Want to chat?</string>
     <string name="websiteLabelsGroup" translatable="false">Website</string>
+    <string name="event_activated" translatable="false"><![CDATA[&#x1f408;&#x1F415;]]></string>
+    <string name="event_deactivated" translatable="false">Pet mode off</string>
 </resources>

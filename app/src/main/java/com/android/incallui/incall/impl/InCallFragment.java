@@ -16,13 +16,11 @@
 
 package com.android.incallui.incall.impl;
 
-import static com.wintmain.dialer.app.settings.DialerSettingsActivity.PrefsFragment.getThemeButtonBehavior;
-
 import android.Manifest.permission;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.os.Handler;
 import android.telecom.CallAudioState;
@@ -33,7 +31,9 @@ import android.view.View;
 import android.view.View.OnAttachStateChangeListener;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.accessibility.AccessibilityEvent;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -48,7 +48,6 @@ import com.android.incallui.audioroute.AudioRouteSelectorDialogFragment;
 import com.android.incallui.audioroute.AudioRouteSelectorDialogFragment.AudioRouteSelectorPresenter;
 import com.android.incallui.contactgrid.ContactGridManager;
 import com.android.incallui.hold.OnHoldFragment;
-import com.android.incallui.incall.impl.ButtonController.CallRecordButtonController;
 import com.android.incallui.incall.impl.ButtonController.SpeakerButtonController;
 import com.android.incallui.incall.impl.ButtonController.UpgradeToRttButtonController;
 import com.android.incallui.incall.impl.InCallButtonGridFragment.OnButtonGridCreatedListener;
@@ -65,21 +64,17 @@ import com.android.incallui.incall.protocol.PrimaryCallState.ButtonState;
 import com.android.incallui.incall.protocol.PrimaryInfo;
 import com.android.incallui.incall.protocol.SecondaryInfo;
 import com.wintmain.dialer.R;
-import com.wintmain.dialer.app.settings.DialerSettingsActivity;
 import com.wintmain.dialer.common.Assert;
 import com.wintmain.dialer.common.FragmentUtils;
 import com.wintmain.dialer.common.LogUtil;
 import com.wintmain.dialer.logging.DialerImpression;
 import com.wintmain.dialer.logging.Logger;
-import com.wintmain.dialer.main.impl.MainActivity;
-import com.wintmain.dialer.main.impl.MainActivityPeer;
 import com.wintmain.dialer.multimedia.MultimediaData;
 import com.wintmain.dialer.strictmode.StrictModeUtils;
 import com.wintmain.dialer.widget.LockableViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Fragment that shows UI for an ongoing voice call.
@@ -91,11 +86,10 @@ public class InCallFragment extends Fragment
         AudioRouteSelectorPresenter,
         OnButtonGridCreatedListener {
 
-    private static final int REQUEST_CODE_CALL_RECORD_PERMISSION = 1000;
-    private final List<ButtonController> buttonControllers = new ArrayList<>();
     // Add animation to educate users. If a call has enriched calling attachments then we'll
     // initially show the attachment page. After a delay seconds we'll animate to the button grid.
     private final Handler handler = new Handler();
+    private final List<ButtonController> buttonControllers = new ArrayList<>();
     private View endCallButton;
     private InCallPaginator paginator;
     private LockableViewPager pager;
@@ -129,12 +123,11 @@ public class InCallFragment extends Fragment
                 || id == InCallButtonIds.BUTTON_MERGE
                 || id == InCallButtonIds.BUTTON_MANAGE_VOICE_CONFERENCE
                 || id == InCallButtonIds.BUTTON_SWAP_SIM
-                || id == InCallButtonIds.BUTTON_UPGRADE_TO_RTT
-                || id == InCallButtonIds.BUTTON_RECORD_CALL;
+                || id == InCallButtonIds.BUTTON_UPGRADE_TO_RTT;
     }
 
     @Override
-    public void onAttach(@NonNull Context context) {
+    public void onAttach(Context context) {
         super.onAttach(context);
         if (savedSecondaryInfo != null) {
             setSecondary(savedSecondaryInfo);
@@ -145,7 +138,7 @@ public class InCallFragment extends Fragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         inCallButtonUiDelegate =
-                Objects.requireNonNull(FragmentUtils.getParent(this, InCallButtonUiDelegateFactory.class))
+                FragmentUtils.getParent(this, InCallButtonUiDelegateFactory.class)
                         .newInCallButtonUiDelegate();
         if (savedInstanceState != null) {
             inCallButtonUiDelegate.onRestoreInstanceState(savedInstanceState);
@@ -174,8 +167,8 @@ public class InCallFragment extends Fragment
                         true /* showAnonymousAvatar */);
         contactGridManager.onMultiWindowModeChanged(requireActivity().isInMultiWindowMode());
 
-        paginator = view.findViewById(R.id.incall_paginator);
-        pager = view.findViewById(R.id.incall_pager);
+        paginator = (InCallPaginator) view.findViewById(R.id.incall_paginator);
+        pager = (LockableViewPager) view.findViewById(R.id.incall_pager);
         pager.setOnTouchListener(
                 (v, event) -> {
                     handler.removeCallbacks(pagerRunnable);
@@ -185,7 +178,7 @@ public class InCallFragment extends Fragment
         endCallButton = view.findViewById(R.id.incall_end_call);
         endCallButton.setOnClickListener(this);
 
-        if (ContextCompat.checkSelfPermission(requireContext(), permission.READ_PHONE_STATE)
+        if (ContextCompat.checkSelfPermission(getContext(), permission.READ_PHONE_STATE)
                 != PackageManager.PERMISSION_GRANTED) {
             voiceNetworkType = TelephonyManager.NETWORK_TYPE_UNKNOWN;
         } else {
@@ -207,14 +200,6 @@ public class InCallFragment extends Fragment
                         if (topInset != container.getPaddingTop()) {
                             TransitionManager.beginDelayedTransition(((ViewGroup) container.getParent()));
                             container.setPadding(0, topInset, 0, bottomInset);
-                            TypedArray typedArray =
-                                    MainActivity.main.getTheme().obtainStyledAttributes(R.styleable.darkmodeView);
-                            boolean darkmode = typedArray.getBoolean(R.styleable.darkmodeView_darkmode, false);
-                            typedArray.recycle();
-                            DialerSettingsActivity.PrefsFragment.ThemeButtonBehavior mThemeBehavior = getThemeButtonBehavior(MainActivityPeer.themeprefs);
-                            if (mThemeBehavior == DialerSettingsActivity.PrefsFragment.ThemeButtonBehavior.LIGHT || !darkmode) {
-                                container.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
-                            }
                         }
                     }
 
@@ -228,7 +213,6 @@ public class InCallFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        inCallButtonUiDelegate.refreshMuteState();
         inCallScreenDelegate.onInCallScreenResumed();
     }
 
@@ -237,7 +221,7 @@ public class InCallFragment extends Fragment
         LogUtil.i("InCallFragment.onViewCreated", null);
         super.onViewCreated(view, bundle);
         inCallScreenDelegate =
-                Objects.requireNonNull(FragmentUtils.getParent(this, InCallScreenDelegateFactory.class)).newInCallScreenDelegate();
+                FragmentUtils.getParent(this, InCallScreenDelegateFactory.class).newInCallScreenDelegate();
         Assert.isNotNull(inCallScreenDelegate);
 
         buttonControllers.add(new ButtonController.MuteButtonController(inCallButtonUiDelegate));
@@ -255,7 +239,6 @@ public class InCallFragment extends Fragment
                 new ButtonController.ManageConferenceButtonController(inCallScreenDelegate));
         buttonControllers.add(
                 new ButtonController.SwitchToSecondaryButtonController(inCallScreenDelegate));
-        buttonControllers.add(new ButtonController.CallRecordButtonController(inCallButtonUiDelegate));
 
         inCallScreenDelegate.onInCallScreenDelegateInit(this);
         inCallScreenDelegate.onInCallScreenReady();
@@ -274,7 +257,7 @@ public class InCallFragment extends Fragment
     }
 
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
+    public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         inCallButtonUiDelegate.onSaveInstanceState(outState);
     }
@@ -303,7 +286,7 @@ public class InCallFragment extends Fragment
             contactGridManager.setAvatarHidden(true);
 
             // Need to let the dialpad move up a little further when location info is being shown
-            View dialpadView = requireView().findViewById(R.id.incall_dialpad_container);
+            View dialpadView = getView().findViewById(R.id.incall_dialpad_container);
             ViewGroup.LayoutParams params = dialpadView.getLayoutParams();
             if (params instanceof RelativeLayout.LayoutParams) {
                 ((RelativeLayout.LayoutParams) params).removeRule(RelativeLayout.BELOW);
@@ -419,7 +402,11 @@ public class InCallFragment extends Fragment
             // Update the Android Button's state to isShowing.
             inCallButtonGridFragment.onInCallScreenDialpadVisibilityChange(isShowing);
         }
-
+        Activity activity = getActivity();
+        Window window = activity.getWindow();
+        window.setNavigationBarColor(
+                activity.getColor(
+                        isShowing ? android.R.color.background_dark : android.R.color.transparent));
     }
 
     @Override
@@ -487,39 +474,6 @@ public class InCallFragment extends Fragment
         ((SpeakerButtonController) getButtonController(InCallButtonIds.BUTTON_AUDIO))
                 .setAudioState(audioState);
         getButtonController(InCallButtonIds.BUTTON_MUTE).setChecked(audioState.isMuted());
-    }
-
-    @Override
-    public void setCallRecordingState(boolean isRecording) {
-        ((CallRecordButtonController) getButtonController(InCallButtonIds.BUTTON_RECORD_CALL))
-                .setRecordingState(isRecording);
-    }
-
-    @Override
-    public void setCallRecordingDuration(long durationMs) {
-        ((CallRecordButtonController) getButtonController(InCallButtonIds.BUTTON_RECORD_CALL))
-                .setRecordingDuration(durationMs);
-    }
-
-    @Override
-    public void requestCallRecordingPermissions(String[] permissions) {
-        requestPermissions(permissions, REQUEST_CODE_CALL_RECORD_PERMISSION);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_CODE_CALL_RECORD_PERMISSION) {
-            boolean allGranted = grantResults.length > 0;
-            for (int grantResult : grantResults) {
-                allGranted &= grantResult == PackageManager.PERMISSION_GRANTED;
-            }
-            if (allGranted) {
-                inCallButtonUiDelegate.callRecordClicked(true);
-            }
-        } else {
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
     }
 
     @Override

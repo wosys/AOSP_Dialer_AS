@@ -21,7 +21,6 @@ import android.hardware.display.DisplayManager;
 import android.os.PowerManager;
 import android.os.Trace;
 import android.view.Display;
-
 import com.android.incallui.call.DialerCall;
 import com.android.incallui.call.DialerCallListener;
 import com.android.incallui.call.state.DialerCallState;

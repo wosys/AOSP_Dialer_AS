@@ -38,6 +38,8 @@ import java.util.Arrays;
  */
 public class CallerInfoUtils {
 
+    private static final String TAG = CallerInfoUtils.class.getSimpleName();
+
     private static final int QUERY_TOKEN = -1;
 
     public CallerInfoUtils() {
@@ -94,7 +96,6 @@ public class CallerInfoUtils {
         if (!TextUtils.isEmpty(number)) {
             // Don't split it if it's a SIP number.
             if (!PhoneNumberHelper.isUriNumber(number)) {
-                assert number != null;
                 final String[] numbers = number.split("&");
                 number = numbers[0];
                 if (numbers.length > 1) {
@@ -122,7 +123,7 @@ public class CallerInfoUtils {
      *
      * @param lookupService the {@link CachedNumberLookupService} used to build a new {@link
      *                      CachedContactInfo}
-     *                      {@link        CallerInfo} object
+     * @param {@link        CallerInfo} object
      * @return a CachedContactInfo object created from this CallerInfo
      * @throws NullPointerException if lookupService or ci are null
      */
@@ -190,7 +191,7 @@ public class CallerInfoUtils {
                 && presentation == TelecomManager.PRESENTATION_ALLOWED)) {
             // For all special strings, change number & numberPrentation.
             if (isCnapSpecialCaseRestricted(number)) {
-                number = PhoneNumberHelper.getDisplayNameForRestrictedNumber(context);
+                number = PhoneNumberHelper.getDisplayNameForRestrictedNumber(context).toString();
                 ci.numberPresentation = TelecomManager.PRESENTATION_RESTRICTED;
             } else if (isCnapSpecialCaseUnknown(number)) {
                 number = context.getString(R.string.unknown);
@@ -225,6 +226,10 @@ public class CallerInfoUtils {
         }
 
         // Todo: Figure out an equivalent for VDBG
+        if (false) {
+            // When VDBG is true we emit PII.
+            return number;
+        }
 
         // Do exactly same thing as Uri#toSafeString() does, which will enable us to compare
         // sanitized phone numbers.

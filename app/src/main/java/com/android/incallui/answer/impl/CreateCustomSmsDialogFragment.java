@@ -19,6 +19,8 @@ package com.android.incallui.answer.impl;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface.OnShowListener;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -26,10 +28,8 @@ import android.view.View;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.EditText;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDialogFragment;
-
 import com.android.incallui.incalluilock.InCallUiLock;
 import com.wintmain.dialer.R;
 import com.wintmain.dialer.common.FragmentUtils;
@@ -68,23 +68,41 @@ public class CreateCustomSmsDialogFragment extends AppCompatDialogFragment {
                 .setView(view)
                 .setPositiveButton(
                         R.string.call_incoming_custom_message_send,
-                        (dialogInterface, i) -> {
-                            FragmentUtils.getParentUnsafe(
-                                            CreateCustomSmsDialogFragment.this, CreateCustomSmsHolder.class)
-                                    .customSmsCreated(editText.getText().toString().trim());
-                            dismiss();
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                FragmentUtils.getParentUnsafe(
+                                                CreateCustomSmsDialogFragment.this, CreateCustomSmsHolder.class)
+                                        .customSmsCreated(editText.getText().toString().trim());
+                                dismiss();
+                            }
                         })
                 .setNegativeButton(
                         R.string.call_incoming_custom_message_cancel,
-                        (dialogInterface, i) -> dismiss())
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dismiss();
+                            }
+                        })
                 .setOnCancelListener(
-                        dialogInterface -> dismiss())
+                        new OnCancelListener() {
+                            @Override
+                            public void onCancel(DialogInterface dialogInterface) {
+                                dismiss();
+                            }
+                        })
                 .setTitle(R.string.call_incoming_respond_via_sms_custom_message);
         final AlertDialog customMessagePopup = builder.create();
         customMessagePopup.setOnShowListener(
-                dialogInterface -> ((AlertDialog) dialogInterface)
-                        .getButton(AlertDialog.BUTTON_POSITIVE)
-                        .setEnabled(false));
+                new OnShowListener() {
+                    @Override
+                    public void onShow(DialogInterface dialogInterface) {
+                        ((AlertDialog) dialogInterface)
+                                .getButton(AlertDialog.BUTTON_POSITIVE)
+                                .setEnabled(false);
+                    }
+                });
 
         editText.addTextChangedListener(
                 new TextWatcher() {
@@ -114,7 +132,7 @@ public class CreateCustomSmsDialogFragment extends AppCompatDialogFragment {
     }
 
     @Override
-    public void onDismiss(@NonNull DialogInterface dialogInterface) {
+    public void onDismiss(DialogInterface dialogInterface) {
         super.onDismiss(dialogInterface);
         inCallUiLock.release();
         FragmentUtils.getParentUnsafe(this, CreateCustomSmsHolder.class).customSmsDismissed();

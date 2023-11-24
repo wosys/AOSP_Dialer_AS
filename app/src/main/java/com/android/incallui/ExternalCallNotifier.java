@@ -16,6 +16,7 @@
 
 package com.android.incallui;
 
+import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -24,6 +25,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.telecom.Call;
 import android.telecom.PhoneAccount;
 import android.telecom.VideoProfile;
@@ -38,6 +40,7 @@ import androidx.core.os.BuildCompat;
 
 import com.android.contacts.common.ContactsUtils;
 import com.android.contacts.common.compat.CallCompat;
+import com.android.incallui.call.CallList;
 import com.android.incallui.call.DialerCall;
 import com.android.incallui.call.DialerCallDelegate;
 import com.android.incallui.call.ExternalCallList;
@@ -52,7 +55,6 @@ import com.wintmain.dialer.notification.NotificationChannelId;
 import com.wintmain.dialer.telecom.TelecomCallUtil;
 
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Handles the display of notifications for "external calls".
@@ -108,6 +110,7 @@ public class ExternalCallNotifier implements ExternalCallList.ExternalCallListen
 
     /**
      * Handles the addition of a new external call by showing a new notification. Triggered by {@link
+     * CallList#onCallAdded(android.telecom.Call)}.
      */
     @Override
     public void onExternalCallAdded(android.telecom.Call call) {
@@ -121,6 +124,7 @@ public class ExternalCallNotifier implements ExternalCallList.ExternalCallListen
 
     /**
      * Handles the removal of an external call by hiding its associated notification. Triggered by
+     * {@link CallList#onCallRemoved(android.telecom.Call)}.
      */
     @Override
     public void onExternalCallRemoved(android.telecom.Call call) {
@@ -135,7 +139,7 @@ public class ExternalCallNotifier implements ExternalCallList.ExternalCallListen
     @Override
     public void onExternalCallUpdated(Call call) {
         Assert.checkArgument(notifications.containsKey(call));
-        postNotification(Objects.requireNonNull(notifications.get(call)));
+        postNotification(notifications.get(call));
     }
 
     @Override
@@ -149,6 +153,7 @@ public class ExternalCallNotifier implements ExternalCallList.ExternalCallListen
      * @param notificationId The notification ID associated with the external call which is to be
      *                       pulled.
      */
+    @TargetApi(Build.VERSION_CODES.N_MR1)
     public void pullExternalCall(int notificationId) {
         for (NotificationInfo info : notifications.values()) {
             if (info.getNotificationId() == notificationId
@@ -212,7 +217,7 @@ public class ExternalCallNotifier implements ExternalCallList.ExternalCallListen
 
         // This will also dismiss the group summary if there are no more external call notifications.
         DialerNotificationManager.cancel(
-                context, NOTIFICATION_TAG, Objects.requireNonNull(notifications.get(call)).getNotificationId());
+                context, NOTIFICATION_TAG, notifications.get(call).getNotificationId());
 
         notifications.remove(call);
     }
@@ -290,6 +295,11 @@ public class ExternalCallNotifier implements ExternalCallList.ExternalCallListen
                             .build());
         }
 
+        /**
+         * This builder is used for the notification shown when the device is locked and the user has
+         * set their notification settings to 'hide sensitive content' {@see
+         * Notification.Builder#setPublicVersion}.
+         */
         Notification.Builder publicBuilder = new Notification.Builder(context);
         publicBuilder.setSmallIcon(R.drawable.quantum_ic_call_white_24);
         publicBuilder.setColor(ThemeUtils.resolveColor(context, android.R.attr.colorAccent));
@@ -314,8 +324,7 @@ public class ExternalCallNotifier implements ExternalCallList.ExternalCallListen
      * @param call        The call.
      * @return The large icon to use for the notification.
      */
-    private @Nullable
-    Bitmap getLargeIconToDisplay(
+    private @Nullable Bitmap getLargeIconToDisplay(
             Context context, ContactInfoCache.ContactCacheEntry contactInfo, android.telecom.Call call) {
 
         Bitmap largeIcon = null;
@@ -327,7 +336,7 @@ public class ExternalCallNotifier implements ExternalCallList.ExternalCallListen
                     BitmapFactory.decodeResource(
                             context.getResources(), R.drawable.quantum_ic_group_vd_theme_24);
         }
-        if ((contactInfo.photo instanceof BitmapDrawable)) {
+        if (contactInfo.photo != null && (contactInfo.photo instanceof BitmapDrawable)) {
             largeIcon = ((BitmapDrawable) contactInfo.photo).getBitmap();
         }
         return largeIcon;
@@ -340,8 +349,7 @@ public class ExternalCallNotifier implements ExternalCallList.ExternalCallListen
      * @param bitmap  The bitmap to round.
      * @return The rounded bitmap.
      */
-    private @Nullable
-    Bitmap getRoundedIcon(Context context, @Nullable Bitmap bitmap) {
+    private @Nullable Bitmap getRoundedIcon(Context context, @Nullable Bitmap bitmap) {
         if (bitmap == null) {
             return null;
         }
@@ -362,8 +370,7 @@ public class ExternalCallNotifier implements ExternalCallList.ExternalCallListen
      * @param call        The call to generate a title for.
      * @return The content title.
      */
-    private @Nullable
-    String getContentTitle(
+    private @Nullable String getContentTitle(
             Context context, ContactInfoCache.ContactCacheEntry contactInfo, android.telecom.Call call) {
 
         if (call.getDetails().hasProperty(android.telecom.Call.Details.PROPERTY_CONFERENCE)) {
@@ -435,7 +442,6 @@ public class ExternalCallNotifier implements ExternalCallList.ExternalCallListen
             this.notificationId = notificationId;
         }
 
-        @NonNull
         public Call getCall() {
             return call;
         }
@@ -444,8 +450,7 @@ public class ExternalCallNotifier implements ExternalCallList.ExternalCallListen
             return notificationId;
         }
 
-        public @Nullable
-        String getContentTitle() {
+        public @Nullable String getContentTitle() {
             return contentTitle;
         }
 
@@ -453,8 +458,7 @@ public class ExternalCallNotifier implements ExternalCallList.ExternalCallListen
             this.contentTitle = contentTitle;
         }
 
-        public @Nullable
-        Bitmap getLargeIcon() {
+        public @Nullable Bitmap getLargeIcon() {
             return largeIcon;
         }
 
@@ -462,8 +466,7 @@ public class ExternalCallNotifier implements ExternalCallList.ExternalCallListen
             this.largeIcon = largeIcon;
         }
 
-        public @Nullable
-        String getPersonReference() {
+        public @Nullable String getPersonReference() {
             return personReference;
         }
 

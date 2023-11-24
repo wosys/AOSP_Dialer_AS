@@ -71,7 +71,9 @@ public class AudioSelectMenu extends PopupWindow {
             item.setChecked(true);
         }
         item.setOnClickListener(
-                (v) -> inCallButtonUiDelegate.setAudioRoute(itemRoute));
+                (v) -> {
+                    inCallButtonUiDelegate.setAudioRoute(itemRoute);
+                });
     }
 
     void setAudioState(CallAudioState audioState) {
