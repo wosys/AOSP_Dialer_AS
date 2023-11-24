@@ -361,6 +361,7 @@
     <string name="listSingleContact">單一聯絡人</string>
     <string name="list_filter_all_accounts">所有聯絡人</string>
     <string name="list_filter_phones">所有包含電話號碼的聯絡人資訊</string>
+    <string name="main_activity_label">手機</string>
     <string name="make_primary">記住這個選擇</string>
     <string name="manageConferenceLabel">管理電話會議</string>
     <string name="manage_blocked_numbers_label">已封鎖的號碼</string>
