@@ -28,9 +28,7 @@ import com.wintmain.dialer.common.concurrent.AsyncTaskExecutor;
 import com.wintmain.dialer.common.concurrent.AsyncTaskExecutors;
 import com.wintmain.dialer.util.PermissionsUtil;
 
-/**
- * TODO(calderwoodra): documentation
- */
+/** TODO(calderwoodra): documentation */
 public class CallLogAsyncTaskUtil {
 
     private static final String TAG = "CallLogAsyncTaskUtil";
@@ -64,7 +62,8 @@ public class CallLogAsyncTaskUtil {
                             callIdLongs[i] = callIds[i];
                         }
                         where
-                                .append(CallLog.Calls._ID).append(" IN (").append(TextUtils.join(",", callIdLongs)).append(")");
+                                .append(CallLog.Calls._ID)
+                                .append(" IN (" + TextUtils.join(",", callIdLongs) + ")");
 
                         ContentValues values = new ContentValues(1);
                         values.put(CallLog.Calls.IS_READ, "1");
@@ -76,9 +75,7 @@ public class CallLogAsyncTaskUtil {
                 });
     }
 
-    /**
-     * The enumeration of {@link AsyncTask} objects used in this class.
-     */
+    /** The enumeration of {@link AsyncTask} objects used in this class. */
     public enum Tasks {
         DELETE_VOICEMAIL,
         DELETE_CALL,
@@ -88,9 +85,7 @@ public class CallLogAsyncTaskUtil {
         UPDATE_DURATION,
     }
 
-    /**
-     * TODO(calderwoodra): documentation
-     */
+    /** TODO(calderwoodra): documentation */
     public interface CallLogAsyncTaskListener {
         void onDeleteVoicemail();
     }

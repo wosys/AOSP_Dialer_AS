@@ -37,9 +37,7 @@ import com.wintmain.dialer.spam.SpamComponent;
 import com.wintmain.dialer.spam.SpamSettings;
 import com.wintmain.dialer.spam.promo.SpamBlockingPromoHelper;
 
-/**
- * Listener to show dialogs for block and report spam actions.
- */
+/** Listener to show dialogs for block and report spam actions. */
 public class BlockReportSpamListener implements CallLogListItemViewHolder.OnClickListener {
 
     private final Context context;

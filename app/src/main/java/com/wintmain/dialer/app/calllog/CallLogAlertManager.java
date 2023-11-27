@@ -26,9 +26,7 @@ import com.wintmain.dialer.R;
 import com.wintmain.dialer.app.alert.AlertManager;
 import com.wintmain.dialer.common.Assert;
 
-/**
- * Manages "alerts" to be shown at the top of an call log to gain the user's attention.
- */
+/** Manages "alerts" to be shown at the top of an call log to gain the user's attention. */
 public class CallLogAlertManager implements AlertManager {
 
     private final CallLogAdapter adapter;
