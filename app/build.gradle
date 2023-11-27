@@ -13,7 +13,7 @@ android {
         minSdk 26
         targetSdk 34
         versionCode 1
-        versionName '1.0'
+        versionName 'V20231127'
     }
 
     compileOptions {
@@ -44,6 +44,17 @@ android {
 
     buildFeatures {
         aidl true
+    }
+
+    sourceSets {
+        def prefix = 'src/main/java/com/wintmain/dialer/'
+        main {
+            // Add additional resource directories here
+            res.srcDirs += [
+                    prefix + 'about/res',
+                    prefix + 'app/res',
+            ]
+        }
     }
 
     namespace 'com.wintmain.dialer'

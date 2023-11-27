@@ -150,6 +150,20 @@
                 <data android:scheme="header" />
             </intent-filter>
         </activity>
+        <!--Temp Add BEGIN-->
+        <activity
+            android:name="com.wintmain.dialer.app.settings.DialerSettingsActivityCompt"
+            android:exported="true"
+            android:label="@string/dialer_settings_label"
+            android:parentActivityName="com.wintmain.dialer.main.impl.MainActivity"
+            android:theme="@style/Dialer">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="header" />
+            </intent-filter>
+        </activity>
+        <!--Temp Add END-->
 
         <provider
             android:name="com.wintmain.dialer.blocking.FilteredNumberProvider"
@@ -463,5 +477,20 @@
                 <data android:scheme="android_secret_code" />
             </intent-filter>
         </receiver>
+
+        <!-- dialer/about BEGIN-->
+        <activity
+            android:name="com.wintmain.dialer.about.LicenseMenuActivity"
+            android:label="@string/licenseActivityLabel"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Light">
+        </activity>
+        <activity
+            android:name="com.wintmain.dialer.about.LicenseActivity"
+            android:label="@string/licenseActivityLabel"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Light">
+        </activity>
+        <!-- dialer/about END-->
     </application>
 </manifest>
