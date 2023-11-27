@@ -82,6 +82,7 @@ import com.wintmain.dialer.app.list.OnDragDropListener;
 import com.wintmain.dialer.app.list.OnListFragmentScrolledListener;
 import com.wintmain.dialer.app.list.PhoneFavoriteSquareTileView;
 import com.wintmain.dialer.app.settings.DialerSettingsActivity;
+import com.wintmain.dialer.app.settings.DialerSettingsActivityCompt;
 import com.wintmain.dialer.app.widget.ActionBarController;
 import com.wintmain.dialer.app.widget.SearchEditTextLayout;
 import com.wintmain.dialer.callcomposer.CallComposerActivity;
@@ -111,6 +112,7 @@ import com.wintmain.dialer.logging.InteractionEvent;
 import com.wintmain.dialer.logging.Logger;
 import com.wintmain.dialer.logging.ScreenEvent;
 import com.wintmain.dialer.logging.UiAction;
+import com.wintmain.dialer.main.impl.MainActivity;
 import com.wintmain.dialer.metrics.Metrics;
 import com.wintmain.dialer.metrics.MetricsComponent;
 import com.wintmain.dialer.performancereport.PerformanceReport;
@@ -653,7 +655,13 @@ public class DialtactsActivity extends AppCompatActivity
     }
 
     protected void handleMenuSettings() {
-        final Intent intent = new Intent(this, DialerSettingsActivity.class);
+        Boolean conf = MainActivity.getBoolConfigUsingLatestAbout();
+        Intent intent;
+        if (!conf) {
+            intent = new Intent(this, DialerSettingsActivityCompt.class);
+        } else {
+            intent = new Intent(this, DialerSettingsActivity.class);
+        }
         startActivity(intent);
     }
 

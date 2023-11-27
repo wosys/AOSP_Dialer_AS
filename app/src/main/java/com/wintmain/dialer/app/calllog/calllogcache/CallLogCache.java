@@ -27,10 +27,7 @@ import com.wintmain.dialer.app.calllog.CallLogAdapter;
 import com.wintmain.dialer.calllogutils.PhoneAccountUtils;
 import com.wintmain.dialer.telecom.TelecomUtil;
 import com.wintmain.dialer.util.CallUtil;
-
 import java.util.Map;
-import java.util.Objects;
-
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
@@ -48,11 +45,12 @@ public class CallLogCache {
     // this writing, that was a much larger undertaking than creating this cache.
 
     protected final Context context;
+
+    private boolean hasCheckedForVideoAvailability;
+    private int videoAvailability;
     private final Map<PhoneAccountHandle, String> phoneAccountLabelCache = new ArrayMap<>();
     private final Map<PhoneAccountHandle, Integer> phoneAccountColorCache = new ArrayMap<>();
     private final Map<PhoneAccountHandle, Boolean> phoneAccountCallWithNoteCache = new ArrayMap<>();
-    private boolean hasCheckedForVideoAvailability;
-    private int videoAvailability;
 
     public CallLogCache(Context context) {
         this.context = context;
@@ -75,7 +73,7 @@ public class CallLogCache {
         if (TextUtils.isEmpty(number)) {
             return false;
         }
-        return TelecomUtil.isVoicemailNumber(context, accountHandle, Objects.requireNonNull(number).toString());
+        return TelecomUtil.isVoicemailNumber(context, accountHandle, number.toString());
     }
 
     /**
@@ -90,9 +88,7 @@ public class CallLogCache {
         return (videoAvailability & CallUtil.VIDEO_CALLING_PRESENCE) != 0;
     }
 
-    /**
-     * Extract account label from PhoneAccount object.
-     */
+    /** Extract account label from PhoneAccount object. */
     public synchronized String getAccountLabel(PhoneAccountHandle accountHandle) {
         if (phoneAccountLabelCache.containsKey(accountHandle)) {
             return phoneAccountLabelCache.get(accountHandle);
@@ -103,14 +99,12 @@ public class CallLogCache {
         }
     }
 
-    /**
-     * Extract account color from PhoneAccount object.
-     */
+    /** Extract account color from PhoneAccount object. */
     public synchronized int getAccountColor(PhoneAccountHandle accountHandle) {
         if (phoneAccountColorCache.containsKey(accountHandle)) {
             return phoneAccountColorCache.get(accountHandle);
         } else {
-            int color = PhoneAccountUtils.getAccountColor(context, accountHandle);
+            Integer color = PhoneAccountUtils.getAccountColor(context, accountHandle);
             phoneAccountColorCache.put(accountHandle, color);
             return color;
         }
@@ -125,9 +119,9 @@ public class CallLogCache {
      */
     public synchronized boolean doesAccountSupportCallSubject(PhoneAccountHandle accountHandle) {
         if (phoneAccountCallWithNoteCache.containsKey(accountHandle)) {
-            return Boolean.TRUE.equals(phoneAccountCallWithNoteCache.get(accountHandle));
+            return phoneAccountCallWithNoteCache.get(accountHandle);
         } else {
-            boolean supportsCallWithNote =
+            Boolean supportsCallWithNote =
                     PhoneAccountUtils.getAccountSupportsCallSubject(context, accountHandle);
             phoneAccountCallWithNoteCache.put(accountHandle, supportsCallWithNote);
             return supportsCallWithNote;

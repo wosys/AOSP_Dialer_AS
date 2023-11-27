@@ -34,6 +34,7 @@ import com.android.contacts.common.dialog.ClearFrequentsDialog;
 import com.wintmain.dialer.R;
 import com.wintmain.dialer.app.calllog.CallLogActivity;
 import com.wintmain.dialer.app.settings.DialerSettingsActivity;
+import com.wintmain.dialer.app.settings.DialerSettingsActivityCompt;
 import com.wintmain.dialer.callintent.CallInitiationType;
 import com.wintmain.dialer.common.LogUtil;
 import com.wintmain.dialer.constants.ActivityRequestCodes;
@@ -475,8 +476,13 @@ public class MainSearchController implements SearchBarListener {
 
     @Override
     public boolean onMenuItemClicked(MenuItem menuItem) {
+        Boolean conf = MainActivity.getBoolConfigUsingLatestAbout();
         if (menuItem.getItemId() == R.id.settings) {
-            activity.startActivity(new Intent(activity, DialerSettingsActivity.class));
+            if (!conf) {
+                activity.startActivity(new Intent(activity, DialerSettingsActivityCompt.class));
+            } else {
+                activity.startActivity(new Intent(activity, DialerSettingsActivity.class));
+            }
             Logger.get(activity).logScreenView(ScreenEvent.Type.SETTINGS, activity);
             return true;
         } else if (menuItem.getItemId() == R.id.clear_frequents) {

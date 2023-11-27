@@ -66,7 +66,7 @@ import com.wintmain.dialer.app.list.OnDragDropListener;
 import com.wintmain.dialer.app.list.OnListFragmentScrolledListener;
 import com.wintmain.dialer.app.list.PhoneFavoriteSquareTileView;
 import com.wintmain.dialer.app.list.RemoveView;
-import com.wintmain.dialer.app.settings.DialerSettingsActivity;
+import com.wintmain.dialer.app.settings.DialerSettingsActivityCompt;
 import com.wintmain.dialer.callcomposer.CallComposerActivity;
 import com.wintmain.dialer.calldetails.OldCallDetailsActivity;
 import com.wintmain.dialer.callintent.CallIntentBuilder;
@@ -193,7 +193,10 @@ public class MainActivityPeer implements com.wintmain.dialer.main.MainActivityPe
     @Override
     public void onActivityCreate(Bundle savedInstanceState) {
         LogUtil.enterBlock("MainActivityPeer.onActivityCreate");
-        themeprefs = DialerSettingsActivity.PrefsFragment.getSharedPreferences(activity);
+        Boolean conf = MainActivity.getBoolConfigUsingLatestAbout();
+        if (!conf) {
+            themeprefs = DialerSettingsActivityCompt.PrefsFragment.getSharedPreferences(activity);
+        }
         activity.setContentView(R.layout.main_activity);
         initUiListeners();
         initLayout(savedInstanceState);

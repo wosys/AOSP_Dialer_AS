@@ -16,7 +16,7 @@
 
 package com.wintmain.dialer.calldetails;
 
-import static com.wintmain.dialer.app.settings.DialerSettingsActivity.PrefsFragment.getThemeButtonBehavior;
+import static com.wintmain.dialer.app.settings.DialerSettingsActivityCompt.PrefsFragment.getThemeButtonBehavior;
 
 import android.Manifest.permission;
 import android.annotation.SuppressLint;
@@ -39,7 +39,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.wintmain.dialer.R;
-import com.wintmain.dialer.app.settings.DialerSettingsActivity;
+import com.wintmain.dialer.app.settings.DialerSettingsActivityCompt;
 import com.wintmain.dialer.calldetails.CallDetailsEntries.CallDetailsEntry;
 import com.wintmain.dialer.callintent.CallInitiationType;
 import com.wintmain.dialer.callintent.CallIntentBuilder;
@@ -59,6 +59,7 @@ import com.wintmain.dialer.glidephotomanager.PhotoInfo;
 import com.wintmain.dialer.logging.DialerImpression;
 import com.wintmain.dialer.logging.Logger;
 import com.wintmain.dialer.logging.UiAction;
+import com.wintmain.dialer.main.impl.MainActivity;
 import com.wintmain.dialer.main.impl.MainActivityPeer;
 import com.wintmain.dialer.performancereport.PerformanceReport;
 import com.wintmain.dialer.postcall.PostCall;
@@ -129,13 +130,16 @@ abstract class CallDetailsActivityCommon extends AppCompatActivity {
     @Override
     @CallSuper
     protected void onCreate(Bundle savedInstanceState) {
-        DialerSettingsActivity.PrefsFragment.ThemeButtonBehavior mThemeBehavior = getThemeButtonBehavior(MainActivityPeer.themeprefs);
+        Boolean conf = MainActivity.getBoolConfigUsingLatestAbout();
+        if (!conf) {
+            DialerSettingsActivityCompt.PrefsFragment.ThemeButtonBehavior mThemeBehavior = getThemeButtonBehavior(MainActivityPeer.themeprefs);
 
-        if (mThemeBehavior == DialerSettingsActivity.PrefsFragment.ThemeButtonBehavior.DARK) {
-            getTheme().applyStyle(R.style.DialerDark, true);
-        }
-        if (mThemeBehavior == DialerSettingsActivity.PrefsFragment.ThemeButtonBehavior.LIGHT) {
-            getTheme().applyStyle(R.style.DialerLight, true);
+            if (mThemeBehavior == DialerSettingsActivityCompt.PrefsFragment.ThemeButtonBehavior.DARK) {
+                getTheme().applyStyle(R.style.DialerDark, true);
+            }
+            if (mThemeBehavior == DialerSettingsActivityCompt.PrefsFragment.ThemeButtonBehavior.LIGHT) {
+                getTheme().applyStyle(R.style.DialerLight, true);
+            }
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.call_details_activity);

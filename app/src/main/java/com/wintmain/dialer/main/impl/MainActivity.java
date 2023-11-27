@@ -16,13 +16,14 @@
 
 package com.wintmain.dialer.main.impl;
 
-import static com.wintmain.dialer.app.settings.DialerSettingsActivity.PrefsFragment.getThemeButtonBehavior;
+import static com.wintmain.dialer.app.settings.DialerSettingsActivityCompt.PrefsFragment.getThemeButtonBehavior;
 
 import android.app.Activity;
 import android.app.role.RoleManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.telecom.TelecomManager;
 
@@ -31,7 +32,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.wintmain.dialer.R;
-import com.wintmain.dialer.app.settings.DialerSettingsActivity;
+import com.wintmain.dialer.app.settings.DialerSettingsActivityCompt;
 import com.wintmain.dialer.blockreportspam.ShowBlockReportSpamDialogReceiver;
 import com.wintmain.dialer.common.Assert;
 import com.wintmain.dialer.common.LogUtil;
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity
 
 
     public static Activity main;
+    public static Boolean boolConfigUsingLatestAbout;
     private com.wintmain.dialer.main.MainActivityPeer activePeer;
     /**
      * {@link android.content.BroadcastReceiver} that shows a dialog to block a number and/or report
@@ -73,18 +75,26 @@ public class MainActivity extends AppCompatActivity
                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     }
 
+    public static Boolean getBoolConfigUsingLatestAbout() {
+        return boolConfigUsingLatestAbout;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        SharedPreferences themeprefs = DialerSettingsActivity.PrefsFragment.getSharedPreferences(this);
-        DialerSettingsActivity.PrefsFragment.ThemeButtonBehavior mThemeBehavior = getThemeButtonBehavior(themeprefs);
+        boolConfigUsingLatestAbout = getApplicationContext().
+                getResources().getBoolean(R.bool.config_using_latest_about);
+        if (!boolConfigUsingLatestAbout) {
+            SharedPreferences themeprefs = DialerSettingsActivityCompt.PrefsFragment.getSharedPreferences(this);
+            DialerSettingsActivityCompt.PrefsFragment.ThemeButtonBehavior mThemeBehavior = getThemeButtonBehavior(themeprefs);
 
-        if (mThemeBehavior == DialerSettingsActivity.PrefsFragment.ThemeButtonBehavior.DARK) {
-            LogUtil.enterBlock("MainActivity.dark");
-            this.getTheme().applyStyle(R.style.MainActivityThemeDark, true);
-        }
-        if (mThemeBehavior == DialerSettingsActivity.PrefsFragment.ThemeButtonBehavior.LIGHT) {
-            LogUtil.enterBlock("MainActivity.light");
-            this.getTheme().applyStyle(R.style.MainActivityThemeLight, true);
+            if (mThemeBehavior == DialerSettingsActivityCompt.PrefsFragment.ThemeButtonBehavior.DARK) {
+                LogUtil.enterBlock("MainActivity.dark");
+                this.getTheme().applyStyle(R.style.MainActivityThemeDark, true);
+            }
+            if (mThemeBehavior == DialerSettingsActivityCompt.PrefsFragment.ThemeButtonBehavior.LIGHT) {
+                LogUtil.enterBlock("MainActivity.light");
+                this.getTheme().applyStyle(R.style.MainActivityThemeLight, true);
+            }
         }
 
         super.onCreate(savedInstanceState);
@@ -111,9 +121,11 @@ public class MainActivity extends AppCompatActivity
 
     private void launchSetDefaultDialerIntent() {
         RoleManager roleManager;
-        roleManager = (RoleManager) getSystemService(Context.ROLE_SERVICE);
-        Intent intent = roleManager.createRequestRoleIntent(RoleManager.ROLE_DIALER);
-        startActivityForResult(intent, ActivityRequestCodes.DEFAULT_DIALER);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            roleManager = (RoleManager) getSystemService(Context.ROLE_SERVICE);
+            Intent intent = roleManager.createRequestRoleIntent(RoleManager.ROLE_DIALER);
+            startActivityForResult(intent, ActivityRequestCodes.DEFAULT_DIALER);
+        }
     }
 
 

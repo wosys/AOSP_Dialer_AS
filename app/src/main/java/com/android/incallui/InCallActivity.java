@@ -16,7 +16,7 @@
 
 package com.android.incallui;
 
-import static com.wintmain.dialer.app.settings.DialerSettingsActivity.PrefsFragment.getThemeButtonBehavior;
+import static com.wintmain.dialer.app.settings.DialerSettingsActivityCompt.PrefsFragment.getThemeButtonBehavior;
 
 import android.app.ActivityManager;
 import android.app.ActivityManager.AppTask;
@@ -84,7 +84,7 @@ import com.android.incallui.video.protocol.VideoCallScreenDelegateFactory;
 import com.wintmain.dialer.R;
 import com.wintmain.dialer.animation.AnimUtils;
 import com.wintmain.dialer.animation.AnimationListenerAdapter;
-import com.wintmain.dialer.app.settings.DialerSettingsActivity;
+import com.wintmain.dialer.app.settings.DialerSettingsActivityCompt;
 import com.wintmain.dialer.common.Assert;
 import com.wintmain.dialer.common.LogUtil;
 import com.wintmain.dialer.common.concurrent.DialerExecutorComponent;
@@ -93,6 +93,7 @@ import com.wintmain.dialer.common.concurrent.UiListener;
 import com.wintmain.dialer.configprovider.ConfigProviderComponent;
 import com.wintmain.dialer.logging.Logger;
 import com.wintmain.dialer.logging.ScreenEvent;
+import com.wintmain.dialer.main.impl.MainActivity;
 import com.wintmain.dialer.main.impl.MainActivityPeer;
 import com.wintmain.dialer.metrics.Metrics;
 import com.wintmain.dialer.metrics.MetricsComponent;
@@ -222,13 +223,16 @@ public class InCallActivity extends TransactionSafeFragmentActivity
     @Override
     protected void onCreate(Bundle bundle) {
         Trace.beginSection("InCallActivity.onCreate");
-        DialerSettingsActivity.PrefsFragment.ThemeButtonBehavior mThemeBehavior = getThemeButtonBehavior(MainActivityPeer.themeprefs);
+        Boolean conf = MainActivity.getBoolConfigUsingLatestAbout();
+        if (!conf) {
+            DialerSettingsActivityCompt.PrefsFragment.ThemeButtonBehavior mThemeBehavior = getThemeButtonBehavior(MainActivityPeer.themeprefs);
 
-        if (mThemeBehavior == DialerSettingsActivity.PrefsFragment.ThemeButtonBehavior.DARK) {
-            getTheme().applyStyle(R.style.DialerDark, true);
-        }
-        if (mThemeBehavior == DialerSettingsActivity.PrefsFragment.ThemeButtonBehavior.LIGHT) {
-            getTheme().applyStyle(R.style.DialerLight, true);
+            if (mThemeBehavior == DialerSettingsActivityCompt.PrefsFragment.ThemeButtonBehavior.DARK) {
+                getTheme().applyStyle(R.style.DialerDark, true);
+            }
+            if (mThemeBehavior == DialerSettingsActivityCompt.PrefsFragment.ThemeButtonBehavior.LIGHT) {
+                getTheme().applyStyle(R.style.DialerLight, true);
+            }
         }
         super.onCreate(bundle);
         preferredAccountWorkerResultListener =
