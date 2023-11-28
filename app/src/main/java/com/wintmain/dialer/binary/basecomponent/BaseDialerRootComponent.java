@@ -20,6 +20,7 @@ import com.android.bubble.BubbleComponent;
 import com.android.incallui.calllocation.CallLocationComponent;
 import com.android.incallui.maps.MapsComponent;
 import com.android.incallui.speakeasy.SpeakEasyComponent;
+import com.android.voicemail.VoicemailComponent;
 import com.wintmain.dialer.activecalls.ActiveCallsComponent;
 import com.wintmain.dialer.calllog.CallLogComponent;
 import com.wintmain.dialer.calllog.config.CallLogConfigComponent;
@@ -79,5 +80,6 @@ public interface BaseDialerRootComponent
         SpamComponent.HasComponent,
         SpeakEasyComponent.HasComponent,
         StorageComponent.HasComponent,
-        StrictModeComponent.HasComponent {
+        StrictModeComponent.HasComponent,
+        VoicemailComponent.HasComponent {
 }

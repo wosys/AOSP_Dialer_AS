@@ -20,6 +20,7 @@ import com.android.bubble.stub.StubBubbleModule;
 import com.android.incallui.calllocation.stub.StubCallLocationModule;
 import com.android.incallui.maps.stub.StubMapsModule;
 import com.android.incallui.speakeasy.StubSpeakEasyModule;
+import com.android.voicemail.impl.VoicemailModule;
 import com.wintmain.dialer.activecalls.ActiveCallsModule;
 import com.wintmain.dialer.binary.basecomponent.BaseDialerRootComponent;
 import com.wintmain.dialer.calllog.CallLogModule;
@@ -80,6 +81,7 @@ import dagger.Component;
                 StubSpamModule.class,
                 StubSpeakEasyModule.class,
                 SystemStrictModeModule.class,
+                VoicemailModule.class,
         })
 public interface AospDialerRootComponent extends BaseDialerRootComponent {
 }

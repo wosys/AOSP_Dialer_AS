@@ -112,7 +112,7 @@
             android:parentActivityName="com.wintmain.dialer.app.settings.DialerSettingsActivity"
             android:theme="@style/Dialer">
             <intent-filter>
-                <action android:name="com.fissy.dialer.action.BLOCKED_NUMBERS_SETTINGS" />
+                <action android:name="com.wintmain.dialer.action.BLOCKED_NUMBERS_SETTINGS" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -246,7 +246,7 @@
             android:theme="@style/MainActivityTheme"
             android:windowSoftInputMode="adjustNothing|stateAlwaysHidden">
             <intent-filter>
-                <action android:name="com.fissy.dialer.main.impl.MAIN" />
+                <action android:name="com.wintmain.dialer.main.impl.MAIN" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <intent-filter>
@@ -340,12 +340,12 @@
             android:permission="android.permission.CALL_PHONE"
             android:theme="@style/Theme.PreCall.DialogHolder">
             <intent-filter>
-                <action android:name="com.fissy.dialer.LAUNCH_PRE_CALL" />
+                <action android:name="com.wintmain.dialer.LAUNCH_PRE_CALL" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:scheme="tel" />
             </intent-filter>
             <intent-filter>
-                <action android:name="com.fissy.dialer.LAUNCH_PRE_CALL" />
+                <action android:name="com.wintmain.dialer.LAUNCH_PRE_CALL" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:scheme="voicemail" />
             </intent-filter>
@@ -370,7 +370,7 @@
             android:value="true" />
         <meta-data
             android:name="com.wintmain.dialer.PREFERRED_SIM_FALLBACK_AUTHORITY"
-            android:value="com.fissy.dialer.preferredsimfallback" />
+            android:value="com.wintmain.dialer.preferredsimfallback" />
 
         <activity android:name="com.wintmain.dialer.rtt.RttTranscriptActivity" />
         <service
