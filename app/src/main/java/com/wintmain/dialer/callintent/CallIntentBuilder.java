@@ -138,6 +138,13 @@ public class CallIntentBuilder implements Parcelable {
                 .setPhoneAccountHandle(phoneAccountHandle);
     }
 
+    public static CallIntentBuilder forVoicemail(
+            CallInitiationType.Type callInitiationType) {
+        return new CallIntentBuilder(
+                Uri.fromParts(PhoneAccount.SCHEME_VOICEMAIL, "", null), callInitiationType)
+                .setPhoneAccountHandle(null);
+    }
+
     private static @NonNull
     CallSpecificAppData createCallSpecificAppData(
             CallInitiationType.Type callInitiationType) {

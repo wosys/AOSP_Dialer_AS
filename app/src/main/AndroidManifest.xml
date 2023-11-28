@@ -63,6 +63,27 @@
     <uses-feature
         android:name="android.hardware.camera.any"
         android:required="false" />
+
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+
+    <!-- voicemail BEGIN -->
+    <uses-permission android:name="com.android.voicemail.permission.ADD_VOICEMAIL" />
+    <uses-permission
+        android:name="com.android.voicemail.permission.WRITE_VOICEMAIL"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission
+        android:name="com.android.voicemail.permission.READ_VOICEMAIL"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- voicemail END-->
+
     <application
         android:name="com.wintmain.dialer.binary.aosp.AospDialerApplication"
         android:extractNativeLibs="false"
@@ -492,5 +513,130 @@
             android:theme="@style/Theme.AppCompat.Light">
         </activity>
         <!-- dialer/about END-->
+
+        <!-- voicemail BEGIN -->
+        <receiver
+            android:name="com.android.voicemail.VoicemailSecretCodeReceiver"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SECRET_CODE" />
+
+                <data android:scheme="android_secret_code" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.android.voicemail.VoicemailPowerCycleReceiver"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.ACTION_SHUTDOWN" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name="com.android.voicemail.impl.configui.VoicemailSecretCodeActivity"
+            android:exported="false" >
+        </activity>
+
+        <receiver
+            android:name="com.android.voicemail.impl.sms.OmtpMessageReceiver"
+            android:directBootAware="true"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.android.vociemailomtp.sms.sms_received" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.android.voicemail.impl.VoicemailClientReceiver"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.android.voicemail.VoicemailClient.ACTION_UPLOAD" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.android.voicemail.impl.fetch.FetchVoicemailReceiver"
+            android:exported="true"
+            android:permission="com.android.voicemail.permission.READ_VOICEMAIL" >
+            <intent-filter>
+                <action android:name="android.intent.action.FETCH_VOICEMAIL" />
+
+                <data
+                    android:host="com.android.voicemail"
+                    android:mimeType="vnd.android.cursor.item/voicemail"
+                    android:scheme="content" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.android.voicemail.impl.sync.OmtpVvmSyncReceiver"
+            android:exported="true"
+            android:permission="com.android.voicemail.permission.READ_VOICEMAIL" >
+            <intent-filter>
+                <action android:name="android.provider.action.SYNC_VOICEMAIL" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.android.voicemail.impl.sync.VoicemailProviderChangeReceiver"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.PROVIDER_CHANGED" />
+
+                <data
+                    android:host="com.android.voicemail"
+                    android:mimeType="vnd.android.cursor.dir/voicemails"
+                    android:scheme="content" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.android.voicemail.impl.scheduling.TaskReceiver"
+            android:exported="false" />
+
+        <service
+            android:name="com.android.voicemail.impl.scheduling.TaskSchedulerJobService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name="com.android.voicemail.impl.StatusCheckJobService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name="com.android.voicemail.impl.DeviceProvisionedJobService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name="com.android.voicemail.impl.OmtpService"
+            android:directBootAware="true"
+            android:exported="true"
+            android:permission="android.permission.BIND_VISUAL_VOICEMAIL_SERVICE" >
+            <intent-filter>
+                <action android:name="android.telephony.VisualVoicemailService" />
+            </intent-filter>
+        </service>
+
+        <receiver
+            android:name="com.android.voicemail.impl.PackageReplacedReceiver"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.android.voicemail.impl.CarrierVvmPackageInstalledReceiver"
+            android:exported="true"
+            android:permission="android.permission.BIND_VISUAL_VOICEMAIL_SERVICE" >
+            <intent-filter>
+
+                <!-- system dialer only broadcast -->
+                <action android:name="com.android.internal.telephony.CARRIER_VVM_PACKAGE_INSTALLED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name="com.android.voicemail.impl.transcribe.GetTranscriptReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action
+                    android:name="com.android.voicemail.impl.transcribe.GetTranscriptReceiver.POLL_ALARM" />
+            </intent-filter>
+        </receiver>
+        <!-- voicemail END -->
     </application>
 </manifest>

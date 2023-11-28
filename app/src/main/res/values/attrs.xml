@@ -409,7 +409,6 @@
     <attr name="popupMenuStyle" format="reference" />
     <attr name="popupTheme" format="reference" />
     <attr name="popupWindowStyle" format="reference" />
-    <attr name="preferenceBackgroundColor" format="color" />
     <attr name="preserveIconSpacing" format="boolean" />
     <attr name="progressBarPadding" format="dimension" />
     <attr name="progressBarStyle" format="reference" />

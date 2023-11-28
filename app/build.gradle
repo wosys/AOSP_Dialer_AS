@@ -53,6 +53,8 @@ android {
             res.srcDirs += [
                     prefix + 'about/res',
                     prefix + 'app/res',
+                    'src/main/java/com/android/voicemail/impl/res',
+                    'src/main/java/com/android/voicemail/impl/configui/res'
             ]
         }
     }
