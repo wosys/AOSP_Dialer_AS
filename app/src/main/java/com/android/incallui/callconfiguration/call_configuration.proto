@@ -14,11 +14,11 @@
 
 syntax = "proto2";
 
-option java_package = "com.android.dialer";
+option java_package = "com.wintmain.dialer";
 option java_multiple_files = true;
 
 
-package com.android.dialer;
+package com.wintmain.dialer;
 
 // Configuration for starting a call
 message CallConfiguration {
