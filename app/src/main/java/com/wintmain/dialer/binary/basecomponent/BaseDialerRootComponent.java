@@ -42,6 +42,7 @@ import com.wintmain.dialer.precall.PreCallComponent;
 import com.wintmain.dialer.preferredsim.PreferredSimComponent;
 import com.wintmain.dialer.preferredsim.suggestion.SimSuggestionComponent;
 import com.wintmain.dialer.promotion.PromotionComponent;
+import com.wintmain.dialer.simulator.SimulatorComponent;
 import com.wintmain.dialer.spam.SpamComponent;
 import com.wintmain.dialer.speeddial.loader.UiItemLoaderComponent;
 import com.wintmain.dialer.storage.StorageComponent;
@@ -77,9 +78,9 @@ public interface BaseDialerRootComponent
         PromotionComponent.HasComponent,
         UiItemLoaderComponent.HasComponent,
         SimSuggestionComponent.HasComponent,
+        SimulatorComponent.HasComponent,
         SpamComponent.HasComponent,
         SpeakEasyComponent.HasComponent,
         StorageComponent.HasComponent,
         StrictModeComponent.HasComponent,
-        VoicemailComponent.HasComponent {
-}
+        VoicemailComponent.HasComponent {}

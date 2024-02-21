@@ -41,6 +41,8 @@ import com.wintmain.dialer.precall.impl.PreCallModule;
 import com.wintmain.dialer.preferredsim.PreferredSimModule;
 import com.wintmain.dialer.preferredsim.suggestion.stub.StubSimSuggestionModule;
 import com.wintmain.dialer.promotion.impl.PromotionModule;
+import com.wintmain.dialer.simulator.impl.SimulatorModule;
+import com.wintmain.dialer.simulator.stub.StubSimulatorEnrichedCallModule;
 import com.wintmain.dialer.spam.stub.StubSpamModule;
 import com.wintmain.dialer.storage.StorageModule;
 import com.wintmain.dialer.strictmode.impl.SystemStrictModeModule;
@@ -49,9 +51,7 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 
-/**
- * Root component for the AOSP Dialer application.
- */
+/** Root component for the AOSP Dialer application. */
 @Singleton
 @Component(
         modules = {
@@ -69,6 +69,8 @@ import dagger.Component;
                 PreferredSimModule.class,
                 PromotionModule.class,
                 SharedPrefConfigProviderModule.class,
+                SimulatorModule.class,
+                StubSimulatorEnrichedCallModule.class,
                 StorageModule.class,
                 StubCallLocationModule.class,
                 StubDuoModule.class,
@@ -83,5 +85,4 @@ import dagger.Component;
                 SystemStrictModeModule.class,
                 VoicemailModule.class,
         })
-public interface AospDialerRootComponent extends BaseDialerRootComponent {
-}
+public interface AospDialerRootComponent extends BaseDialerRootComponent {}
