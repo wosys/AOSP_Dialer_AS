@@ -15,7 +15,7 @@ android {
         minSdk 26
         targetSdk 34
         versionCode 1
-        versionName 'V20231127'
+        versionName 'V20240222'
     }
 
     compileOptions {
