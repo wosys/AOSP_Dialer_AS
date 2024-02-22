@@ -2,13 +2,10 @@ syntax = "proto2";
 
 option java_package = "com.wintmain.dialer.blockreportspam";
 option java_multiple_files = true;
-option optimize_for = LITE_RUNTIME;
 
-
-package com.wintmain.dialer.blockreportspam;
-
-import "com/wintmain/dialer/logging/contact_source.proto";
-import "com/wintmain/dialer/logging/reporting_location.proto";
+package com.android.dialer.blockreportspam;
+import "contact_source.proto";
+import "reporting_location.proto";
 
 // Contains information needed in dialogs that allow a user to block a number
 // and/or report it as spam/not spam.

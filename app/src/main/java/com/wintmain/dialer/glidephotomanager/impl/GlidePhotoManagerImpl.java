@@ -175,16 +175,16 @@ public class GlidePhotoManagerImpl implements GlidePhotoManager {
             displayName = photoInfo.getName();
             identifier = getIdentifier(photoInfo.getLookupUri());
         }
-        letterTileDrawable.setCanonicalDialerLetterTileDetails(
-                displayName,
-                identifier,
-                LetterTileDrawable.SHAPE_CIRCLE,
-                LetterTileDrawable.getContactTypeFromPrimitives(
-                        photoInfo.getIsVoicemail(),
-                        photoInfo.getIsSpam(),
-                        photoInfo.getIsBusiness(),
-                        TelecomManager.PRESENTATION_ALLOWED, // TODO(twyen):implement
-                        photoInfo.getIsConference()));
+//        letterTileDrawable.setCanonicalDialerLetterTileDetails(
+//                displayName,
+//                identifier,
+//                LetterTileDrawable.SHAPE_CIRCLE,
+//                LetterTileDrawable.getContactTypeFromPrimitives(
+//                        photoInfo.getIsVoicemail(),
+//                        photoInfo.getIsSpam(),
+//                        photoInfo.getIsBusiness(),
+//                        TelecomManager.PRESENTATION_ALLOWED, // TODO(twyen):implement
+//                        photoInfo.getIsConference()));
         return letterTileDrawable;
     }
 }

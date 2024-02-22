@@ -5,8 +5,8 @@ option java_multiple_files = true;
 option optimize_for = LITE_RUNTIME;
 
 
-import "com/wintmain/dialer/phonenumberproto/dialer_phone_number.proto";
-import "com/wintmain/dialer/glidephotomanager/photo_info.proto";
+import "dialer_phone_number.proto";
+import "photo_info.proto";
 
 package com.wintmain.dialer.calldetails;
 

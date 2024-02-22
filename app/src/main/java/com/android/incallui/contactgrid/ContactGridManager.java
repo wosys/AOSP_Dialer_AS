@@ -318,7 +318,7 @@ public class ContactGridManager {
         PhotoInfo.Builder photoInfoBuilder =
                 PhotoInfo.newBuilder()
                         .setIsBusiness(primaryInfo.photoType() == ContactPhotoType.BUSINESS)
-                        .setIsVoicemail(primaryCallState.isVoiceMailNumber())
+//                        .setIsVoicemail(primaryCallState.isVoiceMailNumber())
                         .setIsSpam(primaryInfo.isSpam())
                         .setIsConference(primaryCallState.isConference());
 

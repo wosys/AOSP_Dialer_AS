@@ -65,8 +65,10 @@ android {
                 srcDir 'src/main/java/com/android/contacts/common/widget'
                 srcDir 'src/main/java/com/wintmain/dialer/logging'
                 srcDir 'src/main/java/com/wintmain/dialer/dialercontact'
-                // TBD, below has dependency issue
-//                srcDir 'src/main/java/com/wintmain/dialer/blockreportspam'
+
+                // If proto has dependency, move to same folder.
+                srcDir 'src/main/java/com/wintmain/proto'
+
                 // In addition to the default '**/*.proto' (use with caution).
                 // Using an extension other than 'proto' is NOT recommended,
                 // because when proto files are published along with class files, we can

@@ -7,9 +7,9 @@ option optimize_for = LITE_RUNTIME;
 
 package com.wintmain.dialer.callintent;
 
-import "com/wintmain/dialer/callintent/call_initiation_type.proto";
-import "com/wintmain/dialer/callintent/speed_dial_contact_type.proto";
-import "com/wintmain/dialer/logging/ui_action.proto";
+import "call_initiation_type.proto";
+import "speed_dial_contact_type.proto";
+import "ui_action.proto";
 
 // Miscellaneous data that's included in a new outgoing call initiated by
 // Dialer. The system will pass this data to the InCallUi which can use it

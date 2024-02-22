@@ -38,7 +38,7 @@ public final class PhotoInfoBuilder {
         return fromNumberAttributes(coalescedRow.getNumberAttributes())
                 .setName(CallLogEntryText.buildPrimaryText(context, coalescedRow).toString())
                 .setFormattedNumber(coalescedRow.getFormattedNumber())
-                .setIsVoicemail(coalescedRow.getIsVoicemailCall())
+//                .setIsVoicemail(coalescedRow.getIsVoicemailCall())
                 .setIsSpam(
                         Spam.shouldShowAsSpam(
                                 coalescedRow.getNumberAttributes().getIsSpam(), coalescedRow.getCallType()))

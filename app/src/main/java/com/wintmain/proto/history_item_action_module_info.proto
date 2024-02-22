@@ -7,7 +7,7 @@ option optimize_for = LITE_RUNTIME;
 
 package com.wintmain.dialer.historyitemactions;
 
-import "com/wintmain/dialer/logging/contact_source.proto";
+import "contact_source.proto";
 
 // Contains information needed to construct items (modules) in a bottom sheet.
 // Next ID: 17
