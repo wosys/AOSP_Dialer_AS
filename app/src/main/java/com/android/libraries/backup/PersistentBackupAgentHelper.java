@@ -1,4 +1,4 @@
-package com.google.android.libraries.backup;
+package com.android.libraries.backup;
 
 import android.app.backup.BackupAgentHelper;
 import android.app.backup.BackupDataInput;

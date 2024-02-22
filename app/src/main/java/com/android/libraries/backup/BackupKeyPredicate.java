@@ -1,4 +1,4 @@
-package com.google.android.libraries.backup;
+package com.android.libraries.backup;
 
 /**
  * A predicate that determines whether a given key should be backed up.

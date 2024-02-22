@@ -26,9 +26,9 @@ import com.wintmain.dialer.common.Assert;
 import com.wintmain.dialer.common.LogUtil;
 import com.wintmain.dialer.logging.DialerImpression;
 import com.wintmain.dialer.logging.Logger;
-import com.google.android.libraries.backup.BackupKeyPredicate;
-import com.google.android.libraries.backup.BackupKeyPredicates;
-import com.google.android.libraries.backup.PersistentBackupAgentHelper;
+import com.android.libraries.backup.BackupKeyPredicate;
+import com.android.libraries.backup.BackupKeyPredicates;
+import com.android.libraries.backup.PersistentBackupAgentHelper;
 
 import java.io.IOException;
 import java.util.Map;
