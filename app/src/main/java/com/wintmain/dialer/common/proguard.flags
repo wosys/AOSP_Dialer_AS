@@ -1,4 +1,4 @@
--assumenosideeffects class com.fissy.dialer.common.LogUtil {
+-assumenosideeffects class com.wintmain.dialer.common.LogUtil {
     public static void v(...);
     public static void d(...);
 }
