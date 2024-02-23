@@ -25,7 +25,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.wintmain.dialer.calldetails.CallDetailsEntryViewHolder.CallDetailsEntryListener;
 import com.wintmain.dialer.calldetails.CallDetailsFooterViewHolder.DeleteCallDetailsListener;
 import com.wintmain.dialer.calldetails.CallDetailsHeaderViewHolder.CallDetailsHeaderListener;
-import com.wintmain.dialer.callrecord.CallRecordingDataStore;
 import com.wintmain.dialer.glidephotomanager.PhotoInfo;
 
 /**
@@ -36,9 +35,7 @@ import com.wintmain.dialer.glidephotomanager.PhotoInfo;
  */
 final class CallDetailsAdapter extends CallDetailsAdapterCommon {
 
-    /**
-     * Info to be shown in the header.
-     */
+    /** Info to be shown in the header. */
     private final CallDetailsHeaderInfo headerInfo;
 
     CallDetailsAdapter(
@@ -48,16 +45,14 @@ final class CallDetailsAdapter extends CallDetailsAdapterCommon {
             CallDetailsEntryListener callDetailsEntryListener,
             CallDetailsHeaderListener callDetailsHeaderListener,
             CallDetailsFooterViewHolder.ReportCallIdListener reportCallIdListener,
-            DeleteCallDetailsListener deleteCallDetailsListener,
-            CallRecordingDataStore callRecordingDataStore) {
+            DeleteCallDetailsListener deleteCallDetailsListener) {
         super(
                 context,
                 callDetailsEntries,
                 callDetailsEntryListener,
                 callDetailsHeaderListener,
                 reportCallIdListener,
-                deleteCallDetailsListener,
-                callRecordingDataStore);
+                deleteCallDetailsListener);
         this.headerInfo = calldetailsHeaderInfo;
     }
 

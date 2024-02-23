@@ -25,7 +25,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.wintmain.dialer.calldetails.CallDetailsEntryViewHolder.CallDetailsEntryListener;
 import com.wintmain.dialer.calldetails.CallDetailsFooterViewHolder.DeleteCallDetailsListener;
 import com.wintmain.dialer.calldetails.CallDetailsHeaderViewHolder.CallDetailsHeaderListener;
-import com.wintmain.dialer.callrecord.CallRecordingDataStore;
 import com.wintmain.dialer.dialercontact.DialerContact;
 import com.wintmain.dialer.glidephotomanager.PhotoInfo;
 import com.wintmain.dialer.lettertile.LetterTileDrawable;
@@ -38,9 +37,7 @@ import com.wintmain.dialer.lettertile.LetterTileDrawable;
  */
 final class OldCallDetailsAdapter extends CallDetailsAdapterCommon {
 
-    /**
-     * Contains info to be shown in the header.
-     */
+    /** Contains info to be shown in the header. */
     private final DialerContact contact;
 
     OldCallDetailsAdapter(
@@ -50,16 +47,14 @@ final class OldCallDetailsAdapter extends CallDetailsAdapterCommon {
             CallDetailsEntryListener callDetailsEntryListener,
             CallDetailsHeaderListener callDetailsHeaderListener,
             CallDetailsFooterViewHolder.ReportCallIdListener reportCallIdListener,
-            DeleteCallDetailsListener deleteCallDetailsListener,
-            CallRecordingDataStore callRecordingDataStore) {
+            DeleteCallDetailsListener deleteCallDetailsListener) {
         super(
                 context,
                 callDetailsEntries,
                 callDetailsEntryListener,
                 callDetailsHeaderListener,
                 reportCallIdListener,
-                deleteCallDetailsListener,
-                callRecordingDataStore);
+                deleteCallDetailsListener);
         this.contact = contact;
     }
 
@@ -97,6 +92,9 @@ final class OldCallDetailsAdapter extends CallDetailsAdapterCommon {
                         .setName(contact.getNameOrNumber())
                         .setLookupUri(contact.getContactUri());
         switch (contact.getContactType()) {
+            case LetterTileDrawable.TYPE_VOICEMAIL:
+//                builder.setIsVoicemail(true);
+                break;
             case LetterTileDrawable.TYPE_BUSINESS:
                 builder.setIsBusiness(true);
                 break;

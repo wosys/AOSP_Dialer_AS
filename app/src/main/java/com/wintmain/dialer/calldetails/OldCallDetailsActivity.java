@@ -23,7 +23,6 @@ import com.wintmain.dialer.calldetails.CallDetailsEntryViewHolder.CallDetailsEnt
 import com.wintmain.dialer.calldetails.CallDetailsFooterViewHolder.DeleteCallDetailsListener;
 import com.wintmain.dialer.calldetails.CallDetailsFooterViewHolder.ReportCallIdListener;
 import com.wintmain.dialer.calldetails.CallDetailsHeaderViewHolder.CallDetailsHeaderListener;
-import com.wintmain.dialer.callrecord.CallRecordingDataStore;
 import com.wintmain.dialer.common.Assert;
 import com.wintmain.dialer.dialercontact.DialerContact;
 import com.wintmain.dialer.protos.ProtoParsers;
@@ -40,9 +39,7 @@ public final class OldCallDetailsActivity extends CallDetailsActivityCommon {
     public static final String EXTRA_CALL_DETAILS_ENTRIES = "call_details_entries";
     public static final String EXTRA_CONTACT = "contact";
 
-    /**
-     * Contains info to be shown in the header.
-     */
+    /** Contains info to be shown in the header. */
     private DialerContact contact;
 
     public static boolean isLaunchIntent(Intent intent) {
@@ -50,9 +47,7 @@ public final class OldCallDetailsActivity extends CallDetailsActivityCommon {
                 && OldCallDetailsActivity.class.getName().equals(intent.getComponent().getClassName());
     }
 
-    /**
-     * Returns an {@link Intent} to launch this activity.
-     */
+    /** Returns an {@link Intent} to launch this activity. */
     public static Intent newInstance(
             Context context,
             CallDetailsEntries details,
@@ -86,8 +81,7 @@ public final class OldCallDetailsActivity extends CallDetailsActivityCommon {
             CallDetailsEntryListener callDetailsEntryListener,
             CallDetailsHeaderListener callDetailsHeaderListener,
             ReportCallIdListener reportCallIdListener,
-            DeleteCallDetailsListener deleteCallDetailsListener,
-            CallRecordingDataStore callRecordingDataStore) {
+            DeleteCallDetailsListener deleteCallDetailsListener) {
         return new OldCallDetailsAdapter(
                 /* context = */ this,
                 contact,
@@ -95,8 +89,7 @@ public final class OldCallDetailsActivity extends CallDetailsActivityCommon {
                 callDetailsEntryListener,
                 callDetailsHeaderListener,
                 reportCallIdListener,
-                deleteCallDetailsListener,
-                callRecordingDataStore);
+                deleteCallDetailsListener);
     }
 
     @Override

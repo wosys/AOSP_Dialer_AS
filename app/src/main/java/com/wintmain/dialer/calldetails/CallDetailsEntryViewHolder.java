@@ -16,18 +16,12 @@
 
 package com.wintmain.dialer.calldetails;
 
-import android.content.ActivityNotFoundException;
-import android.content.ContentUris;
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.provider.CallLog.Calls;
-import android.provider.MediaStore;
+
 import android.text.TextUtils;
-import android.text.format.DateFormat;
-import android.view.Menu;
 import android.view.View;
-import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,46 +34,48 @@ import androidx.core.os.BuildCompat;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import com.wintmain.dialer.R;
-import com.wintmain.dialer.calldetails.CallDetailsEntries.CallDetailsEntry;
 import com.wintmain.dialer.calllogutils.CallLogDates;
 import com.wintmain.dialer.calllogutils.CallLogDurations;
 import com.wintmain.dialer.calllogutils.CallTypeHelper;
 import com.wintmain.dialer.calllogutils.CallTypeIconsView;
-import com.wintmain.dialer.callrecord.CallRecording;
-import com.wintmain.dialer.callrecord.CallRecordingDataStore;
-import com.wintmain.dialer.callrecord.impl.CallRecorderService;
 import com.wintmain.dialer.common.LogUtil;
 import com.wintmain.dialer.enrichedcall.historyquery.proto.HistoryResult;
-import com.wintmain.dialer.enrichedcall.historyquery.proto.HistoryResult.Type;
 import com.wintmain.dialer.glidephotomanager.PhotoInfo;
 import com.wintmain.dialer.oem.MotorolaUtils;
 import com.wintmain.dialer.util.DialerUtils;
 import com.wintmain.dialer.util.IntentUtil;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-
-/**
- * ViewHolder for call entries in {@link OldCallDetailsActivity} or {@link CallDetailsActivity}.
- */
+/** ViewHolder for call entries in {@link OldCallDetailsActivity} or {@link CallDetailsActivity}. */
 public class CallDetailsEntryViewHolder extends ViewHolder {
 
+    /** Listener for the call details header */
+    interface CallDetailsEntryListener {
+        /** Shows RTT transcript. */
+        void showRttTranscript(String transcriptId, String primaryText, PhotoInfo photoInfo);
+    }
+
     private final CallDetailsEntryListener callDetailsEntryListener;
+
     private final CallTypeIconsView callTypeIcon;
     private final TextView callTypeText;
     private final TextView callTime;
     private final TextView callDuration;
+
     private final View multimediaImageContainer;
     private final View multimediaDetailsContainer;
+    private final View multimediaDivider;
+
     private final TextView multimediaDetails;
     private final TextView postCallNote;
     private final TextView rttTranscript;
+
     private final ImageView multimediaImage;
+
+    // TODO(maxwelb): Display this when location is stored - a bug
+    @SuppressWarnings("unused")
+    private final TextView multimediaAttachmentsNumber;
+
     private final Context context;
-    private final TextView playbackButton;
 
     public CallDetailsEntryViewHolder(
             View container, CallDetailsEntryListener callDetailsEntryListener) {
@@ -90,50 +86,25 @@ public class CallDetailsEntryViewHolder extends ViewHolder {
         callTypeText = (TextView) container.findViewById(R.id.call_type);
         callTime = (TextView) container.findViewById(R.id.call_time);
         callDuration = (TextView) container.findViewById(R.id.call_duration);
-        playbackButton = (TextView) container.findViewById(R.id.play_recordings);
+
         multimediaImageContainer = container.findViewById(R.id.multimedia_image_container);
         multimediaDetailsContainer = container.findViewById(R.id.ec_container);
+        multimediaDivider = container.findViewById(R.id.divider);
         multimediaDetails = (TextView) container.findViewById(R.id.multimedia_details);
         postCallNote = (TextView) container.findViewById(R.id.post_call_note);
         multimediaImage = (ImageView) container.findViewById(R.id.multimedia_image);
-        // TODO(maxwelb): Display this when location is stored - a bug
-        TextView multimediaAttachmentsNumber = (TextView) container.findViewById(R.id.multimedia_attachments_number);
+        multimediaAttachmentsNumber =
+                (TextView) container.findViewById(R.id.multimedia_attachments_number);
         rttTranscript = container.findViewById(R.id.rtt_transcript);
         this.callDetailsEntryListener = callDetailsEntryListener;
-    }
-
-    private static boolean isIncoming(@NonNull HistoryResult historyResult) {
-        return historyResult.getType() == Type.INCOMING_POST_CALL
-                || historyResult.getType() == Type.INCOMING_CALL_COMPOSER;
-    }
-
-    private static @ColorInt
-    int getColorForCallType(Context context, int callType) {
-        switch (callType) {
-            case Calls.OUTGOING_TYPE:
-            case Calls.VOICEMAIL_TYPE:
-            case Calls.BLOCKED_TYPE:
-            case Calls.INCOMING_TYPE:
-            case Calls.ANSWERED_EXTERNALLY_TYPE:
-            case Calls.REJECTED_TYPE:
-                return ContextCompat.getColor(context, R.color.dialer_secondary_text_color);
-            case Calls.MISSED_TYPE:
-            default:
-                // It is possible for users to end up with calls with unknown call types in their
-                // call history, possibly due to 3rd party call log implementations (e.g. to
-                // distinguish between rejected and missed calls). Instead of crashing, just
-                // assume that all unknown call types are missed calls.
-                return ContextCompat.getColor(context, R.color.dialer_red);
-        }
     }
 
     void setCallDetails(
             String number,
             String primaryText,
             PhotoInfo photoInfo,
-            CallDetailsEntry entry,
+            CallDetailsEntries.CallDetailsEntry entry,
             CallTypeHelper callTypeHelper,
-            CallRecordingDataStore callRecordingDataStore,
             boolean showMultimediaDivider) {
         int callType = entry.getCallType();
         boolean isVideoCall = (entry.getFeatures() & Calls.FEATURES_VIDEO) == Calls.FEATURES_VIDEO;
@@ -172,22 +143,6 @@ public class CallDetailsEntryViewHolder extends ViewHolder {
                     CallLogDurations.formatDurationAndDataUsageA11y(
                             context, entry.getDuration(), entry.getDataUsage()));
         }
-
-        // do this synchronously to prevent recordings from "popping in" after detail item is displayed
-        final List<CallRecording> recordings;
-        if (CallRecorderService.isEnabled(context)) {
-            callRecordingDataStore.open(context); // opens unless already open
-            recordings = callRecordingDataStore.getRecordings(number, entry.getDate());
-        } else {
-            recordings = null;
-        }
-
-        int count = recordings != null ? recordings.size() : 0;
-        playbackButton.setOnClickListener(v -> handleRecordingClick(v, Objects.requireNonNull(recordings)));
-        playbackButton.setText(
-                context.getResources().getQuantityString(R.plurals.play_recordings, count, count));
-        playbackButton.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
-
         setMultimediaDetails(number, entry, showMultimediaDivider);
         if (isRttCall) {
             if (entry.getHasRttTranscript()) {
@@ -209,7 +164,8 @@ public class CallDetailsEntryViewHolder extends ViewHolder {
         }
     }
 
-    private void setMultimediaDetails(String number, CallDetailsEntry entry, boolean showDivider) {
+    private void setMultimediaDetails(String number, CallDetailsEntries.CallDetailsEntry entry, boolean showDivider) {
+        multimediaDivider.setVisibility(showDivider ? View.VISIBLE : View.GONE);
         if (entry.getHistoryResultsList().isEmpty()) {
             LogUtil.i("CallDetailsEntryViewHolder.setMultimediaDetails", "no data, hiding UI");
             multimediaDetailsContainer.setVisibility(View.GONE);
@@ -257,53 +213,27 @@ public class CallDetailsEntryViewHolder extends ViewHolder {
         DialerUtils.startActivityWithErrorToast(context, IntentUtil.getSendSmsIntent(number));
     }
 
-    private void handleRecordingClick(View v, List<CallRecording> recordings) {
-        final Context context = v.getContext();
-        if (recordings.size() == 1) {
-            playRecording(context, recordings.get(0));
-        } else {
-            PopupMenu menu = new PopupMenu(context, v);
-            String pattern = DateFormat.getBestDateTimePattern(Locale.getDefault(),
-                    DateFormat.is24HourFormat(context) ? "Hmss" : "hmssa");
-            SimpleDateFormat format = new SimpleDateFormat(pattern, Locale.US);
-
-            for (int i = 0; i < recordings.size(); i++) {
-                final long startTime = recordings.get(i).startRecordingTime;
-                final String formattedDate = format.format(new Date(startTime));
-                menu.getMenu().add(Menu.NONE, i, i, formattedDate);
-            }
-            menu.setOnMenuItemClickListener(item -> {
-                playRecording(context, recordings.get(item.getItemId()));
-                return true;
-            });
-            menu.show();
-        }
+    private static boolean isIncoming(@NonNull HistoryResult historyResult) {
+        return historyResult.getType() == HistoryResult.Type.INCOMING_POST_CALL
+                || historyResult.getType() == HistoryResult.Type.INCOMING_CALL_COMPOSER;
     }
 
-    private void playRecording(Context context, CallRecording recording) {
-        Uri uri = ContentUris.withAppendedId(
-                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, recording.mediaId);
-        String extension = MimeTypeMap.getFileExtensionFromUrl(recording.fileName);
-        String mime = !TextUtils.isEmpty(extension)
-                ? MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension) : "audio/*";
-        try {
-            Intent intent = new Intent(Intent.ACTION_VIEW)
-                    .setDataAndType(uri, mime)
-                    .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            context.startActivity(intent);
-        } catch (ActivityNotFoundException e) {
-            Toast.makeText(context, R.string.call_playback_no_app_found_toast, Toast.LENGTH_LONG)
-                    .show();
+    private static @ColorInt int getColorForCallType(Context context, int callType) {
+        switch (callType) {
+            case Calls.OUTGOING_TYPE:
+            case Calls.VOICEMAIL_TYPE:
+            case Calls.BLOCKED_TYPE:
+            case Calls.INCOMING_TYPE:
+            case Calls.ANSWERED_EXTERNALLY_TYPE:
+            case Calls.REJECTED_TYPE:
+                return ContextCompat.getColor(context, R.color.dialer_secondary_text_color);
+            case Calls.MISSED_TYPE:
+            default:
+                // It is possible for users to end up with calls with unknown call types in their
+                // call history, possibly due to 3rd party call log implementations (e.g. to
+                // distinguish between rejected and missed calls). Instead of crashing, just
+                // assume that all unknown call types are missed calls.
+                return ContextCompat.getColor(context, R.color.dialer_red);
         }
-    }
-
-    /**
-     * Listener for the call details header
-     */
-    interface CallDetailsEntryListener {
-        /**
-         * Shows RTT transcript.
-         */
-        void showRttTranscript(String transcriptId, String primaryText, PhotoInfo photoInfo);
     }
 }
