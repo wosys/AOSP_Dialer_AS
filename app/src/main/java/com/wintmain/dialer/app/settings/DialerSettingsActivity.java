@@ -167,6 +167,13 @@ public class DialerSettingsActivity extends AppCompatPreferenceActivity {
         LogUtil.i(
                 "DialerSettingsActivity.onBuildHeaders",
                 "showing assisted dialing header: " + isAssistedDialingEnabled);
+        if (true/*isAssistedDialingEnabled*/) {
+            Header assistedDialingSettingsHeader = new Header();
+            assistedDialingSettingsHeader.titleRes = R.string.assisted_dialing_setting_title;
+            assistedDialingSettingsHeader.intent =
+                    new Intent("com.wintmain.dialer.app.settings.SHOW_ASSISTED_DIALING_SETTINGS");
+            target.add(assistedDialingSettingsHeader);
+        }
 
         if (showAbout()) {
             Header aboutPhoneHeader = new Header();

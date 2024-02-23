@@ -651,5 +651,18 @@
             </intent-filter>
         </service>
         <!-- com/wintmain/dialer/simulator END-->
+
+        <!-- com/wintmain/dialer/assisteddialing/ui/-->
+        <activity
+            android:label="@string/assisted_dialing_setting_title"
+            android:name=".assisteddialing.ui.AssistedDialingSettingActivity"
+            android:parentActivityName=".app.settings.DialerSettingsActivity"
+            android:exported="true"
+            android:theme="@style/SettingsStyle">
+            <intent-filter>
+                <action android:name="com.wintmain.dialer.app.settings.SHOW_ASSISTED_DIALING_SETTINGS"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
     </application>
 </manifest>
