@@ -18,7 +18,6 @@ package com.wintmain.dialer.common.concurrent;
 
 import android.content.Context;
 import android.os.Bundle;
-
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -104,25 +103,6 @@ public class SupportUiListener<OutputT> extends Fragment {
                 DialerExecutorComponent.get(context).uiExecutor());
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
-        // Note: We use commitAllowingStateLoss when attaching the fragment so it may not be safe to
-        // read savedInstanceState in all situations. (But it's not anticipated that this fragment
-        // should need to rely on saved state.)
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        LogUtil.enterBlock("SupportUiListener.onDetach");
-        if (callbackWrapper != null) {
-            callbackWrapper.successListener = null;
-            callbackWrapper.failureListener = null;
-        }
-    }
-
     private static class CallbackWrapper<OutputT> implements FutureCallback<OutputT> {
         private SuccessListener<OutputT> successListener;
         private FailureListener failureListener;
@@ -143,7 +123,7 @@ public class SupportUiListener<OutputT> extends Fragment {
         }
 
         @Override
-        public void onFailure(@NonNull Throwable throwable) {
+        public void onFailure(Throwable throwable) {
             LogUtil.e("SupportUiListener.runTask", "task failed", throwable);
             if (failureListener == null) {
                 LogUtil.i("SupportUiListener.runTask", "task failed but UI is dead");
@@ -152,5 +132,23 @@ public class SupportUiListener<OutputT> extends Fragment {
             }
         }
     }
-}
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+        // Note: We use commitAllowingStateLoss when attaching the fragment so it may not be safe to
+        // read savedInstanceState in all situations. (But it's not anticipated that this fragment
+        // should need to rely on saved state.)
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        LogUtil.enterBlock("SupportUiListener.onDetach");
+        if (callbackWrapper != null) {
+            callbackWrapper.successListener = null;
+            callbackWrapper.failureListener = null;
+        }
+    }
+}

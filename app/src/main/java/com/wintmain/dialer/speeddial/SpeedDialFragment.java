@@ -142,9 +142,9 @@ public class SpeedDialFragment extends Fragment {
         emptyContentView = rootLayout.findViewById(R.id.speed_dial_empty_content_view);
         emptyContentView.setImage(R.drawable.empty_speed_dial);
 
-        speedDialLoaderListener =
-                DialerExecutorComponent.get(requireContext())
-                        .createUiListener(getChildFragmentManager(), "speed_dial_loader_listener");
+//        speedDialLoaderListener =
+//                DialerExecutorComponent.get(requireContext())
+//                        .createUiListener(getChildFragmentManager(), "speed_dial_loader_listener");
 
         // Setup our RecyclerView
         SpeedDialLayoutManager layoutManager =
