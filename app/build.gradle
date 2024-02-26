@@ -56,7 +56,8 @@ android {
                     prefix + 'about/res',
                     prefix + 'app/res',
                     'src/main/java/com/android/voicemail/impl/res',
-                    'src/main/java/com/android/voicemail/impl/configui/res'
+                    'src/main/java/com/android/voicemail/impl/configui/res',
+                    'src/main/java/com/wintmain/theme/res'
             ]
 
             proto {

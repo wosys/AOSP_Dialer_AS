@@ -389,7 +389,7 @@
             android:value="true" />
 
         <activity
-            android:name="com.android.incallui.InCallActivity"
+            android:name="com.android.incallui.entry.InCallActivity"
             android:directBootAware="true"
             android:excludeFromRecents="true"
             android:exported="false"
@@ -402,7 +402,7 @@
             android:theme="@style/Theme.InCallScreen"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name="com.android.incallui.ManageConferenceActivity"
+            android:name="com.android.incallui.entry.ManageConferenceActivity"
             android:directBootAware="true"
             android:excludeFromRecents="true"
             android:exported="false"
@@ -414,7 +414,7 @@
             android:theme="@style/Theme.InCallScreen.ManageConference" />
 
         <service
-            android:name="com.android.incallui.InCallServiceImpl"
+            android:name="com.android.incallui.entry.InCallServiceImpl"
             android:directBootAware="true"
             android:exported="true"
             android:foregroundServiceType="phoneCall"
@@ -435,24 +435,24 @@
         </service>
 
         <activity
-            android:name="com.android.incallui.AudioRouteSelectorActivity"
+            android:name="com.android.incallui.entry.AudioRouteSelectorActivity"
             android:excludeFromRecents="true"
             android:exported="false"
             android:noHistory="true"
             android:theme="@style/Theme.Incall.DialogHolder" />
         <activity
-            android:name="com.android.incallui.PostCharDialogActivity"
+            android:name="com.android.incallui.entry.PostCharDialogActivity"
             android:excludeFromRecents="true"
             android:exported="false"
             android:noHistory="true"
             android:theme="@style/Theme.Incall.DialogHolder" />
 
         <receiver
-            android:name="com.android.incallui.NotificationBroadcastReceiver"
+            android:name="com.android.incallui.entry.NotificationBroadcastReceiver"
             android:directBootAware="true"
             android:exported="false" />
         <receiver
-            android:name="com.android.incallui.ReturnToCallActionReceiver"
+            android:name="com.android.incallui.entry.ReturnToCallActionReceiver"
             android:exported="false" />
 
         <activity

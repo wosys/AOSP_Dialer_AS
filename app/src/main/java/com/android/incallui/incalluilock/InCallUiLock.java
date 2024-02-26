@@ -16,10 +16,13 @@
 
 package com.android.incallui.incalluilock;
 
+import com.android.incallui.entry.InCallActivity;
+import com.android.incallui.entry.InCallPresenter;
+
 /**
- * Prevents the {@link com.android.incallui.InCallActivity} from auto-finishing where there are no
+ * Prevents the {@link InCallActivity} from auto-finishing where there are no
  * calls left. Acquired through {@link
- * com.android.incallui.InCallPresenter#acquireInCallUiLock(String)}. Example: when a dialog is
+ * InCallPresenter#acquireInCallUiLock(String)}. Example: when a dialog is
  * still being displayed to the user the InCallActivity should not disappear abruptly when the call
  * ends, this lock should be held to keep the activity alive until it is dismissed.
  */

@@ -22,6 +22,7 @@ import android.telecom.Call;
 import android.util.ArraySet;
 import androidx.annotation.NonNull;
 import com.android.contacts.common.compat.CallCompat;
+import com.android.incallui.entry.ExternalCallNotifier;
 import com.wintmain.dialer.common.Assert;
 import com.wintmain.dialer.common.LogUtil;
 import java.util.Collections;
@@ -136,7 +137,7 @@ public class ExternalCallList {
 
     /**
      * Defines events which the {@link ExternalCallList} exposes to interested components (e.g. {@link
-     * com.android.incallui.ExternalCallNotifier ExternalCallNotifier}).
+     * ExternalCallNotifier ExternalCallNotifier}).
      */
     public interface ExternalCallListener {
 

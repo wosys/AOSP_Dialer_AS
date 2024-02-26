@@ -21,6 +21,7 @@ import android.media.AudioDeviceInfo;
 import android.media.AudioManager;
 import android.telecom.CallAudioState;
 
+import com.android.incallui.entry.ProximitySensor;
 import com.wintmain.dialer.common.LogUtil;
 
 import java.util.ArrayList;
@@ -101,7 +102,7 @@ public class AudioModeProvider {
 
     /**
      * Sets a approximated audio state before {@link #onAudioStateChanged} is called. Classes such as
-     * {@link com.android.incallui.ProximitySensor} fetches the audio state before it is updated by
+     * {@link ProximitySensor} fetches the audio state before it is updated by
      * telecom. This method attempts to guess the correct routing based on connected audio devices.
      * The audio state may still be wrong on a second call due to a bug, telecom setting the
      * route back to earpiece when a call ends.

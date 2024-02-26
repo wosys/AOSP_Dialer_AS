@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <view xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@id/dtmf_twelve_key_dialer_view"
-    class="com.android.incallui.DialpadFragment$DialpadSlidingLinearLayout"
+    class="com.android.incallui.entry.DialpadFragment$DialpadSlidingLinearLayout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:clipChildren="false"

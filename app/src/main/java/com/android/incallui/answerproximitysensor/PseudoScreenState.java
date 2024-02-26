@@ -17,7 +17,7 @@
 package com.android.incallui.answerproximitysensor;
 
 import android.util.ArraySet;
-import com.android.incallui.InCallActivity;
+import com.android.incallui.entry.InCallActivity;
 import java.util.Set;
 
 /**
