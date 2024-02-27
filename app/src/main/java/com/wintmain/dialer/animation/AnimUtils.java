@@ -119,8 +119,8 @@ public class AnimUtils {
     /**
      * Scales in the view from scale of 0 to actual dimensions.
      *
-     * @param view         The view to scale.
-     * @param durationMs   The duration of the scaling in milliseconds.
+     * @param view The view to scale.
+     * @param durationMs The duration of the scaling in milliseconds.
      * @param startDelayMs The delay to applying the scaling in milliseconds.
      */
     public static void scaleIn(final View view, int durationMs, int startDelayMs) {
@@ -150,7 +150,7 @@ public class AnimUtils {
     /**
      * Scales out the view from actual dimensions to 0.
      *
-     * @param view       The view to scale.
+     * @param view The view to scale.
      * @param durationMs The duration of the scaling in milliseconds.
      */
     public static void scaleOut(final View view, int durationMs) {
@@ -211,8 +211,8 @@ public class AnimUtils {
     /**
      * Animates a view to the new specified dimensions.
      *
-     * @param view      The view to change the dimensions of.
-     * @param newWidth  The new width of the view.
+     * @param view The view to change the dimensions of.
+     * @param newWidth The new width of the view.
      * @param newHeight The new height of the view.
      */
     public static void changeDimensions(final View view, final int newWidth, final int newHeight) {
@@ -224,22 +224,23 @@ public class AnimUtils {
         final int deltaHeight = newHeight - oldHeight;
 
         animator.addUpdateListener(
-                animator1 -> {
-                    Float value = (Float) animator1.getAnimatedValue();
+                new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animator) {
+                        Float value = (Float) animator.getAnimatedValue();
 
-                    view.getLayoutParams().width = (int) (value * deltaWidth + oldWidth);
-                    view.getLayoutParams().height = (int) (value * deltaHeight + oldHeight);
-                    view.requestLayout();
+                        view.getLayoutParams().width = (int) (value * deltaWidth + oldWidth);
+                        view.getLayoutParams().height = (int) (value * deltaHeight + oldHeight);
+                        view.requestLayout();
+                    }
                 });
         animator.start();
     }
 
     public static class AnimationCallback {
 
-        public void onAnimationEnd() {
-        }
+        public void onAnimationEnd() {}
 
-        public void onAnimationCancel() {
-        }
+        public void onAnimationCancel() {}
     }
 }

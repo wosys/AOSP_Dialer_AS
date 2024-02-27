@@ -25,24 +25,15 @@ import android.view.animation.Animation.AnimationListener;
  */
 public class AnimationListenerAdapter implements AnimationListener {
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
-    public void onAnimationStart(Animation animation) {
-    }
+    public void onAnimationStart(Animation animation) {}
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
-    public void onAnimationEnd(Animation animation) {
-    }
+    public void onAnimationEnd(Animation animation) {}
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
-    public void onAnimationRepeat(Animation animation) {
-    }
+    public void onAnimationRepeat(Animation animation) {}
 }

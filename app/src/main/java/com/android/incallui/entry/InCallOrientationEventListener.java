@@ -40,10 +40,25 @@ public class InCallOrientationEventListener extends OrientationEventListener {
     public static final int SCREEN_ORIENTATION_180 = 180;
     public static final int SCREEN_ORIENTATION_270 = 270;
     public static final int SCREEN_ORIENTATION_360 = 360;
+
+    /** Screen orientation angles one of 0, 90, 180, 270, 360 in degrees. */
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({
+            SCREEN_ORIENTATION_0,
+            SCREEN_ORIENTATION_90,
+            SCREEN_ORIENTATION_180,
+            SCREEN_ORIENTATION_270,
+            SCREEN_ORIENTATION_360,
+            SCREEN_ORIENTATION_UNKNOWN
+    })
+    public @interface ScreenOrientation {}
+
     // We use SCREEN_ORIENTATION_USER so that reverse-portrait is not allowed.
     public static final int ACTIVITY_PREFERENCE_ALLOW_ROTATION = ActivityInfo.SCREEN_ORIENTATION_USER;
+
     public static final int ACTIVITY_PREFERENCE_DISALLOW_ROTATION =
             ActivityInfo.SCREEN_ORIENTATION_NOSENSOR;
+
     /**
      * This is to identify dead zones where we won't notify others of orientation changed. Say for e.g
      * our threshold is x degrees. We will only notify UI when our current rotation is within x
@@ -51,14 +66,14 @@ public class InCallOrientationEventListener extends OrientationEventListener {
      * return SCREEN_ORIENTATION_UNKNOWN and ignore it.
      */
     public static final int SCREEN_ORIENTATION_UNKNOWN = -1;
+
     // Rotation threshold is 10 degrees. So if the rotation angle is within 10 degrees of any of
     // the above angles, we will notify orientation changed.
     private static final int ROTATION_THRESHOLD = 10;
-    /**
-     * Cache the current rotation of the device.
-     */
-    @ScreenOrientation
-    private static int currentOrientation = SCREEN_ORIENTATION_0;
+
+    /** Cache the current rotation of the device. */
+    @ScreenOrientation private static int currentOrientation = SCREEN_ORIENTATION_0;
+
     private boolean enabled = false;
 
     public InCallOrientationEventListener(Context context) {
@@ -119,7 +134,7 @@ public class InCallOrientationEventListener extends OrientationEventListener {
      * orientation.
      *
      * @param notifyDeviceOrientationChange Whether to notify listeners that the device orientation is
-     *                                      changed.
+     *     changed.
      */
     public void enable(boolean notifyDeviceOrientationChange) {
         if (enabled) {
@@ -134,17 +149,13 @@ public class InCallOrientationEventListener extends OrientationEventListener {
         }
     }
 
-    /**
-     * Enables the OrientationEventListener.
-     */
+    /** Enables the OrientationEventListener. */
     @Override
     public void enable() {
         enable(false /* notifyDeviceOrientationChange */);
     }
 
-    /**
-     * Disables the OrientationEventListener.
-     */
+    /** Disables the OrientationEventListener. */
     @Override
     public void disable() {
         if (!enabled) {
@@ -156,9 +167,7 @@ public class InCallOrientationEventListener extends OrientationEventListener {
         super.disable();
     }
 
-    /**
-     * Returns true the OrientationEventListener is enabled, false otherwise.
-     */
+    /** Returns true the OrientationEventListener is enabled, false otherwise. */
     public boolean isEnabled() {
         return enabled;
     }
@@ -168,7 +177,7 @@ public class InCallOrientationEventListener extends OrientationEventListener {
      *
      * @param rotation sensor rotation angle in degrees
      * @return Screen orientation angle in degrees (0, 90, 180, 270). Returns -1 for degrees not
-     * within threshold to identify zones where orientation change should not be trigerred.
+     *     within threshold to identify zones where orientation change should not be trigerred.
      */
     @ScreenOrientation
     private int toScreenOrientation(int rotation) {
@@ -186,20 +195,5 @@ public class InCallOrientationEventListener extends OrientationEventListener {
             return SCREEN_ORIENTATION_90;
         }
         return SCREEN_ORIENTATION_UNKNOWN;
-    }
-
-    /**
-     * Screen orientation angles one of 0, 90, 180, 270, 360 in degrees.
-     */
-    @Retention(RetentionPolicy.SOURCE)
-    @IntDef({
-            SCREEN_ORIENTATION_0,
-            SCREEN_ORIENTATION_90,
-            SCREEN_ORIENTATION_180,
-            SCREEN_ORIENTATION_270,
-            SCREEN_ORIENTATION_360,
-            SCREEN_ORIENTATION_UNKNOWN
-    })
-    public @interface ScreenOrientation {
     }
 }

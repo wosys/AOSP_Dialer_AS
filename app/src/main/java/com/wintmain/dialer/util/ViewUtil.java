@@ -34,12 +34,14 @@ import androidx.annotation.NonNull;
 
 import java.util.Locale;
 
-/**
- * Provides static functions to work with views
- */
+/** Provides static functions to work with views */
 public class ViewUtil {
 
-    private ViewUtil() {
+    private ViewUtil() {}
+
+    /** Similar to {@link Runnable} but takes a View parameter to operate on */
+    public interface ViewRunnable {
+        void run(@NonNull View view);
     }
 
     /**
@@ -85,9 +87,7 @@ public class ViewUtil {
         }
     }
 
-    /**
-     * Runs a piece of code just before the next draw, after layout and measurement
-     */
+    /** Runs a piece of code just before the next draw, after layout and measurement */
     public static void doOnPreDraw(
             @NonNull final View view, final boolean drawNextFrame, final Runnable runnable) {
         view.getViewTreeObserver()
@@ -140,12 +140,5 @@ public class ViewUtil {
         PowerManager powerManager = context.getSystemService(PowerManager.class);
         return Settings.Global.getFloat(contentResolver, Global.ANIMATOR_DURATION_SCALE, 1.0f) == 0
                 || powerManager.isPowerSaveMode();
-    }
-
-    /**
-     * Similar to {@link Runnable} but takes a View parameter to operate on
-     */
-    public interface ViewRunnable {
-        void run(@NonNull View view);
     }
 }
