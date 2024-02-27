@@ -23,17 +23,9 @@ import com.wintmain.dialer.inject.IncludeInDialerRoot;
 
 import dagger.Subcomponent;
 
-/**
- * Component for metrics.
- */
+/** Component for metrics. */
 @Subcomponent
 public abstract class MetricsComponent {
-
-    public static MetricsComponent get(Context context) {
-        return ((MetricsComponent.HasComponent)
-                ((HasRootComponent) context.getApplicationContext()).component())
-                .metricsComponent();
-    }
 
     public abstract Metrics metrics();
 
@@ -41,9 +33,13 @@ public abstract class MetricsComponent {
 
     public abstract FutureTimer futureTimer();
 
-    /**
-     * Used to refer to the root application component.
-     */
+    public static MetricsComponent get(Context context) {
+        return ((MetricsComponent.HasComponent)
+                ((HasRootComponent) context.getApplicationContext()).component())
+                .metricsComponent();
+    }
+
+    /** Used to refer to the root application component. */
     @IncludeInDialerRoot
     public interface HasComponent {
         MetricsComponent metricsComponent();

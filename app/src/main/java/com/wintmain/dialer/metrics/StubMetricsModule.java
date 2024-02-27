@@ -22,9 +22,7 @@ import com.wintmain.dialer.inject.InstallIn;
 import dagger.Binds;
 import dagger.Module;
 
-/**
- * Binds stub {@link Metrics}.
- */
+/** Binds stub {@link Metrics}. */
 @InstallIn(variants = {DialerVariant.DIALER_TEST})
 @Module
 public interface StubMetricsModule {

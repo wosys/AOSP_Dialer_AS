@@ -20,9 +20,7 @@ import android.app.Application;
 
 import androidx.annotation.Nullable;
 
-/**
- * Logs metrics.
- */
+/** Logs metrics. */
 public interface Metrics {
 
     String APPLICATION_ON_CREATE_EVENT_NAME = "Application.onCreate";
@@ -33,7 +31,7 @@ public interface Metrics {
     String ON_CALL_ADDED_TO_ON_INCALL_UI_SHOWN_OUTGOING =
             "CallList.onCallAdded_To_InCallActivity.onCreate_Outgoing";
     String DIALTACTS_ON_RESUME_MEMORY_EVENT_NAME = "GoogleDialtactsActivity.onResume";
-    String OLD_MAIN_ACTIVITY_PEER_ON_RESUME_MEMORY_EVENT_NAME = "MainActivityPeer.onResume";
+    String OLD_MAIN_ACTIVITY_PEER_ON_RESUME_MEMORY_EVENT_NAME = "OldMainActivityPeer.onResume";
     String INCALL_ACTIVITY_ON_RESUME_MEMORY_EVENT_NAME = "IncallActivity.OnResume";
     String INCALL_ACTIVITY_ON_STOP_MEMORY_EVENT_NAME = "IncallActivity.OnStop";
     String OLD_CALL_LOG_JANK_EVENT_NAME = "OldCallLog.Jank";
@@ -72,17 +70,15 @@ public interface Metrics {
     String LOOKUP_FOR_CALL_TEMPLATE = "%s.LookupForCall";
     String LOOKUP_FOR_NUMBER_TEMPLATE = "%s.LookupForNumber";
 
-    /**
-     * Start a timer.
-     */
+    /** Start a timer. */
     void startTimer(String timerEventName);
 
     /**
      * Starts a timer for which the name is not yet known.
      *
      * @return opaque identifier for the event which should be provided back to {@link
-     * #stopUnnamedTimer(int, String)} to stop the timer. Null if the timer cannot be started, for
-     * example because the user is locked.
+     *     #stopUnnamedTimer(int, String)} to stop the timer. Null if the timer cannot be started, for
+     *     example because the user is locked.
      */
     @Nullable
     Integer startUnnamedTimer();
@@ -94,38 +90,24 @@ public interface Metrics {
      */
     void stopUnnamedTimer(int timerId, String timerEventName);
 
-    /**
-     * Stop a timer.
-     */
+    /** Stop a timer. */
     void stopTimer(String timerEventName);
 
-    /**
-     * Start a jank recorder.
-     */
+    /** Start a jank recorder. */
     void startJankRecorder(String eventName);
 
-    /**
-     * Stop a jank recorder.
-     */
+    /** Stop a jank recorder. */
     void stopJankRecorder(String eventName);
 
-    /**
-     * Record memory.
-     */
+    /** Record memory. */
     void recordMemory(String memoryEventName);
 
-    /**
-     * Record battery.
-     */
+    /** Record battery. */
     void recordBattery(String batteryEventName);
 
-    /**
-     * Initiazer for metrics.
-     */
+    /** Initiazer for metrics. */
     interface Initializer {
-        /**
-         * Initialize metrics for the application .
-         */
+        /** Initialize metrics for the application . */
         void initialize(Application application);
     }
 }

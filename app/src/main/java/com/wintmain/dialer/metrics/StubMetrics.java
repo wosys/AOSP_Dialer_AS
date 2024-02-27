@@ -23,14 +23,11 @@ import com.wintmain.dialer.common.LogUtil;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-
 import javax.annotation.concurrent.ThreadSafe;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-/**
- * Stub {@link Metrics} which simply logs debug messages to logcat.
- */
+/** Stub {@link Metrics} which simply logs debug messages to logcat. */
 @ThreadSafe
 @Singleton
 public final class StubMetrics implements Metrics {
@@ -39,8 +36,7 @@ public final class StubMetrics implements Metrics {
     private final ConcurrentMap<Integer, StubTimerEvent> unnamedEvents = new ConcurrentHashMap<>();
 
     @Inject
-    StubMetrics() {
-    }
+    StubMetrics() {}
 
     @Override
     public void startTimer(String timerEventName) {
