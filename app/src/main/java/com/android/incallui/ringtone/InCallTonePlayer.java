@@ -18,13 +18,10 @@ package com.android.incallui.ringtone;
 
 import android.media.AudioManager;
 import android.media.ToneGenerator;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.android.incallui.Log;
 import com.android.incallui.async.PausableExecutor;
-
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -39,20 +36,18 @@ public class InCallTonePlayer {
 
     public static final int VOLUME_RELATIVE_HIGH_PRIORITY = 80;
 
-    @NonNull
-    private final ToneGeneratorFactory toneGeneratorFactory;
-    @NonNull
-    private final PausableExecutor executor;
+    @NonNull private final ToneGeneratorFactory toneGeneratorFactory;
+    @NonNull private final PausableExecutor executor;
     private @Nullable CountDownLatch numPlayingTones;
 
     /**
      * Creates a new InCallTonePlayer.
      *
      * @param toneGeneratorFactory the {@link ToneGeneratorFactory} used to create {@link
-     *                             ToneGenerator}s.
-     * @param executor             the {@link PausableExecutor} used to play tones in a background thread.
+     *     ToneGenerator}s.
+     * @param executor the {@link PausableExecutor} used to play tones in a background thread.
      * @throws NullPointerException if audioModeProvider, toneGeneratorFactory, or executor are {@code
-     *                              null}.
+     *     null}.
      */
     public InCallTonePlayer(
             @NonNull ToneGeneratorFactory toneGeneratorFactory, @NonNull PausableExecutor executor) {
@@ -60,9 +55,7 @@ public class InCallTonePlayer {
         this.executor = Objects.requireNonNull(executor);
     }
 
-    /**
-     * @return {@code true} if a tone is currently playing, {@code false} otherwise.
-     */
+    /** @return {@code true} if a tone is currently playing, {@code false} otherwise. */
     public boolean isPlayingTone() {
         return numPlayingTones != null && numPlayingTones.getCount() > 0;
     }
@@ -71,7 +64,7 @@ public class InCallTonePlayer {
      * Plays the given tone in a background thread.
      *
      * @param tone the tone to play.
-     * @throws IllegalStateException    if a tone is already playing.
+     * @throws IllegalStateException if a tone is already playing.
      * @throws IllegalArgumentException if the tone is invalid.
      */
     public void play(int tone) {
@@ -90,20 +83,23 @@ public class InCallTonePlayer {
     }
 
     private ToneGeneratorInfo getToneGeneratorInfo(int tone) {
-        if (tone == TONE_CALL_WAITING) {/*
-         * DialerCall waiting tones play until they're stopped either by the user accepting or
-         * declining the call so the tone length is set at what's effectively forever. The
-         * tone is played at a high priority volume and through STREAM_VOICE_CALL since it's
-         * call related and using that stream will route it through bluetooth devices
-         * appropriately.
-         */
-            return new ToneGeneratorInfo(
-                    ToneGenerator.TONE_SUP_CALL_WAITING,
-                    VOLUME_RELATIVE_HIGH_PRIORITY,
-                    Integer.MAX_VALUE,
-                    AudioManager.STREAM_VOICE_CALL);
+        switch (tone) {
+            case TONE_CALL_WAITING:
+                /*
+                 * DialerCall waiting tones play until they're stopped either by the user accepting or
+                 * declining the call so the tone length is set at what's effectively forever. The
+                 * tone is played at a high priority volume and through STREAM_VOICE_CALL since it's
+                 * call related and using that stream will route it through bluetooth devices
+                 * appropriately.
+                 */
+                return new ToneGeneratorInfo(
+                        ToneGenerator.TONE_SUP_CALL_WAITING,
+                        VOLUME_RELATIVE_HIGH_PRIORITY,
+                        Integer.MAX_VALUE,
+                        AudioManager.STREAM_VOICE_CALL);
+            default:
+                throw new IllegalArgumentException("Bad tone: " + tone);
         }
-        throw new IllegalArgumentException("Bad tone: " + tone);
     }
 
     private void playOnBackgroundThread(ToneGeneratorInfo info) {
@@ -136,9 +132,7 @@ public class InCallTonePlayer {
         }
     }
 
-    /**
-     * Stops playback of the current tone.
-     */
+    /** Stops playback of the current tone. */
     public void stop() {
         if (numPlayingTones != null) {
             numPlayingTones.countDown();

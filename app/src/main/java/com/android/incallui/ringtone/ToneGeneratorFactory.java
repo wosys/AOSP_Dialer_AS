@@ -18,9 +18,7 @@ package com.android.incallui.ringtone;
 
 import android.media.ToneGenerator;
 
-/**
- * Factory used to create {@link ToneGenerator}s.
- */
+/** Factory used to create {@link ToneGenerator}s. */
 public class ToneGeneratorFactory {
 
     /**

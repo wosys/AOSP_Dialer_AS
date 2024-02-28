@@ -110,9 +110,7 @@ import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Describes a single call and its state.
- */
+/** Describes a single call and its state. */
 public class DialerCall implements VideoTechListener, StateChangedListener, CapabilitiesListener {
 
     public static final int CALL_HISTORY_STATUS_UNKNOWN = 0;
@@ -122,12 +120,17 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
     // Hard coded property for {@code Call}. Upstreamed change from Motorola.
     // TODO(a bug): Move it to Telecom in framework.
     public static final int PROPERTY_CODEC_KNOWN = 0x04000000;
+
+    private static final String ID_PREFIX = "DialerCall_";
+
     @VisibleForTesting
     public static final String CONFIG_EMERGENCY_CALLBACK_WINDOW_MILLIS =
             "emergency_callback_window_millis";
-    public static final int UNKNOWN_PEER_DIMENSIONS = -1;
-    private static final String ID_PREFIX = "DialerCall_";
+
     private static int idCounter = 0;
+
+    public static final int UNKNOWN_PEER_DIMENSIONS = -1;
+
     /**
      * A counter used to append to restricted/private/hidden calls so that users can identify them in
      * a conversation. This value is reset in {@link CallList#onCallRemoved(Context, Call)} when there
@@ -168,13 +171,10 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
     private String lastForwardedNumber;
     private boolean isCallForwarded;
     private String callSubject;
-    @Nullable
-    private PhoneAccountHandle phoneAccountHandle;
-    @CallHistoryStatus
-    private int callHistoryStatus = CALL_HISTORY_STATUS_UNKNOWN;
+    @Nullable private PhoneAccountHandle phoneAccountHandle;
+    @CallHistoryStatus private int callHistoryStatus = CALL_HISTORY_STATUS_UNKNOWN;
 
-    @Nullable
-    private SpamStatus spamStatus;
+    @Nullable private SpamStatus spamStatus;
     private boolean isBlocked;
 
     private boolean didShowCameraPermission;
@@ -203,61 +203,40 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
 
     private Clock clock = System::currentTimeMillis;
 
-    @Nullable
-    private PreferredAccountRecorder preferredAccountRecorder;
+    @Nullable private PreferredAccountRecorder preferredAccountRecorder;
     private boolean isCallRemoved;
+
+    public static String getNumberFromHandle(Uri handle) {
+        return handle == null ? "" : handle.getSchemeSpecificPart();
+    }
+
     /**
      * Whether the call is put on hold by remote party. This is different than the {@link
      * DialerCallState#ONHOLD} state which indicates that the call is being held locally on the
      * device.
      */
     private boolean isRemotelyHeld;
-    /**
-     * Indicates whether this call is currently in the process of being merged into a conference.
-     */
+
+    /** Indicates whether this call is currently in the process of being merged into a conference. */
     private boolean isMergeInProcess;
+
     /**
      * Indicates whether the phone account associated with this call supports specifying a call
      * subject.
      */
     private boolean isCallSubjectSupported;
+
+    public RttTranscript getRttTranscript() {
+        return rttTranscript;
+    }
+
+    public void setRttTranscript(RttTranscript rttTranscript) {
+        this.rttTranscript = rttTranscript;
+    }
+
     private RttTranscript rttTranscript;
-    private final long timeAddedMs;
-    private int peerDimensionWidth = UNKNOWN_PEER_DIMENSIONS;
-    private int peerDimensionHeight = UNKNOWN_PEER_DIMENSIONS;
 
-    public DialerCall(
-            Context context,
-            DialerCallDelegate dialerCallDelegate,
-            Call telecomCall,
-            LatencyReport latencyReport,
-            boolean registerCallback) {
-        Assert.isNotNull(context);
-        this.context = context;
-        this.dialerCallDelegate = dialerCallDelegate;
-        this.telecomCall = telecomCall;
-        this.latencyReport = latencyReport;
-        id = ID_PREFIX + idCounter++;
-
-        // Must be after assigning mTelecomCall
-        videoTechManager = new VideoTechManager(this);
-
-        updateFromTelecomCall();
-        if (isHiddenNumber() && TextUtils.isEmpty(getNumber())) {
-            hiddenId = ++hiddenCounter;
-        } else {
-            hiddenId = 0;
-        }
-
-        if (registerCallback) {
-            this.telecomCall.registerCallback(telecomCallCallback);
-        }
-
-        timeAddedMs = System.currentTimeMillis();
-        parseCallSpecificAppData();
-
-        updateEnrichedCallSession();
-    }    private final Call.Callback telecomCallCallback =
+    private final Call.Callback telecomCallCallback =
             new Call.Callback() {
                 @Override
                 public void onStateChanged(Call call, int newState) {
@@ -412,8 +391,41 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
                 }
             };
 
-    public static String getNumberFromHandle(Uri handle) {
-        return handle == null ? "" : handle.getSchemeSpecificPart();
+    private long timeAddedMs;
+    private int peerDimensionWidth = UNKNOWN_PEER_DIMENSIONS;
+    private int peerDimensionHeight = UNKNOWN_PEER_DIMENSIONS;
+
+    public DialerCall(
+            Context context,
+            DialerCallDelegate dialerCallDelegate,
+            Call telecomCall,
+            LatencyReport latencyReport,
+            boolean registerCallback) {
+        Assert.isNotNull(context);
+        this.context = context;
+        this.dialerCallDelegate = dialerCallDelegate;
+        this.telecomCall = telecomCall;
+        this.latencyReport = latencyReport;
+        id = ID_PREFIX + Integer.toString(idCounter++);
+
+        // Must be after assigning mTelecomCall
+        videoTechManager = new VideoTechManager(this);
+
+        updateFromTelecomCall();
+        if (isHiddenNumber() && TextUtils.isEmpty(getNumber())) {
+            hiddenId = ++hiddenCounter;
+        } else {
+            hiddenId = 0;
+        }
+
+        if (registerCallback) {
+            this.telecomCall.registerCallback(telecomCallCallback);
+        }
+
+        timeAddedMs = System.currentTimeMillis();
+        parseCallSpecificAppData();
+
+        updateEnrichedCallSession();
     }
 
     private static int translateState(int state) {
@@ -451,18 +463,6 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
 
         // otherwise compare call Ids
         return call1.getId().equals(call2.getId());
-    }
-
-    public static void clearRestrictedCount() {
-        hiddenCounter = 0;
-    }
-
-    public RttTranscript getRttTranscript() {
-        return rttTranscript;
-    }
-
-    public void setRttTranscript(RttTranscript rttTranscript) {
-        this.rttTranscript = rttTranscript;
     }
 
     public void addListener(DialerCallListener listener) {
@@ -756,7 +756,7 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
 
     /**
      * @return name appended with a number if the number is restricted/unknown and the user has
-     * received more than one restricted/unknown call.
+     *     received more than one restricted/unknown call.
      */
     @Nullable
     public String updateNameIfRestricted(@Nullable String name) {
@@ -764,6 +764,10 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
             return context.getString(R.string.unknown_counter, name, hiddenId);
         }
         return name;
+    }
+
+    public static void clearRestrictedCount() {
+        hiddenCounter = 0;
     }
 
     private boolean isHiddenNumber() {
@@ -837,7 +841,9 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
                 && getExtras().getLong(Call.EXTRA_LAST_EMERGENCY_CALLBACK_TIME_MILLIS, 0) > 0) {
             long lastEmergencyCallMillis =
                     getExtras().getLong(Call.EXTRA_LAST_EMERGENCY_CALLBACK_TIME_MILLIS, 0);
-          return isInEmergencyCallbackWindow(lastEmergencyCallMillis);
+            if (isInEmergencyCallbackWindow(lastEmergencyCallMillis)) {
+                return true;
+            }
         }
         return false;
     }
@@ -858,6 +864,10 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
         }
     }
 
+    public int getNonConferenceState() {
+        return state;
+    }
+
     public void setState(int state) {
         if (state == DialerCallState.INCOMING) {
             logState.isIncoming = true;
@@ -865,10 +875,6 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
         updateCallTiming(state);
 
         this.state = state;
-    }
-
-    public int getNonConferenceState() {
-        return state;
     }
 
     private void updateCallTiming(int newState) {
@@ -932,16 +938,12 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
         return telecomCall == null ? null : telecomCall.getDetails().getExtras();
     }
 
-    /**
-     * @return The child number for the call, or {@code null} if none specified.
-     */
+    /** @return The child number for the call, or {@code null} if none specified. */
     public String getChildNumber() {
         return childNumber;
     }
 
-    /**
-     * @return The last forwarded number for the call, or {@code null} if none specified.
-     */
+    /** @return The last forwarded number for the call, or {@code null} if none specified. */
     public String getLastForwardedNumber() {
         return lastForwardedNumber;
     }
@@ -950,24 +952,20 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
         return isCallForwarded;
     }
 
-    /**
-     * @return The call subject, or {@code null} if none specified.
-     */
+    /** @return The call subject, or {@code null} if none specified. */
     public String getCallSubject() {
         return callSubject;
     }
 
     /**
      * @return {@code true} if the call's phone account supports call subjects, {@code false}
-     * otherwise.
+     *     otherwise.
      */
     public boolean isCallSubjectSupported() {
         return isCallSubjectSupported;
     }
 
-    /**
-     * Returns call disconnect cause, defined by {@link DisconnectCause}.
-     */
+    /** Returns call disconnect cause, defined by {@link DisconnectCause}. */
     public DisconnectCause getDisconnectCause() {
         if (state == DialerCallState.DISCONNECTED || state == DialerCallState.IDLE) {
             return disconnectCause;
@@ -981,16 +979,12 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
         logState.disconnectCause = this.disconnectCause;
     }
 
-    /**
-     * Returns the possible text message responses.
-     */
+    /** Returns the possible text message responses. */
     public List<String> getCannedSmsResponses() {
         return telecomCall.getCannedTextResponses();
     }
 
-    /**
-     * Checks if the call supports the given set of capabilities supplied as a bit mask.
-     */
+    /** Checks if the call supports the given set of capabilities supplied as a bit mask. */
     @TargetApi(28)
     public boolean can(int capabilities) {
         int supportedCapabilities = telecomCall.getDetails().getCallCapabilities();
@@ -1026,9 +1020,7 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
         return uniqueCallId;
     }
 
-    /**
-     * Gets the time when the call first became active.
-     */
+    /** Gets the time when the call first became active. */
     public long getConnectTimeMillis() {
         return telecomCall.getDetails().getConnectTimeMillis();
     }
@@ -1057,9 +1049,7 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
         return telecomCall == null ? null : telecomCall.getDetails().getAccountHandle();
     }
 
-    /**
-     * @return The {@link VideoCall} instance associated with the {@link Call}.
-     */
+    /** @return The {@link VideoCall} instance associated with the {@link Call}. */
     public VideoCall getVideoCall() {
         return telecomCall == null ? null : telecomCall.getVideoCall();
     }
@@ -1108,7 +1098,10 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
         if (phoneAccount == null) {
             return false;
         }
-      return phoneAccount.hasCapabilities(PhoneAccount.CAPABILITY_RTT);
+        if (!phoneAccount.hasCapabilities(PhoneAccount.CAPABILITY_RTT)) {
+            return false;
+        }
+        return true;
     }
 
     @TargetApi(28)
@@ -1125,7 +1118,10 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
         if (isConferenceCall()) {
             return false;
         }
-      return !CallList.getInstance().hasActiveRttCall();
+        if (CallList.getInstance().hasActiveRttCall()) {
+            return false;
+        }
+        return true;
     }
 
     @TargetApi(28)
@@ -1213,7 +1209,7 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
      * Determines if answering this call will cause an ongoing video call to be dropped.
      *
      * @return {@code true} if answering this call will drop an ongoing video call, {@code false}
-     * otherwise.
+     *     otherwise.
      */
     public boolean answeringDisconnectsForegroundVideoCall() {
         Bundle extras = getExtras();
@@ -1300,12 +1296,12 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
         didDismissVideoChargesAlertDialog = didDismiss;
     }
 
-    public Optional<SpamStatus> getSpamStatus() {
-        return Optional.fromNullable(spamStatus);
-    }
-
     public void setSpamStatus(@Nullable SpamStatus spamStatus) {
         this.spamStatus = spamStatus;
+    }
+
+    public Optional<SpamStatus> getSpamStatus() {
+        return Optional.fromNullable(spamStatus);
     }
 
     public boolean isSpam() {
@@ -1317,7 +1313,11 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
             return false;
         }
 
-      return !isPotentialEmergencyCallback();
+        if (isPotentialEmergencyCallback()) {
+            return false;
+        }
+
+        return true;
     }
 
     public boolean isBlocked() {
@@ -1355,9 +1355,11 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
             // placing the outgoing call.
             //
             // The existence of the assisted dialing extras indicates that assisted dialing took place.
-          return getIntentExtras().getBoolean(TelephonyManagerCompat.USE_ASSISTED_DIALING, false)
-                  && getAssistedDialingExtras() != null
-                  && VERSION.SDK_INT <= ConcreteCreator.BUILD_CODE_CEILING;
+            if (getIntentExtras().getBoolean(TelephonyManagerCompat.USE_ASSISTED_DIALING, false)
+                    && getAssistedDialingExtras() != null
+                    && Build.VERSION.SDK_INT <= ConcreteCreator.BUILD_CODE_CEILING) {
+                return true;
+            }
         }
 
         return false;
@@ -1476,9 +1478,7 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
         telecomCall.reject(rejectWithMessage, message);
     }
 
-    /**
-     * Return the string label to represent the call provider
-     */
+    /** Return the string label to represent the call provider */
     public String getCallProviderLabel() {
         if (callProviderLabel == null) {
             PhoneAccount account = getPhoneAccount();
@@ -1722,9 +1722,7 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
         this.preferredAccountRecorder = preferredAccountRecorder;
     }
 
-    /**
-     * Indicates the call is eligible for SpeakEasy
-     */
+    /** Indicates the call is eligible for SpeakEasy */
     public boolean isSpeakEasyEligible() {
 
         PhoneAccount phoneAccount = getPhoneAccount();
@@ -1766,9 +1764,7 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
         return true;
     }
 
-    /**
-     * Indicates the user has selected SpeakEasy
-     */
+    /** Indicates the user has selected SpeakEasy */
     public boolean isSpeakEasyCall() {
         if (!isSpeakEasyEligible()) {
             return false;
@@ -1776,9 +1772,7 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
         return isSpeakEasyCall;
     }
 
-    /**
-     * Sets the user preference for SpeakEasy
-     */
+    /** Sets the user preference for SpeakEasy */
     public void setIsSpeakEasyCall(boolean isSpeakEasyCall) {
         this.isSpeakEasyCall = isSpeakEasyCall;
         if (listeners != null) {
@@ -1786,20 +1780,6 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
                 listener.onDialerCallSpeakEasyStateChange();
             }
         }
-    }
-
-    /**
-     * Gets peer dimension width.
-     */
-    public int getPeerDimensionWidth() {
-        return peerDimensionWidth;
-    }
-
-    /**
-     * Gets peer dimension height.
-     */
-    public int getPeerDimensionHeight() {
-        return peerDimensionHeight;
     }
 
     /**
@@ -1812,19 +1792,9 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
             CALL_HISTORY_STATUS_NOT_PRESENT
     })
     @Retention(RetentionPolicy.SOURCE)
-    public @interface CallHistoryStatus {
-    }
+    public @interface CallHistoryStatus {}
 
-    /**
-     * Called when canned text responses have been loaded.
-     */
-    public interface CannedTextResponsesLoadedListener {
-        void onCannedTextResponsesLoaded(DialerCall call);
-    }
-
-    /**
-     * Camera direction constants
-     */
+    /** Camera direction constants */
     public static class CameraDirection {
         public static final int CAMERA_DIRECTION_UNKNOWN = -1;
         public static final int CAMERA_DIRECTION_FRONT_FACING = CameraCharacteristics.LENS_FACING_FRONT;
@@ -1849,16 +1819,20 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
 
         // Result of subtracting android.telecom.Call.Details#getConnectTimeMillis from the current time
         public long telecomDurationMillis = 0;
-        // Result of subtracting dialer_connect_time_millis from System.currentTimeMillis
-        public long dialerDurationMillis = 0;
-        // Same as dialerDurationMillis, using SystemClock.elapsedRealtime instead
-        public long dialerDurationMillisElapsedRealtime = 0;
+
         // Result of a call to System.currentTimeMillis when Dialer sees that a call
         // moves to the ACTIVE state
         long dialerConnectTimeMillis = 0;
+
         // Same as dialer_connect_time_millis, using SystemClock.elapsedRealtime
         // instead
         long dialerConnectTimeMillisElapsedRealtime = 0;
+
+        // Result of subtracting dialer_connect_time_millis from System.currentTimeMillis
+        public long dialerDurationMillis = 0;
+
+        // Same as dialerDurationMillis, using SystemClock.elapsedRealtime instead
+        public long dialerDurationMillisElapsedRealtime = 0;
 
         private static String lookupToString(ContactLookupResult.Type lookupType) {
             switch (lookupType) {
@@ -1932,9 +1906,7 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
         }
     }
 
-    /**
-     * Coordinates the available VideoTech implementations for a call.
-     */
+    /** Coordinates the available VideoTech implementations for a call. */
     @VisibleForTesting
     public static class VideoTechManager {
         private final Context context;
@@ -2006,5 +1978,20 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
                 videoTech.onRemovedFromCallList();
             }
         }
+    }
+
+    /** Called when canned text responses have been loaded. */
+    public interface CannedTextResponsesLoadedListener {
+        void onCannedTextResponsesLoaded(DialerCall call);
+    }
+
+    /** Gets peer dimension width. */
+    public int getPeerDimensionWidth() {
+        return peerDimensionWidth;
+    }
+
+    /** Gets peer dimension height. */
+    public int getPeerDimensionHeight() {
+        return peerDimensionHeight;
     }
 }
