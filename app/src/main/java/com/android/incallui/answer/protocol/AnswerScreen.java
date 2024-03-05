@@ -20,9 +20,7 @@ import androidx.fragment.app.Fragment;
 
 import java.util.List;
 
-/**
- * Interface for the answer module.
- */
+/** Interface for the answer module. */
 public interface AnswerScreen {
 
     String getCallId();

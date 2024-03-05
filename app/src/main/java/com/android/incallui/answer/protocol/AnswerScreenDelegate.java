@@ -20,9 +20,7 @@ import androidx.annotation.FloatRange;
 
 import com.android.incallui.incalluilock.InCallUiLock;
 
-/**
- * Callbacks implemented by the container app for this module.
- */
+/** Callbacks implemented by the container app for this module. */
 public interface AnswerScreenDelegate {
 
     void onAnswerScreenUnready();
@@ -40,7 +38,6 @@ public interface AnswerScreenDelegate {
     void onAnswerAndReleaseButtonEnabled();
 
     void onAnswerAndReleaseButtonDisabled();
-
     /**
      * Sets the window background color based on foreground call's theme and the given progress. This
      * is called from the answer UI to animate the accept and reject action.
@@ -52,9 +49,7 @@ public interface AnswerScreenDelegate {
      */
     void updateWindowBackgroundColor(@FloatRange(from = -1f, to = 1.0f) float progress);
 
-    /**
-     * Returns true if any answer/reject action timed out.
-     */
+    /** Returns true if any answer/reject action timed out. */
     boolean isActionTimeout();
 
     InCallUiLock acquireInCallUiLock(String tag);

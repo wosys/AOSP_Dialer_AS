@@ -388,6 +388,7 @@
             android:name="android.telephony.HIDE_VOICEMAIL_SETTINGS_MENU"
             android:value="true" />
 
+        <!-- com.android.incallui START-->
         <activity
             android:name="com.android.incallui.entry.InCallActivity"
             android:directBootAware="true"
@@ -412,13 +413,13 @@
             android:resizeableActivity="true"
             android:taskAffinity="com.android.incallui"
             android:theme="@style/Theme.InCallScreen.ManageConference" />
-
+        <!-- Memo: foregroundServiceType needed for SDK 34+ -->
         <service
             android:name="com.android.incallui.entry.InCallServiceImpl"
             android:directBootAware="true"
             android:exported="true"
             android:foregroundServiceType="phoneCall"
-            android:permission="android.permission.BIND_INCALL_SERVICE">
+            android:permission="android.permission.BIND_INCALL_SERVICE" >
             <meta-data
                 android:name="android.telecom.IN_CALL_SERVICE_UI"
                 android:value="true" />
@@ -428,12 +429,10 @@
             <meta-data
                 android:name="android.telecom.INCLUDE_EXTERNAL_CALLS"
                 android:value="true" />
-
             <intent-filter>
                 <action android:name="android.telecom.InCallService" />
             </intent-filter>
         </service>
-
         <activity
             android:name="com.android.incallui.entry.AudioRouteSelectorActivity"
             android:excludeFromRecents="true"
@@ -446,7 +445,7 @@
             android:exported="false"
             android:noHistory="true"
             android:theme="@style/Theme.Incall.DialogHolder" />
-
+        <!-- BroadcastReceiver for receiving Intents from Notification mechanism. -->
         <receiver
             android:name="com.android.incallui.entry.NotificationBroadcastReceiver"
             android:directBootAware="true"
@@ -454,16 +453,12 @@
         <receiver
             android:name="com.android.incallui.entry.ReturnToCallActionReceiver"
             android:exported="false" />
-
-        <activity
-            android:name="com.android.incallui.callpending.CallPendingActivity"
-            android:directBootAware="true"
-            android:excludeFromRecents="true"
-            android:exported="false"
-            android:label="@string/phoneAppLabel"
-            android:resizeableActivity="true"
-            android:taskAffinity="com.android.incallui"
-            android:theme="@style/Theme.InCallScreen" />
+        <!--
+           Comments for attributes in SpamNotificationActivity:
+           taskAffinity=""             -> Open the dialog without opening the dialer app behind it
+           noHistory="true"            -> Navigating away finishes activity
+           excludeFromRecents="true"   -> Don't show in "recent apps" screen
+           -->
         <activity
             android:name="com.android.incallui.spam.SpamNotificationActivity"
             android:excludeFromRecents="true"
@@ -471,16 +466,27 @@
             android:noHistory="true"
             android:taskAffinity=""
             android:theme="@style/AfterCallNotificationTheme" />
-
         <service
             android:name="com.android.incallui.spam.SpamNotificationService"
             android:exported="false" />
+        <!-- Identical to .InCallActivity except orientation is locked to portrait -->
+        <activity
+            android:name="com.android.incallui.callpending.CallPendingActivity"
+            android:directBootAware="true"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:label="@string/phoneAppLabel"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"
+            android:taskAffinity="com.android.incallui"
+            android:theme="@style/Theme.InCallScreen" />
         <activity
             android:name="com.android.incallui.telecomeventui.InternationalCallOnWifiDialogActivity"
             android:excludeFromRecents="true"
             android:exported="true"
             android:noHistory="true"
             android:theme="@style/Theme.Incall.DialogHolder" />
+        <!-- com.android.incallui END-->
 
         <provider
             android:name="com.wintmain.dialer.lookup.LookupProvider"
