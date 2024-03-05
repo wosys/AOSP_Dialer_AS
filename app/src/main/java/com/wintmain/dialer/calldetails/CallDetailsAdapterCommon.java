@@ -36,6 +36,7 @@ import com.wintmain.dialer.calldetails.CallDetailsHeaderViewHolder.CallDetailsHe
 import com.wintmain.dialer.calllogutils.CallTypeHelper;
 import com.wintmain.dialer.calllogutils.CallbackActionHelper;
 import com.wintmain.dialer.calllogutils.CallbackActionHelper.CallbackAction;
+import com.wintmain.dialer.callrecord.CallRecordingDataStore;
 import com.wintmain.dialer.common.Assert;
 import com.wintmain.dialer.duo.DuoComponent;
 import com.wintmain.dialer.glidephotomanager.PhotoInfo;
@@ -55,23 +56,9 @@ abstract class CallDetailsAdapterCommon extends RecyclerView.Adapter<RecyclerVie
     private final ReportCallIdListener reportCallIdListener;
     private final DeleteCallDetailsListener deleteCallDetailsListener;
     private final CallTypeHelper callTypeHelper;
+    private final CallRecordingDataStore callRecordingDataStore;
 
     private CallDetailsEntries callDetailsEntries;
-
-    protected abstract void bindCallDetailsHeaderViewHolder(
-            CallDetailsHeaderViewHolder viewHolder, int position);
-
-    protected abstract CallDetailsHeaderViewHolder createCallDetailsHeaderViewHolder(
-            View container, CallDetailsHeaderListener callDetailsHeaderListener);
-
-    /** Returns the phone number of the call details. */
-    protected abstract String getNumber();
-
-    /** Returns the primary text shown on call details toolbar, usually contact name or number. */
-    protected abstract String getPrimaryText();
-
-    /** Returns {@link PhotoInfo} of the contact. */
-    protected abstract PhotoInfo getPhotoInfo();
 
     CallDetailsAdapterCommon(
             Context context,
@@ -79,16 +66,41 @@ abstract class CallDetailsAdapterCommon extends RecyclerView.Adapter<RecyclerVie
             CallDetailsEntryListener callDetailsEntryListener,
             CallDetailsHeaderListener callDetailsHeaderListener,
             ReportCallIdListener reportCallIdListener,
-            DeleteCallDetailsListener deleteCallDetailsListener) {
+            DeleteCallDetailsListener deleteCallDetailsListener,
+            CallRecordingDataStore callRecordingDataStore) {
         this.callDetailsEntries = callDetailsEntries;
         this.callDetailsEntryListener = callDetailsEntryListener;
         this.callDetailsHeaderListener = callDetailsHeaderListener;
         this.reportCallIdListener = reportCallIdListener;
         this.deleteCallDetailsListener = deleteCallDetailsListener;
+        this.callRecordingDataStore = callRecordingDataStore;
         this.callTypeHelper =
                 new CallTypeHelper(context.getResources(), DuoComponent.get(context).getDuo());
     }
 
+    protected abstract void bindCallDetailsHeaderViewHolder(
+            CallDetailsHeaderViewHolder viewHolder, int position);
+
+    protected abstract CallDetailsHeaderViewHolder createCallDetailsHeaderViewHolder(
+            View container, CallDetailsHeaderListener callDetailsHeaderListener);
+
+    /**
+     * Returns the phone number of the call details.
+     */
+    protected abstract String getNumber();
+
+    /**
+     * Returns the primary text shown on call details toolbar, usually contact name or number.
+     */
+    protected abstract String getPrimaryText();
+
+    /**
+     * Returns {@link PhotoInfo} of the contact.
+     */
+    protected abstract PhotoInfo getPhotoInfo();
+
+
+    @NonNull
     @Override
     @CallSuper
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -127,6 +139,7 @@ abstract class CallDetailsAdapterCommon extends RecyclerView.Adapter<RecyclerVie
                     getPhotoInfo(),
                     entry,
                     callTypeHelper,
+                    callRecordingDataStore,
                     !entry.getHistoryResultsList().isEmpty() && position != getItemCount() - 2);
         }
     }
@@ -162,7 +175,8 @@ abstract class CallDetailsAdapterCommon extends RecyclerView.Adapter<RecyclerVie
         notifyDataSetChanged();
     }
 
-    final @CallbackAction int getCallbackAction() {
+    final @CallbackAction
+    int getCallbackAction() {
         Assert.checkState(!callDetailsEntries.getEntriesList().isEmpty());
 
         CallDetailsEntry entry = callDetailsEntries.getEntries(0);

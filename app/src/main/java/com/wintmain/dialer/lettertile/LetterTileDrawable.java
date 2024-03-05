@@ -66,7 +66,6 @@ public class LetterTileDrawable extends Drawable {
      */
     public static final int SHAPE_CIRCLE = 1;
     public static final int SHAPE_RECTANGLE = 2;
-    public static final int TYPE_VOICEMAIL = 3;
     /**
      * 54% opacity
      */

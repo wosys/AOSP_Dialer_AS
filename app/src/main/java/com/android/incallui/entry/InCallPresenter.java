@@ -16,18 +16,14 @@
 
 package com.android.incallui.entry;
 
-import android.annotation.SuppressLint;
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Trace;
-import androidx.annotation.MainThread;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
-import androidx.core.os.UserManagerCompat;
 import android.telecom.Call.Details;
 import android.telecom.CallAudioState;
 import android.telecom.DisconnectCause;
@@ -41,6 +37,14 @@ import android.util.ArraySet;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
+
+import androidx.annotation.MainThread;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
+import androidx.core.app.ActivityCompat;
+import androidx.core.os.UserManagerCompat;
+
 import com.android.contacts.common.compat.CallCompat;
 import com.wintmain.dialer.CallConfiguration;
 import com.wintmain.dialer.Mode;
@@ -80,7 +84,27 @@ import com.android.incallui.telecomeventui.InternationalCallOnWifiDialogFragment
 import com.android.incallui.videosurface.bindings.VideoSurfaceBindings;
 import com.android.incallui.videosurface.protocol.VideoSurfaceTexture;
 import com.android.incallui.videotech.utils.VideoUtils;
+import com.wintmain.dialer.CallConfiguration;
+import com.wintmain.dialer.Mode;
+import com.wintmain.dialer.R;
+import com.wintmain.dialer.blocking.FilteredNumberAsyncQueryHandler;
+import com.wintmain.dialer.blocking.FilteredNumberAsyncQueryHandler.OnCheckBlockedListener;
+import com.wintmain.dialer.blocking.FilteredNumberCompat;
+import com.wintmain.dialer.blocking.FilteredNumbersUtil;
+import com.wintmain.dialer.common.Assert;
+import com.wintmain.dialer.common.LogUtil;
+import com.wintmain.dialer.common.concurrent.DialerExecutorComponent;
+import com.wintmain.dialer.enrichedcall.EnrichedCallComponent;
+import com.wintmain.dialer.location.GeoUtil;
+import com.wintmain.dialer.logging.DialerImpression;
+import com.wintmain.dialer.logging.InteractionEvent;
+import com.wintmain.dialer.logging.Logger;
+import com.wintmain.dialer.postcall.PostCall;
+import com.wintmain.dialer.telecom.TelecomCallUtil;
+import com.wintmain.dialer.telecom.TelecomUtil;
+import com.wintmain.dialer.util.TouchPointManager;
 import com.google.protobuf.InvalidProtocolBufferException;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -126,7 +150,8 @@ public class InCallPresenter implements CallList.Listener, AudioModeProvider.Aud
                     new ConcurrentHashMap<InCallOrientationListener, Boolean>(8, 0.9f, 1));
     private final Set<InCallEventListener> inCallEventListeners =
             Collections.newSetFromMap(new ConcurrentHashMap<InCallEventListener, Boolean>(8, 0.9f, 1));
-
+    private final PseudoScreenState pseudoScreenState = new PseudoScreenState();
+    private final Set<InCallUiLock> inCallUiLocks = new ArraySet<>();
     private StatusBarNotifier statusBarNotifier;
     private ExternalCallNotifier externalCallNotifier;
     private ContactInfoCache contactInfoCache;
@@ -142,10 +167,24 @@ public class InCallPresenter implements CallList.Listener, AudioModeProvider.Aud
                     }
                 }
             };
+    private final PhoneStateListener phoneStateListener =
+            new PhoneStateListener() {
+                @Override
+                public void onCallStateChanged(int state, String incomingNumber) {
+                    if (state == TelephonyManager.CALL_STATE_RINGING) {
+                        if (FilteredNumbersUtil.hasRecentEmergencyCall(context)) {
+                            return;
+                        }
+                        // Check if the number is blocked, to silence the ringer.
+                        String countryIso = GeoUtil.getCurrentCountryIso(context);
+                        filteredQueryHandler.isBlockedNumber(
+                                onCheckBlockedListener, incomingNumber, countryIso);
+                    }
+                }
+            };
     private CallList callList;
     private ExternalCallList externalCallList;
     private InCallActivity inCallActivity;
-    private ManageConferenceActivity manageConferenceActivity;
     private final android.telecom.Call.Callback callCallback =
             new android.telecom.Call.Callback() {
                 @Override
@@ -196,51 +235,7 @@ public class InCallPresenter implements CallList.Listener, AudioModeProvider.Aud
                     onDetailsChanged(telecomCall, telecomCall.getDetails());
                 }
             };
-    private InCallState inCallState = InCallState.NO_CALLS;
-    private ProximitySensor proximitySensor;
-    private final PseudoScreenState pseudoScreenState = new PseudoScreenState();
-    private boolean serviceConnected;
-    private InCallCameraManager inCallCameraManager;
-    private FilteredNumberAsyncQueryHandler filteredQueryHandler;
-    private CallList.Listener spamCallListListener;
-    private CallList.Listener activeCallsListener;
-    /** Whether or not we are currently bound and waiting for Telecom to send us a new call. */
-    private boolean boundAndWaitingForOutgoingCall;
-    /** Determines if the InCall UI is in fullscreen mode or not. */
-    private boolean isFullScreen = false;
-
-    private boolean screenTimeoutEnabled = true;
-
-    private PhoneStateListener phoneStateListener =
-            new PhoneStateListener() {
-                @Override
-                public void onCallStateChanged(int state, String incomingNumber) {
-                    if (state == TelephonyManager.CALL_STATE_RINGING) {
-                        if (FilteredNumbersUtil.hasRecentEmergencyCall(context)) {
-                            return;
-                        }
-                        // Check if the number is blocked, to silence the ringer.
-                        String countryIso = GeoUtil.getCurrentCountryIso(context);
-                        filteredQueryHandler.isBlockedNumber(
-                                onCheckBlockedListener, incomingNumber, countryIso);
-                    }
-                }
-            };
-
-    /** Whether or not InCallService is bound to Telecom. */
-    private boolean serviceBound = false;
-
-    /**
-     * When configuration changes Android kills the current activity and starts a new one. The flag is
-     * used to check if full clean up is necessary (activity is stopped and new activity won't be
-     * started), or if a new activity will be started right after the current one is destroyed, and
-     * therefore no need in release all resources.
-     */
-    private boolean isChangingConfigurations = false;
-
-    private boolean awaitingCallListUpdate = false;
-
-    private ExternalCallList.ExternalCallListener externalCallListener =
+    private final ExternalCallList.ExternalCallListener externalCallListener =
             new ExternalCallList.ExternalCallListener() {
 
                 @Override
@@ -268,19 +263,48 @@ public class InCallPresenter implements CallList.Listener, AudioModeProvider.Aud
                     // No-op
                 }
             };
-
+    private ManageConferenceActivity manageConferenceActivity;
+    private InCallState inCallState = InCallState.NO_CALLS;
+    private ProximitySensor proximitySensor;
+    private boolean serviceConnected;
+    private InCallCameraManager inCallCameraManager;
+    private FilteredNumberAsyncQueryHandler filteredQueryHandler;
+    private CallList.Listener spamCallListListener;
+    private CallList.Listener activeCallsListener;
+    /**
+     * Whether or not we are currently bound and waiting for Telecom to send us a new call.
+     */
+    private boolean boundAndWaitingForOutgoingCall;
+    /**
+     * Determines if the InCall UI is in fullscreen mode or not.
+     */
+    private boolean isFullScreen = false;
+    private boolean screenTimeoutEnabled = true;
+    /**
+     * Whether or not InCallService is bound to Telecom.
+     */
+    private boolean serviceBound = false;
+    /**
+     * When configuration changes Android kills the current activity and starts a new one. The flag is
+     * used to check if full clean up is necessary (activity is stopped and new activity won't be
+     * started), or if a new activity will be started right after the current one is destroyed, and
+     * therefore no need in release all resources.
+     */
+    private boolean isChangingConfigurations = false;
+    private boolean awaitingCallListUpdate = false;
     private ThemeColorManager themeColorManager;
     private VideoSurfaceTexture localVideoSurfaceTexture;
     private VideoSurfaceTexture remoteVideoSurfaceTexture;
-
     private SpeakEasyCallManager speakEasyCallManager;
-
     private boolean addCallClicked = false;
     private boolean automaticallyMutedByAddCall = false;
 
-    /** Inaccessible constructor. Must use getRunningInstance() to get this singleton. */
+    /**
+     * Inaccessible constructor. Must use getRunningInstance() to get this singleton.
+     */
     @VisibleForTesting
-    InCallPresenter() {}
+    InCallPresenter() {
+    }
 
     public static synchronized InCallPresenter getInstance() {
         if (inCallPresenter == null) {
@@ -302,8 +326,8 @@ public class InCallPresenter implements CallList.Listener, AudioModeProvider.Aud
      *
      * @param call to check accounts for.
      * @return {@code true} if the call has no call capable phone accounts set, {@code false} if the
-     *     call contains a phone account that could be used to initiate it with, or is an emergency
-     *     call.
+     * call contains a phone account that could be used to initiate it with, or is an emergency
+     * call.
      */
     public static boolean isCallWithNoValidAccounts(DialerCall call) {
         if (call != null && !call.isEmergencyCall()) {
@@ -324,6 +348,54 @@ public class InCallPresenter implements CallList.Listener, AudioModeProvider.Aud
             }
         }
         return false;
+    }
+
+    /**
+     * Get the highest priority call to display. Goes through the calls and chooses which to return
+     * based on priority of which type of call to display to the user. Callers can use the "ignore"
+     * feature to get the second best call by passing a previously found primary call as ignore.
+     *
+     * @param ignore A call to ignore if found.
+     */
+    static DialerCall getCallToDisplay(
+            CallList callList, DialerCall ignore, boolean skipDisconnected) {
+        // Active calls come second.  An active call always gets precedent.
+        DialerCall retval = callList.getActiveCall();
+        if (retval != null && retval != ignore) {
+            return retval;
+        }
+
+        // Sometimes there is intemediate state that two calls are in active even one is about
+        // to be on hold.
+        retval = callList.getSecondActiveCall();
+        if (retval != null && retval != ignore) {
+            return retval;
+        }
+
+        // Disconnected calls get primary position if there are no active calls
+        // to let user know quickly what call has disconnected. Disconnected
+        // calls are very short lived.
+        if (!skipDisconnected) {
+            retval = callList.getDisconnectingCall();
+            if (retval != null && retval != ignore) {
+                return retval;
+            }
+            retval = callList.getDisconnectedCall();
+            if (retval != null && retval != ignore) {
+                return retval;
+            }
+        }
+
+        // Then we go to background call (calls on hold)
+        retval = callList.getBackgroundCall();
+        if (retval != null && retval != ignore) {
+            return retval;
+        }
+
+        // Lastly, we go to a second background call.
+        retval = callList.getSecondBackgroundCall();
+
+        return retval;
     }
 
     public InCallState getInCallState() {
@@ -879,9 +951,6 @@ public class InCallPresenter implements CallList.Listener, AudioModeProvider.Aud
         } else if (newState == InCallState.INCALL) {
             primary = getCallToDisplay(callList, null, false);
         }
-        if (primary != null) {
-            onForegroundCallChanged(primary);
-        }
 
         // notify listeners of new state
         for (InCallStateListener listener : listeners) {
@@ -901,54 +970,8 @@ public class InCallPresenter implements CallList.Listener, AudioModeProvider.Aud
     }
 
     /**
-     * Get the highest priority call to display. Goes through the calls and chooses which to return
-     * based on priority of which type of call to display to the user. Callers can use the "ignore"
-     * feature to get the second best call by passing a previously found primary call as ignore.
-     *
-     * @param ignore A call to ignore if found.
+     * Called when there is a new incoming call.
      */
-    static DialerCall getCallToDisplay(
-            CallList callList, DialerCall ignore, boolean skipDisconnected) {
-        // Active calls come second.  An active call always gets precedent.
-        DialerCall retval = callList.getActiveCall();
-        if (retval != null && retval != ignore) {
-            return retval;
-        }
-
-        // Sometimes there is intemediate state that two calls are in active even one is about
-        // to be on hold.
-        retval = callList.getSecondActiveCall();
-        if (retval != null && retval != ignore) {
-            return retval;
-        }
-
-        // Disconnected calls get primary position if there are no active calls
-        // to let user know quickly what call has disconnected. Disconnected
-        // calls are very short lived.
-        if (!skipDisconnected) {
-            retval = callList.getDisconnectingCall();
-            if (retval != null && retval != ignore) {
-                return retval;
-            }
-            retval = callList.getDisconnectedCall();
-            if (retval != null && retval != ignore) {
-                return retval;
-            }
-        }
-
-        // Then we go to background call (calls on hold)
-        retval = callList.getBackgroundCall();
-        if (retval != null && retval != ignore) {
-            return retval;
-        }
-
-        // Lastly, we go to a second background call.
-        retval = callList.getSecondBackgroundCall();
-
-        return retval;
-    }
-
-    /** Called when there is a new incoming call. */
     @Override
     public void onIncomingCall(DialerCall call) {
         Trace.beginSection("InCallPresenter.onIncomingCall");
@@ -1052,7 +1075,9 @@ public class InCallPresenter implements CallList.Listener, AudioModeProvider.Aud
                 && (number.length() <= 8 || number.startsWith("*#*#") || number.endsWith("#*#*"));
     }
 
-    /** Given the call list, return the state in which the in-call screen should be. */
+    /**
+     * Given the call list, return the state in which the in-call screen should be.
+     */
     public InCallState getPotentialStateFromCallList(CallList callList) {
 
         InCallState newState = InCallState.NO_CALLS;
@@ -1179,7 +1204,9 @@ public class InCallPresenter implements CallList.Listener, AudioModeProvider.Aud
         return pseudoScreenState;
     }
 
-    /** Returns true if the incall app is the foreground application. */
+    /**
+     * Returns true if the incall app is the foreground application.
+     */
     public boolean isShowingInCallUi() {
         if (!isActivityStarted()) {
             return false;
@@ -1225,7 +1252,9 @@ public class InCallPresenter implements CallList.Listener, AudioModeProvider.Aud
                 "updateIsChangingConfigurations = " + isChangingConfigurations);
     }
 
-    /** Called when the activity goes in/out of the foreground. */
+    /**
+     * Called when the activity goes in/out of the foreground.
+     */
     public void onUiShowing(boolean showing) {
         if (proximitySensor != null) {
             proximitySensor.onInCallShowing(showing);
@@ -1284,7 +1313,9 @@ public class InCallPresenter implements CallList.Listener, AudioModeProvider.Aud
         }
     }
 
-    /** Brings the app into the foreground if possible. */
+    /**
+     * Brings the app into the foreground if possible.
+     */
     public void bringToForeground(boolean showDialpad) {
         // Before we bring the incall UI to the foreground, we check to see if:
         // 1. It is not currently in the foreground
@@ -1385,7 +1416,9 @@ public class InCallPresenter implements CallList.Listener, AudioModeProvider.Aud
         return true;
     }
 
-    /** Clears the previous fullscreen state. */
+    /**
+     * Clears the previous fullscreen state.
+     */
     public void clearFullscreen() {
         isFullScreen = false;
     }
@@ -1394,7 +1427,7 @@ public class InCallPresenter implements CallList.Listener, AudioModeProvider.Aud
      * Changes the fullscreen mode of the in-call UI.
      *
      * @param isFullScreen {@code true} if in-call should be in fullscreen mode, {@code false}
-     *     otherwise.
+     *                     otherwise.
      */
     public void setFullScreen(boolean isFullScreen) {
         setFullScreen(isFullScreen, false /* force */);
@@ -1404,8 +1437,8 @@ public class InCallPresenter implements CallList.Listener, AudioModeProvider.Aud
      * Changes the fullscreen mode of the in-call UI.
      *
      * @param isFullScreen {@code true} if in-call should be in fullscreen mode, {@code false}
-     *     otherwise.
-     * @param force {@code true} if fullscreen mode should be set regardless of its current state.
+     *                     otherwise.
+     * @param force        {@code true} if fullscreen mode should be set regardless of its current state.
      */
     public void setFullScreen(boolean isFullScreen, boolean force) {
         LogUtil.i("InCallPresenter.setFullScreen", "setFullScreen = " + isFullScreen);
@@ -1428,7 +1461,7 @@ public class InCallPresenter implements CallList.Listener, AudioModeProvider.Aud
 
     /**
      * @return {@code true} if the in-call ui is currently in fullscreen mode, {@code false}
-     *     otherwise.
+     * otherwise.
      */
     public boolean isFullscreen() {
         return isFullScreen;
@@ -1445,7 +1478,9 @@ public class InCallPresenter implements CallList.Listener, AudioModeProvider.Aud
         }
     }
 
-    /** Instruct the in-call activity to show an error dialog or toast for a disconnected call. */
+    /**
+     * Instruct the in-call activity to show an error dialog or toast for a disconnected call.
+     */
     private void showDialogOrToastForDisconnectedCall(DialerCall call) {
         if (call.getState() != DialerCallState.DISCONNECTED) {
             return;
@@ -1612,8 +1647,8 @@ public class InCallPresenter implements CallList.Listener, AudioModeProvider.Aud
 
     /**
      * @return {@code true} if the InCallPresenter is ready to be torn down, {@code false} otherwise.
-     *     Calling classes should use this as an indication whether to interact with the
-     *     InCallPresenter or not.
+     * Calling classes should use this as an indication whether to interact with the
+     * InCallPresenter or not.
      */
     public boolean isReadyForTearDown() {
         return inCallActivity == null && !serviceConnected && inCallState == InCallState.NO_CALLS;
@@ -1751,10 +1786,10 @@ public class InCallPresenter implements CallList.Listener, AudioModeProvider.Aud
      * Notifies listeners of changes in orientation and notify calls of rotation angle change.
      *
      * @param orientation The screen orientation of the device (one of: {@link
-     *     InCallOrientationEventListener#SCREEN_ORIENTATION_0}, {@link
-     *     InCallOrientationEventListener#SCREEN_ORIENTATION_90}, {@link
-     *     InCallOrientationEventListener#SCREEN_ORIENTATION_180}, {@link
-     *     InCallOrientationEventListener#SCREEN_ORIENTATION_270}).
+     *                    InCallOrientationEventListener#SCREEN_ORIENTATION_0}, {@link
+     *                    InCallOrientationEventListener#SCREEN_ORIENTATION_90}, {@link
+     *                    InCallOrientationEventListener#SCREEN_ORIENTATION_180}, {@link
+     *                    InCallOrientationEventListener#SCREEN_ORIENTATION_270}).
      */
     public void onDeviceOrientationChange(@ScreenOrientation int orientation) {
         LogUtil.d(
@@ -1778,7 +1813,7 @@ public class InCallPresenter implements CallList.Listener, AudioModeProvider.Aud
      * orientation event listener if allowOrientationChange is true, disables it if false.
      *
      * @param allowOrientationChange {@code true} if the in-call UI can change between portrait and
-     *     landscape. {@code false} if the in-call UI should be locked in portrait.
+     *                               landscape. {@code false} if the in-call UI should be locked in portrait.
      */
     public void setInCallAllowsOrientationChange(boolean allowOrientationChange) {
         if (inCallActivity == null) {
@@ -1814,7 +1849,7 @@ public class InCallPresenter implements CallList.Listener, AudioModeProvider.Aud
      * Hides or shows the conference manager fragment.
      *
      * @param show {@code true} if the conference manager should be shown, {@code false} if it should
-     *     be hidden.
+     *             be hidden.
      */
     public void showConferenceCallManager(boolean show) {
         if (inCallActivity != null) {
@@ -1837,28 +1872,14 @@ public class InCallPresenter implements CallList.Listener, AudioModeProvider.Aud
         return inCallActivity.isDialpadVisible();
     }
 
-    public ThemeColorManager getThemeColorManager() {
-        return themeColorManager;
-    }
-
-    @VisibleForTesting
-    public void setThemeColorManager(ThemeColorManager themeColorManager) {
-        this.themeColorManager = themeColorManager;
-    }
-
-    /** Called when the foreground call changes. */
-    public void onForegroundCallChanged(DialerCall newForegroundCall) {
-        themeColorManager.onForegroundCallChanged(context, newForegroundCall);
-        if (inCallActivity != null) {
-            inCallActivity.onForegroundCallChanged(newForegroundCall);
-        }
-    }
 
     public InCallActivity getActivity() {
         return inCallActivity;
     }
 
-    /** Called when the UI begins, and starts the callstate callbacks if necessary. */
+    /**
+     * Called when the UI begins, and starts the callstate callbacks if necessary.
+     */
     public void setActivity(InCallActivity inCallActivity) {
         if (inCallActivity == null) {
             throw new IllegalArgumentException("registerActivity cannot be called with null");
@@ -1907,15 +1928,100 @@ public class InCallPresenter implements CallList.Listener, AudioModeProvider.Aud
         }
     }
 
-    @SuppressLint("MissingPermission")
     @Override
     public void onAudioStateChanged(CallAudioState audioState) {
         if (statusBarNotifier != null) {
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
             statusBarNotifier.updateNotification();
         }
     }
 
-    /** All the main states of InCallActivity. */
+    @MainThread
+    public InCallUiLock acquireInCallUiLock(String tag) {
+        Assert.isMainThread();
+        InCallUiLock lock = new InCallUiLockImpl(tag);
+        inCallUiLocks.add(lock);
+        return lock;
+    }
+
+    @MainThread
+    private void releaseInCallUiLock(InCallUiLock lock) {
+        Assert.isMainThread();
+        LogUtil.i("InCallPresenter.releaseInCallUiLock", "releasing %s", lock);
+        inCallUiLocks.remove(lock);
+        if (inCallUiLocks.isEmpty()) {
+            LogUtil.i("InCallPresenter.releaseInCallUiLock", "all locks released");
+            if (inCallState == InCallState.NO_CALLS) {
+                LogUtil.i("InCallPresenter.releaseInCallUiLock", "no more calls, finishing UI");
+                attemptFinishActivity();
+                attemptCleanup();
+            }
+        }
+    }
+
+    @MainThread
+    public boolean isInCallUiLocked() {
+        Assert.isMainThread();
+        if (inCallUiLocks.isEmpty()) {
+            return false;
+        }
+        for (InCallUiLock lock : inCallUiLocks) {
+            LogUtil.i("InCallPresenter.isInCallUiLocked", "still locked by %s", lock);
+        }
+        return true;
+    }
+
+    public void addCallClicked() {
+        if (addCallClicked) {
+            // Since clicking add call button brings user to MainActivity and coming back refreshes mute
+            // state, add call button should only be clicked once during InCallActivity shows.
+            return;
+        }
+        addCallClicked = true;
+        if (!AudioModeProvider.getInstance().getAudioState().isMuted()) {
+            // Automatically mute the current call
+            TelecomAdapter.getInstance().mute(true);
+            automaticallyMutedByAddCall = true;
+        }
+        TelecomAdapter.getInstance().addCall();
+    }
+
+    /**
+     * Refresh mute state after call UI resuming from add call screen.
+     */
+    public void refreshMuteState() {
+        LogUtil.i(
+                "InCallPresenter.refreshMuteState",
+                "refreshMuteStateAfterAddCall: %b addCallClicked: %b",
+                automaticallyMutedByAddCall,
+                addCallClicked);
+        if (!addCallClicked) {
+            return;
+        }
+        if (automaticallyMutedByAddCall) {
+            // Restore the previous mute state
+            TelecomAdapter.getInstance().mute(false);
+            automaticallyMutedByAddCall = false;
+        }
+        addCallClicked = false;
+    }
+
+    public ThemeColorManager getThemeColorManager() {
+        return themeColorManager;
+    }
+
+    /**
+     * All the main states of InCallActivity.
+     */
     public enum InCallState {
         // InCall Screen is off and there are no calls
         NO_CALLS,
@@ -1945,7 +2051,9 @@ public class InCallPresenter implements CallList.Listener, AudioModeProvider.Aud
         }
     }
 
-    /** Interface implemented by classes that need to know about the InCall State. */
+    /**
+     * Interface implemented by classes that need to know about the InCall State.
+     */
     public interface InCallStateListener {
 
         // TODO: Enhance state to contain the call objects instead of passing CallList
@@ -2005,74 +2113,4 @@ public class InCallPresenter implements CallList.Listener, AudioModeProvider.Aud
             return "InCallUiLock[" + tag + "]";
         }
     }
-
-    @MainThread
-    public InCallUiLock acquireInCallUiLock(String tag) {
-        Assert.isMainThread();
-        InCallUiLock lock = new InCallUiLockImpl(tag);
-        inCallUiLocks.add(lock);
-        return lock;
-    }
-
-    @MainThread
-    private void releaseInCallUiLock(InCallUiLock lock) {
-        Assert.isMainThread();
-        LogUtil.i("InCallPresenter.releaseInCallUiLock", "releasing %s", lock);
-        inCallUiLocks.remove(lock);
-        if (inCallUiLocks.isEmpty()) {
-            LogUtil.i("InCallPresenter.releaseInCallUiLock", "all locks released");
-            if (inCallState == InCallState.NO_CALLS) {
-                LogUtil.i("InCallPresenter.releaseInCallUiLock", "no more calls, finishing UI");
-                attemptFinishActivity();
-                attemptCleanup();
-            }
-        }
-    }
-
-    @MainThread
-    public boolean isInCallUiLocked() {
-        Assert.isMainThread();
-        if (inCallUiLocks.isEmpty()) {
-            return false;
-        }
-        for (InCallUiLock lock : inCallUiLocks) {
-            LogUtil.i("InCallPresenter.isInCallUiLocked", "still locked by %s", lock);
-        }
-        return true;
-    }
-
-    public void addCallClicked() {
-        if (addCallClicked) {
-            // Since clicking add call button brings user to MainActivity and coming back refreshes mute
-            // state, add call button should only be clicked once during InCallActivity shows.
-            return;
-        }
-        addCallClicked = true;
-        if (!AudioModeProvider.getInstance().getAudioState().isMuted()) {
-            // Automatically mute the current call
-            TelecomAdapter.getInstance().mute(true);
-            automaticallyMutedByAddCall = true;
-        }
-        TelecomAdapter.getInstance().addCall();
-    }
-
-    /** Refresh mute state after call UI resuming from add call screen. */
-    public void refreshMuteState() {
-        LogUtil.i(
-                "InCallPresenter.refreshMuteState",
-                "refreshMuteStateAfterAddCall: %b addCallClicked: %b",
-                automaticallyMutedByAddCall,
-                addCallClicked);
-        if (!addCallClicked) {
-            return;
-        }
-        if (automaticallyMutedByAddCall) {
-            // Restore the previous mute state
-            TelecomAdapter.getInstance().mute(false);
-            automaticallyMutedByAddCall = false;
-        }
-        addCallClicked = false;
-    }
-
-    private final Set<InCallUiLock> inCallUiLocks = new ArraySet<>();
 }

@@ -74,9 +74,9 @@ public class PreCallCoordinatorImpl implements PreCallCoordinator {
         } else {
             builder = Assert.isNotNull(intent.getParcelableExtra(EXTRA_CALL_INTENT_BUILDER));
         }
-//        uiListener =
-//                DialerExecutorComponent.get(activity)
-//                        .createUiListener(uiListener.getChildFragmentManager(), "PreCallCoordinatorImpl.uiListener");
+        uiListener =
+                DialerExecutorComponent.get(activity)
+                        .createUiListener(uiListener.getChildFragmentManager(), "PreCallCoordinatorImpl.uiListener");
     }
 
     void onRestoreInstanceState(Bundle savedInstanceState) {

@@ -27,12 +27,22 @@ import com.wintmain.dialer.common.concurrent.Annotations.Ui;
 import com.wintmain.dialer.inject.HasRootComponent;
 import com.wintmain.dialer.inject.IncludeInDialerRoot;
 import com.google.common.util.concurrent.ListeningExecutorService;
-import dagger.Subcomponent;
+
 import java.util.concurrent.ExecutorService;
 
-/** Dagger component which provides a {@link DialerExecutorFactory}. */
+import dagger.Subcomponent;
+
+/**
+ * Dagger component which provides a {@link DialerExecutorFactory}.
+ */
 @Subcomponent
 public abstract class DialerExecutorComponent {
+
+    public static DialerExecutorComponent get(Context context) {
+        return ((DialerExecutorComponent.HasComponent)
+                ((HasRootComponent) context.getApplicationContext()).component())
+                .dialerExecutorComponent();
+    }
 
     public abstract DialerExecutorFactory dialerExecutorFactory();
 
@@ -48,22 +58,14 @@ public abstract class DialerExecutorComponent {
     @LightweightExecutor
     public abstract ListeningExecutorService lightweightExecutor();
 
-    /**
-     * Version of {@link #createUiListener(FragmentManager, String)} that accepts support fragment
-     * manager.
-     */
-    public <OutputT> SupportUiListener<OutputT> createUiListener(
+    public <OutputT> UiListener<OutputT> createUiListener(
             FragmentManager fragmentManager, String taskId) {
-        return SupportUiListener.create(fragmentManager, taskId);
+        return UiListener.create(fragmentManager, taskId);
     }
 
-    public static DialerExecutorComponent get(Context context) {
-        return ((DialerExecutorComponent.HasComponent)
-                ((HasRootComponent) context.getApplicationContext()).component())
-                .dialerExecutorComponent();
-    }
-
-    /** Used to refer to the root application component. */
+    /**
+     * Used to refer to the root application component.
+     */
     @IncludeInDialerRoot
     public interface HasComponent {
         DialerExecutorComponent dialerExecutorComponent();

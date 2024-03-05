@@ -22,12 +22,14 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+
 import com.wintmain.dialer.CoalescedIds;
 import com.wintmain.dialer.calldetails.CallDetailsEntryViewHolder.CallDetailsEntryListener;
 import com.wintmain.dialer.calldetails.CallDetailsFooterViewHolder.DeleteCallDetailsListener;
 import com.wintmain.dialer.calldetails.CallDetailsFooterViewHolder.ReportCallIdListener;
 import com.wintmain.dialer.calldetails.CallDetailsHeaderViewHolder.CallDetailsHeaderListener;
 import com.wintmain.dialer.calllog.database.contract.AnnotatedCallLogContract.AnnotatedCallLog;
+import com.wintmain.dialer.callrecord.CallRecordingDataStore;
 import com.wintmain.dialer.common.Assert;
 import com.wintmain.dialer.enrichedcall.EnrichedCallComponent;
 import com.wintmain.dialer.protos.ProtoParsers;
@@ -46,13 +48,19 @@ public final class CallDetailsActivity extends CallDetailsActivityCommon {
 
     private static final int CALL_DETAILS_LOADER_ID = 0;
 
-    /** IDs of call log entries, used to retrieve them from the annotated call log. */
+    /**
+     * IDs of call log entries, used to retrieve them from the annotated call log.
+     */
     private CoalescedIds coalescedCallLogIds;
 
-    /** Info to be shown in the header. */
+    /**
+     * Info to be shown in the header.
+     */
     private CallDetailsHeaderInfo headerInfo;
 
-    /** Returns an {@link Intent} to launch this activity. */
+    /**
+     * Returns an {@link Intent} to launch this activity.
+     */
     public static Intent newInstance(
             Context context,
             CoalescedIds coalescedAnnotatedCallLogIds,
@@ -93,7 +101,8 @@ public final class CallDetailsActivity extends CallDetailsActivityCommon {
             CallDetailsEntryListener callDetailsEntryListener,
             CallDetailsHeaderListener callDetailsHeaderListener,
             ReportCallIdListener reportCallIdListener,
-            DeleteCallDetailsListener deleteCallDetailsListener) {
+            DeleteCallDetailsListener deleteCallDetailsListener,
+            CallRecordingDataStore callRecordingDataStore) {
         return new CallDetailsAdapter(
                 this,
                 headerInfo,
@@ -101,7 +110,8 @@ public final class CallDetailsActivity extends CallDetailsActivityCommon {
                 callDetailsEntryListener,
                 callDetailsHeaderListener,
                 reportCallIdListener,
-                deleteCallDetailsListener);
+                deleteCallDetailsListener,
+                callRecordingDataStore);
     }
 
     @Override

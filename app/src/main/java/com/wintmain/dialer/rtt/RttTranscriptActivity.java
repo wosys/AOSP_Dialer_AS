@@ -71,9 +71,9 @@ public class RttTranscriptActivity extends AppCompatActivity {
         adapter = new RttTranscriptAdapter(this);
         recyclerView.setAdapter(adapter);
 
-//        rttTranscriptUiListener =
-//                DialerExecutorComponent.get(this)
-//                        .createUiListener(getSupportFragmentManager(), "Load RTT transcript");
+        rttTranscriptUiListener =
+                DialerExecutorComponent.get(this)
+                        .createUiListener(getSupportFragmentManager(), "Load RTT transcript");
         handleIntent(getIntent());
     }
 

@@ -209,12 +209,12 @@ public class MainActivityPeer implements com.wintmain.dialer.main.MainActivityPe
 
 
     private void initUiListeners() {
-//        getLastOutgoingCallListener =
-//                DialerExecutorComponent.get(activity)
-//                        .createUiListener(activity.getSupportFragmentManager(), "Query last phone number");
-//        missedCallObserverUiListener =
-//                DialerExecutorComponent.get(activity)
-//                        .createUiListener(activity.getSupportFragmentManager(), "Missed call observer");
+        getLastOutgoingCallListener =
+                DialerExecutorComponent.get(activity)
+                        .createUiListener(activity.getSupportFragmentManager(), "Query last phone number");
+        missedCallObserverUiListener =
+                DialerExecutorComponent.get(activity)
+                        .createUiListener(activity.getSupportFragmentManager(), "Missed call observer");
     }
 
     @SuppressLint("CutPasteId")
