@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="a11y_minutes">
+        <item quantity="other">de minute</item>
+        <item quantity="one">minut</item>
+        <item quantity="few">minute</item>
+    </plurals>
+    <plurals name="a11y_new_call_log_entry_answered_call">
+        <item quantity="other">^1 de apeluri. Ultimul este un apel preluat de la ^2</item>
+        <item quantity="one">^1 apel preluat de la ^2</item>
+        <item quantity="few">^1 apeluri. Ultimul este un apel preluat de la ^2</item>
+    </plurals>
+    <plurals name="a11y_new_call_log_entry_blocked_call">
+        <item quantity="other">^1 de apeluri. Ultimul este un apel blocat de la ^2</item>
+        <item quantity="one">^1 apel blocat de la ^2</item>
+        <item quantity="few">^1 apeluri. Ultimul este un apel blocat de la ^2</item>
+    </plurals>
+    <plurals name="a11y_new_call_log_entry_missed_call">
+        <item quantity="other">^1 de apeluri. Ultimul este un apel nepreluat de la ^2</item>
+        <item quantity="one">^1 apel nepreluat de la ^2</item>
+        <item quantity="few">^1 apeluri. Ultimul este un apel nepreluat de la ^2</item>
+    </plurals>
+    <plurals name="a11y_new_call_log_entry_outgoing_call">
+        <item quantity="other">^1 de apeluri. Ultimul este un apel efectuat către ^2</item>
+        <item quantity="one">^1 apel efectuat către ^2</item>
+        <item quantity="few">^1 apeluri. Ultimul este un apel efectuat către ^2</item>
+    </plurals>
+    <plurals name="a11y_seconds">
+        <item quantity="other">de secunde</item>
+        <item quantity="one">secundă</item>
+        <item quantity="few">secunde</item>
+    </plurals>
+    <plurals name="tab_title_with_unread_items">
+        <item quantity="other">Fila %1$s. %2$d de elemente necitite.</item>
+        <item quantity="one">Fila %1$s. %2$d element necitit.</item>
+        <item quantity="few">Fila %1$s. %2$d elemente necitite.</item>
+    </plurals>
+</resources>

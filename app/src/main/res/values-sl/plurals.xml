@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="a11y_minutes">
+        <item quantity="other">minute</item>
+        <item quantity="one">minute</item>
+        <item quantity="two">minute</item>
+        <item quantity="few">minute</item>
+    </plurals>
+    <plurals name="a11y_new_call_log_entry_answered_call">
+        <item quantity="other">^1 klicev, zadnji od njih je sprejet dohodni klic stika ^2</item>
+        <item quantity="one">^1 klic, zadnji od njih je sprejet dohodni klic stika ^2</item>
+        <item quantity="two">^1 klica, zadnji od njih je sprejet dohodni klic stika ^2</item>
+        <item quantity="few">^1 klici, zadnji od njih je sprejet dohodni klic stika ^2</item>
+    </plurals>
+    <plurals name="a11y_new_call_log_entry_blocked_call">
+        <item quantity="other">^1 klicev, zadnji od njih je blokiran dohodni klic stika ^2</item>
+        <item quantity="one">^1 klic, zadnji od njih je blokiran dohodni klic stika ^2</item>
+        <item quantity="two">^1 klica, zadnji od njih je blokiran dohodni klic stika ^2</item>
+        <item quantity="few">^1 klici, zadnji od njih je blokiran dohodni klic stika ^2</item>
+    </plurals>
+    <plurals name="a11y_new_call_log_entry_missed_call">
+        <item quantity="other">^1 klicev, zadnji od njih je neodgovorjen dohodni klic stika ^2</item>
+        <item quantity="one">^1 klic, zadnji od njih je neodgovorjen dohodni klic stika ^2</item>
+        <item quantity="two">^1 klica, zadnji od njih je neodgovorjen dohodni klic stika ^2</item>
+        <item quantity="few">^1 klici, zadnji od njih je neodgovorjen dohodni klic stika ^2</item>
+    </plurals>
+    <plurals name="a11y_new_call_log_entry_outgoing_call">
+        <item quantity="other">^1 klicev, zadnji od njih je odhodni klic stika ^2</item>
+        <item quantity="one">^1 klic, zadnji od njih je odhodni klic stika ^2</item>
+        <item quantity="two">^1 klica, zadnji od njih je odhodni klic stika ^2</item>
+        <item quantity="few">^1 klici, zadnji od njih je odhodni klic stika ^2</item>
+    </plurals>
+    <plurals name="a11y_seconds">
+        <item quantity="other">sekunde</item>
+        <item quantity="one">sekunde</item>
+        <item quantity="two">sekunde</item>
+        <item quantity="few">sekunde</item>
+    </plurals>
+    <plurals name="tab_title_with_unread_items">
+        <item quantity="other">Zavihek »%1$s«. %2$d neprebranih elementov.</item>
+        <item quantity="one">Zavihek »%1$s«. %2$d neprebran element.</item>
+        <item quantity="two">Zavihek »%1$s«. %2$d neprebrana elementa.</item>
+        <item quantity="few">Zavihek »%1$s«. %2$d neprebrani elementi.</item>
+    </plurals>
+</resources>

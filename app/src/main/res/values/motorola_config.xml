@@ -85,9 +85,4 @@
 
     <!-- Flag to control whether to disable phone number formatting -->
     <bool name="motorola_disable_phone_number_formatting">false</bool>
-
-    <string-array name="motorola_enabled_spn">
-        <item>Sprint</item>
-        <item>moto</item>
-    </string-array>
 </resources>
