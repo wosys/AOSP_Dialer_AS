@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2012 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License
+  -->
+<resources>
+
+    <attr name="preferenceBackgroundColor" format="color" />
+    <attr name="contentDescriptionChecked" format="reference|string"/>
+    <attr name="contentDescriptionUnchecked" format="reference|string" />
+
+    <declare-styleable name="SearchEditTextLayout" />
+
+
+    <declare-styleable name="ResizingText">
+        <attr name="resizing_text_min_size" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="MaxHeightScrollView">
+        <attr name="maxHeight" format="dimension" />
+    </declare-styleable>
+
+
+    <declare-styleable name="Theme">
+        <attr name="android:textColorSecondary" />
+    </declare-styleable>
+
+    <declare-styleable name="ContactsDataKind">
+        <!-- Mime-type handled by this mapping. -->
+        <attr name="android:mimeType" />
+        <!-- Icon used to represent data of this kind. -->
+        <attr name="android:icon" />
+        <!-- Column in data table that summarizes this data. -->
+        <attr name="android:summaryColumn" />
+        <!-- Column in data table that contains details for this data. -->
+        <attr name="android:detailColumn" />
+        <!-- Flag indicating that detail should be built from SocialProvider. -->
+        <attr name="android:detailSocialSummary" />
+        <!-- Resource representing the term "All Contacts" (e.g. "All Friends" or
+        "All connections"). Optional (Default is "All Contacts"). -->
+        <attr name="android:allContactsName" />
+    </declare-styleable>
+
+    <declare-styleable name="ContactListItemView">
+        <attr name="list_item_height" format="dimension" />
+        <attr name="list_section_header_height" format="dimension" />
+        <attr name="activated_background" format="reference" />
+        <attr name="section_header_background" format="reference" />
+        <attr name="list_item_padding_top" format="dimension" />
+        <attr name="list_item_padding_right" format="dimension" />
+        <attr name="list_item_padding_bottom" format="dimension" />
+        <attr name="list_item_padding_left" format="dimension" />
+        <attr name="list_item_gap_between_image_and_text" format="dimension" />
+        <attr name="list_item_gap_between_label_and_data" format="dimension" />
+        <attr name="list_item_presence_icon_margin" format="dimension" />
+        <attr name="list_item_presence_icon_size" format="dimension" />
+        <attr name="list_item_photo_size" format="dimension" />
+        <attr name="list_item_profile_photo_size" format="dimension" />
+        <attr name="list_item_prefix_highlight_color" format="color" />
+        <attr name="list_item_background_color" format="color" />
+        <attr name="list_item_header_text_indent" format="dimension" />
+        <attr name="list_item_header_text_color" format="color" />
+        <attr name="list_item_header_text_size" format="dimension" />
+        <attr name="list_item_header_height" format="dimension" />
+        <attr name="list_item_name_text_color" format="color" />
+        <attr name="list_item_name_text_size" format="dimension" />
+        <attr name="list_item_text_indent" format="dimension" />
+        <attr name="list_item_text_offset_top" format="dimension" />
+        <attr name="list_item_data_width_weight" format="integer" />
+        <attr name="list_item_label_width_weight" format="integer" />
+        <attr name="list_item_video_call_icon_size" format="dimension" />
+        <attr name="list_item_video_call_icon_margin" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="ContactBrowser">
+        <attr name="contact_browser_list_padding_left" format="dimension" />
+        <attr name="contact_browser_list_padding_right" format="dimension" />
+        <attr name="contact_browser_background" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="ProportionalLayout">
+        <attr name="direction" format="string" />
+        <attr name="ratio" format="float" />
+    </declare-styleable>
+
+    <declare-styleable name="Favorites">
+        <attr name="favorites_padding_bottom" format="dimension" />
+    </declare-styleable>
+
+
+    <declare-styleable name="SwitchPreferenceWithClickableSummary">
+        <attr name="urlToOpen" format="string" />
+    </declare-styleable>
+
+
+    <declare-styleable name="CallTypeIconsView">
+        <!-- This attribute is used to let CallTypeIconsView know that we want to use large
+        icons (Call Details) instead of small icons (Call Log). Using large icons also limits
+        CallTypeIconsView to only use one icon at a time. -->
+        <attr name="useLargeIcons" format="boolean" />
+    </declare-styleable>
+
+
+    <declare-styleable name="CheckableImageButton">
+        <attr name="android:checked" />
+        <attr name="contentDescriptionChecked"/>
+        <attr name="contentDescriptionUnchecked"/>
+    </declare-styleable>
+
+
+    <declare-styleable name="FixedAspectSurfaceView">
+        <attr name="aspectRatio" format="float" />
+        <attr name="scaleWidth" format="boolean" />
+        <attr name="scaleHeight" format="boolean" />
+    </declare-styleable>
+
+
+    <declare-styleable name="RttCheckableButton">
+        <attr name="android:checked" />
+        <attr name="contentDescriptionChecked" />
+        <attr name="contentDescriptionUnchecked"/>
+    </declare-styleable>
+
+
+    <declare-styleable name="CheckableLabeledButton">
+        <attr name="incall_icon" format="reference" />
+        <attr name="incall_labelText" format="string|reference" />
+        <attr name="android:enabled" />
+    </declare-styleable>
+
+
+    <declare-styleable name="AutoResizeTextView">
+        <!--
+          The unit to use when computing step increments for the resize operation. That is, the
+          resized text will be guaranteed to be a whole number (integer) value in the unit
+          specified. For example, if the unit is scaled pixels (sp), then the font size might be
+          13sp or 14sp, but not 13.5sp.
+
+          The enum values must match the values from android.util.TypedValue.
+        -->
+        <attr name="autoResizeText_resizeStepUnit" format="enum">
+            <!-- Must match TypedValue.COMPLEX_UNIT_PX. -->
+            <enum name="unitPx" value="0" />
+            <!-- Must match TypedValue.COMPLEX_UNIT_DIP. -->
+            <enum name="unitDip" value="1" />
+            <!-- Must match TypedValue.COMPLEX_UNIT_SP. -->
+            <enum name="unitSp" value="2" />
+            <!-- Must match TypedValue.COMPLEX_UNIT_PT. -->
+            <enum name="unitPt" value="3" />
+            <!-- Must match TypedValue.COMPLEX_UNIT_IN. -->
+            <enum name="unitIn" value="4" />
+            <!-- Must match TypedValue.COMPLEX_UNIT_MM. -->
+            <enum name="unitMm" value="5" />
+        </attr>
+        <!--
+          The minimum text size to use in this view. Text size will be scale down to fit the text
+          in this view, but no smaller than the minimum size specified in this attribute.
+        -->
+        <attr name="autoResizeText_minTextSize" format="dimension" />
+    </declare-styleable>
+
+</resources>
+
+

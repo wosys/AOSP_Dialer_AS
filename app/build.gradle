@@ -1,0 +1,109 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'com.google.protobuf'
+}
+
+android {
+    namespace rootProject.ext.ConfigAppVersion.APP_NAME_SPACE
+    compileSdk rootProject.ext.ConfigAppVersion.COMPILE_SDK
+
+    defaultConfig {
+        applicationId rootProject.ext.ConfigAppVersion.APPLICATION_ID
+        minSdk rootProject.ext.ConfigAppVersion.MIN_SDK
+        targetSdk rootProject.ext.ConfigAppVersion.TARGET_SDK
+        versionCode rootProject.ext.ConfigAppVersion.VERSION_CODE
+        versionName rootProject.ext.ConfigAppVersion.VERSION_NAME
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+
+    packagingOptions {
+        exclude 'META-INF/INDEX.LIST'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/io.netty.versions.properties'
+    }
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.21.7"
+    }
+    plugins {
+        grpc {
+            artifact = 'io.grpc:protoc-gen-grpc-java:1.52.1'
+        }
+    }
+    generateProtoTasks {
+        all().each { task ->
+            task.builtins {
+                java { option 'lite' }
+            }
+            task.plugins {
+                grpc { option 'lite' }
+            }
+        }
+    }
+}
+
+kapt {
+    correctErrorTypes true
+}
+
+dependencies {
+    implementation project(path: ':custom')
+    implementation project(path: ':RootComponentGenerator')
+    compileOnly files('libs/framework.jar')
+    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'com.google.android.material:material:1.5.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+    implementation 'com.google.gms:google-services:4.3.15'
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
+    compileOnly 'com.google.auto.service:auto-service:1.0.1'
+    annotationProcessor 'com.google.auto.service:auto-service-annotations:1.0.1'
+    kapt 'com.google.auto.service:auto-service-annotations:1.0.1'
+    compileOnly 'com.google.auto.value:auto-value:1.10.1'
+    annotationProcessor 'com.google.auto.value:auto-value:1.10.1'
+    kapt 'com.google.auto.value:auto-value:1.10.1'
+    implementation 'com.squareup:javapoet:1.13.0'
+    implementation 'com.github.bumptech.glide:glide:4.14.2'
+    kapt 'com.github.bumptech.glide:compiler:4.14.2'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.14.2'
+    implementation 'com.googlecode.libphonenumber:libphonenumber:8.13.7'
+    implementation 'com.googlecode.libphonenumber:geocoder:2.201'
+    implementation 'me.leolin:ShortcutBadger:1.1.22'
+    implementation 'com.google.dagger:dagger-android:2.45'
+    kapt 'com.google.dagger:dagger-compiler:2.45'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.45'
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
+    implementation 'io.grpc:grpc-all:1.52.1'
+    compileOnly 'org.apache.tomcat:annotations-api:6.0.53' // necessary for Java 9+
+    implementation 'androidx.fragment:fragment:1.5.5'
+    implementation("org.apache.james:apache-mime4j:0.8.9"){
+        exclude group: "org.apache.james", module: "apache-mime4j-benchmark"
+    }
+    implementation 'com.google.zxing:core:3.5.1'
+    implementation 'javax.inject:javax.inject:1'
+    implementation 'javax.annotation:javax.annotation-api:1.3.2'
+    // https://mvnrepository.com/artifact/com.android.volley/volley
+    implementation 'com.android.volley:volley:1.2.1'
+    implementation(project(":libackup")) {
+        exclude group: "xmlpull", module: "xmlpull"
+        exclude group: "org.robolectric", module: "robolectric-utils"
+    }
+    implementation project(path: ':common')
+}
