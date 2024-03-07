@@ -16,7 +16,6 @@
 
 package com.android.incallui.incall.impl;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -24,19 +23,15 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.PagerAdapter;
 
 import com.android.incallui.sessiondata.MultimediaFragment;
+
 import com.wintmain.dialer.common.Assert;
 import com.wintmain.dialer.multimedia.MultimediaData;
 
-import java.util.Objects;
-
-/**
- * View pager adapter for in call ui.
- */
+/** View pager adapter for in call ui. */
 public class InCallPagerAdapter extends FragmentStatePagerAdapter {
 
+    @Nullable private MultimediaData attachments;
     private final boolean showInCallButtonGrid;
-    @Nullable
-    private MultimediaData attachments;
 
     public InCallPagerAdapter(
             FragmentManager fragmentManager,
@@ -47,20 +42,25 @@ public class InCallPagerAdapter extends FragmentStatePagerAdapter {
         this.showInCallButtonGrid = showInCallButtonGrid;
     }
 
-    @NonNull
     @Override
     public Fragment getItem(int position) {
         if (!showInCallButtonGrid) {
             // TODO(calderwoodra): handle fragment invalidation for when the data changes.
             return MultimediaFragment.newInstance(
-                    Objects.requireNonNull(attachments), true /* isInteractive */, false /* showAvatar */, false /* isSpam */);
+                    attachments,
+                    true /* isInteractive */,
+                    false /* showAvatar */,
+                    false /* isSpam */);
 
         } else if (position == getButtonGridPosition()) {
             return InCallButtonGridFragment.newInstance();
 
         } else {
             return MultimediaFragment.newInstance(
-                    Objects.requireNonNull(attachments), true /* isInteractive */, false /* showAvatar */, false /* isSpam */);
+                    attachments,
+                    true /* isInteractive */,
+                    false /* showAvatar */,
+                    false /* isSpam */);
         }
     }
 

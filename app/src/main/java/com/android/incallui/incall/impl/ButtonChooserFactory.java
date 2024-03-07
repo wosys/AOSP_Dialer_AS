@@ -33,9 +33,10 @@ class ButtonChooserFactory {
     /**
      * Creates the appropriate {@link ButtonChooser} based on the given information.
      *
-     * @param voiceNetworkType the result of a call to {@link TelephonyManager#getVoiceNetworkType()}.
-     * @param isWiFi           {@code true} if the call is made over WiFi, {@code false} otherwise.
-     * @param phoneType        the result of a call to {@link TelephonyManager#getPhoneType()}.
+     * @param voiceNetworkType the result of a call to {@link
+     *     TelephonyManager#getVoiceNetworkType()}.
+     * @param isWiFi {@code true} if the call is made over WiFi, {@code false} otherwise.
+     * @param phoneType the result of a call to {@link TelephonyManager#getPhoneType()}.
      * @return the ButtonChooser.
      */
     public static ButtonChooser newButtonChooser(

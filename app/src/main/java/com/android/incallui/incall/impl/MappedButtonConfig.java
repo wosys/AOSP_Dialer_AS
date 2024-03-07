@@ -23,6 +23,7 @@ import androidx.collection.ArrayMap;
 
 import com.android.incallui.incall.protocol.InCallButtonIds;
 import com.android.incallui.incall.protocol.InCallButtonIdsExtension;
+
 import com.google.auto.value.AutoValue;
 import com.wintmain.dialer.common.Assert;
 
@@ -50,10 +51,8 @@ import javax.annotation.concurrent.Immutable;
 @Immutable
 final class MappedButtonConfig {
 
-    @NonNull
-    private final Map<Integer, MappingInfo> mapping;
-    @NonNull
-    private final List<Integer> orderedMappedSlots;
+    @NonNull private final Map<Integer, MappingInfo> mapping;
+    @NonNull private final List<Integer> orderedMappedSlots;
 
     /**
      * Creates this MappedButtonConfig with the given mapping of {@link InCallButtonIds} to their
@@ -77,9 +76,7 @@ final class MappedButtonConfig {
         return orderedSlots;
     }
 
-    /**
-     * Returns an immutable list of the slots for which this class has button mapping.
-     */
+    /** Returns an immutable list of the slots for which this class has button mapping. */
     @NonNull
     public List<Integer> getOrderedMappedSlots() {
         if (mapping.isEmpty()) {
@@ -158,9 +155,7 @@ final class MappedButtonConfig {
         return info;
     }
 
-    /**
-     * Holds information about button mapping.
-     */
+    /** Holds information about button mapping. */
     @AutoValue
     abstract static class MappingInfo {
 
@@ -171,13 +166,8 @@ final class MappedButtonConfig {
                     .setSlot(slot)
                     .setSlotOrder(Integer.MAX_VALUE)
                     .setConflictOrder(Integer.MAX_VALUE)
-                    .setMutuallyExclusiveButton(InCallButtonIds.NO_MUTUALLY_EXCLUSIVE_BUTTON_SET);
+                    .setMutuallyExclusiveButton(NO_MUTUALLY_EXCLUSIVE_BUTTON_SET);
         }
-
-        /**
-         * The Ui slot into which a given button desires to be placed.
-         */
-        public abstract int getSlot();
 
         /**
          * Returns an integer used to determine which button is chosen for a slot when multiple buttons
@@ -201,9 +191,10 @@ final class MappedButtonConfig {
          */
         public abstract @InCallButtonIds int getMutuallyExclusiveButton();
 
-        /**
-         * Class used to build instances of {@link MappingInfo}.
-         */
+        /** The Ui slot into which a given button desires to be placed. */
+        public abstract int getSlot();
+
+        /** Class used to build instances of {@link MappingInfo}. */
         @AutoValue.Builder
         abstract static class Builder {
             public abstract Builder setSlot(int slot);

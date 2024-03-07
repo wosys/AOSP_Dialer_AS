@@ -21,33 +21,29 @@ import androidx.annotation.IntDef;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-/**
- * Ids for buttons in the in call UI.
- */
+/** Ids for buttons in the in call UI. */
 @Retention(RetentionPolicy.SOURCE)
 @IntDef({
-        InCallButtonIds.NO_MUTUALLY_EXCLUSIVE_BUTTON_SET,
-        InCallButtonIds.BUTTON_AUDIO,
-        InCallButtonIds.BUTTON_MUTE,
-        InCallButtonIds.BUTTON_DIALPAD,
-        InCallButtonIds.BUTTON_HOLD,
-        InCallButtonIds.BUTTON_SWAP,
-        InCallButtonIds.BUTTON_UPGRADE_TO_VIDEO,
-        InCallButtonIds.BUTTON_SWITCH_CAMERA,
-        InCallButtonIds.BUTTON_DOWNGRADE_TO_AUDIO,
-        InCallButtonIds.BUTTON_ADD_CALL,
-        InCallButtonIds.BUTTON_MERGE,
-        InCallButtonIds.BUTTON_PAUSE_VIDEO,
-        InCallButtonIds.BUTTON_MANAGE_VIDEO_CONFERENCE,
-        InCallButtonIds.BUTTON_MANAGE_VOICE_CONFERENCE,
-        InCallButtonIds.BUTTON_SWITCH_TO_SECONDARY,
-        InCallButtonIds.BUTTON_SWAP_SIM,
-        InCallButtonIds.BUTTON_RECORD_CALL,
-        InCallButtonIds.BUTTON_COUNT,
-        InCallButtonIds.BUTTON_UPGRADE_TO_RTT
+    InCallButtonIds.BUTTON_AUDIO,
+    InCallButtonIds.BUTTON_MUTE,
+    InCallButtonIds.BUTTON_DIALPAD,
+    InCallButtonIds.BUTTON_HOLD,
+    InCallButtonIds.BUTTON_SWAP,
+    InCallButtonIds.BUTTON_UPGRADE_TO_VIDEO,
+    InCallButtonIds.BUTTON_SWITCH_CAMERA,
+    InCallButtonIds.BUTTON_DOWNGRADE_TO_AUDIO,
+    InCallButtonIds.BUTTON_ADD_CALL,
+    InCallButtonIds.BUTTON_MERGE,
+    InCallButtonIds.BUTTON_PAUSE_VIDEO,
+    InCallButtonIds.BUTTON_MANAGE_VIDEO_CONFERENCE,
+    InCallButtonIds.BUTTON_MANAGE_VOICE_CONFERENCE,
+    InCallButtonIds.BUTTON_SWITCH_TO_SECONDARY,
+    InCallButtonIds.BUTTON_SWAP_SIM,
+    InCallButtonIds.BUTTON_COUNT,
+    InCallButtonIds.BUTTON_UPGRADE_TO_RTT
 })
 public @interface InCallButtonIds {
-    int NO_MUTUALLY_EXCLUSIVE_BUTTON_SET = -1;
+
     int BUTTON_AUDIO = 0;
     int BUTTON_MUTE = 1;
     int BUTTON_DIALPAD = 2;
@@ -63,7 +59,6 @@ public @interface InCallButtonIds {
     int BUTTON_MANAGE_VOICE_CONFERENCE = 12;
     int BUTTON_SWITCH_TO_SECONDARY = 13;
     int BUTTON_SWAP_SIM = 14;
-    int BUTTON_RECORD_CALL = 15;
+    int BUTTON_COUNT = 15;
     int BUTTON_UPGRADE_TO_RTT = 16;
-    int BUTTON_COUNT = 17;
 }

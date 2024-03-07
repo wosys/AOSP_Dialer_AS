@@ -18,37 +18,18 @@ package com.android.incallui.incall.protocol;
 
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+
 import androidx.annotation.Nullable;
+
+import com.google.auto.value.AutoValue;
 import com.wintmain.dialer.common.LogUtil;
 import com.wintmain.dialer.multimedia.MultimediaData;
-import com.google.auto.value.AutoValue;
+
 import java.util.Locale;
 
-/**
- * Information about the primary call.
- */
+/** Information about the primary call. */
 @AutoValue
 public abstract class PrimaryInfo {
-    public static Builder builder() {
-        return new AutoValue_PrimaryInfo.Builder();
-    }
-
-    public static PrimaryInfo empty() {
-        return PrimaryInfo.builder()
-                .setNameIsNumber(false)
-                .setPhotoType(ContactPhotoType.DEFAULT_PLACEHOLDER)
-                .setIsSipCall(false)
-                .setIsContactPhotoShown(false)
-                .setIsWorkCall(false)
-                .setIsSpam(false)
-                .setIsLocalContact(false)
-                .setAnsweringDisconnectsOngoingCall(false)
-                .setShouldShowLocation(false)
-                .setShowInCallButtonGrid(true)
-                .setNumberPresentation(-1)
-                .build();
-    }
-
     @Nullable
     public abstract String number();
 
@@ -98,6 +79,26 @@ public abstract class PrimaryInfo {
 
     public abstract int numberPresentation();
 
+    public static Builder builder() {
+        return new AutoValue_PrimaryInfo.Builder();
+    }
+
+    public static PrimaryInfo empty() {
+        return PrimaryInfo.builder()
+                .setNameIsNumber(false)
+                .setPhotoType(ContactPhotoType.DEFAULT_PLACEHOLDER)
+                .setIsSipCall(false)
+                .setIsContactPhotoShown(false)
+                .setIsWorkCall(false)
+                .setIsSpam(false)
+                .setIsLocalContact(false)
+                .setAnsweringDisconnectsOngoingCall(false)
+                .setShouldShowLocation(false)
+                .setShowInCallButtonGrid(true)
+                .setNumberPresentation(-1)
+                .build();
+    }
+
     @Override
     public String toString() {
         return String.format(
@@ -114,9 +115,7 @@ public abstract class PrimaryInfo {
                 multimediaData());
     }
 
-    /**
-     * Builder class for primary call info.
-     */
+    /** Builder class for primary call info. */
     @AutoValue.Builder
     public abstract static class Builder {
         public abstract Builder setNumber(String number);

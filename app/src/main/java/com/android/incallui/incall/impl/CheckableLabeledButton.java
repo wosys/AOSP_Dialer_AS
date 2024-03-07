@@ -51,8 +51,7 @@ public class CheckableLabeledButton extends LinearLayout implements Checkable {
     private boolean isChecked;
     private OnCheckedChangeListener onCheckedChangeListener;
     private ImageView iconView;
-    @DrawableRes
-    private int iconResource = 0;
+    @DrawableRes private int iconResource = 0;
     private TextView labelView;
     private Drawable background;
     private Drawable backgroundMore;
@@ -143,8 +142,8 @@ public class CheckableLabeledButton extends LinearLayout implements Checkable {
     public void setCheckedColor(@ColorInt int color) {
         iconView.setImageTintList(
                 new ColorStateList(
-                        new int[][]{new int[]{android.R.attr.state_checked}, new int[]{}},
-                        new int[]{color, Color.WHITE}));
+                        new int[][] {new int[] {android.R.attr.state_checked}, new int[] {}},
+                        new int[] {color, Color.WHITE}));
     }
 
     public Drawable getIconDrawable() {
@@ -162,9 +161,7 @@ public class CheckableLabeledButton extends LinearLayout implements Checkable {
         labelView.setText(stringRes);
     }
 
-    /**
-     * Shows or hides a little down arrow to indicate that the button will pop up a menu.
-     */
+    /** Shows or hides a little down arrow to indicate that the button will pop up a menu. */
     public void setShouldShowMoreIndicator(boolean shouldShow) {
         iconView.setBackground(shouldShow ? backgroundMore : background);
     }
@@ -241,7 +238,7 @@ public class CheckableLabeledButton extends LinearLayout implements Checkable {
      * interaction.
      *
      * @param checked {@code true} if the button should be in the checked state, {@code false}
-     *                otherwise.
+     *     otherwise.
      */
     private void performSetChecked(boolean checked) {
         if (isChecked() == checked) {
@@ -256,7 +253,7 @@ public class CheckableLabeledButton extends LinearLayout implements Checkable {
      * state, rather the request should be propagated to the associated listener.
      *
      * @param checked {@code true} if the button should be in the checked state, {@code false}
-     *                otherwise.
+     *     otherwise.
      */
     private void userRequestedSetChecked(boolean checked) {
         if (isChecked() == checked) {
@@ -272,9 +269,7 @@ public class CheckableLabeledButton extends LinearLayout implements Checkable {
         broadcasting = false;
     }
 
-    /**
-     * Callback interface to notify when the button's checked state has changed
-     */
+    /** Callback interface to notify when the button's checked state has changed */
     public interface OnCheckedChangeListener {
 
         void onCheckedChanged(CheckableLabeledButton checkableLabeledButton, boolean isChecked);

@@ -38,3 +38,4 @@ org.eclipse.buildship.core.prefs
 docs-gen
 site
 *.bak
+/.idea/shelf

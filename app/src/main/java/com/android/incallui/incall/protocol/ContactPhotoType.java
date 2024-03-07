@@ -21,14 +21,12 @@ import androidx.annotation.IntDef;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-/**
- * Types of contact photos we can have.
- */
+/** Types of contact photos we can have. */
 @Retention(RetentionPolicy.SOURCE)
 @IntDef({
-        ContactPhotoType.DEFAULT_PLACEHOLDER,
-        ContactPhotoType.BUSINESS,
-        ContactPhotoType.CONTACT,
+    ContactPhotoType.DEFAULT_PLACEHOLDER,
+    ContactPhotoType.BUSINESS,
+    ContactPhotoType.CONTACT,
 })
 public @interface ContactPhotoType {
 

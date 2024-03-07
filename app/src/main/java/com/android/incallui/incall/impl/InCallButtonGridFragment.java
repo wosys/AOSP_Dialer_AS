@@ -27,6 +27,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.android.incallui.incall.protocol.InCallButtonIds;
+
 import com.wintmain.dialer.R;
 import com.wintmain.dialer.common.Assert;
 import com.wintmain.dialer.common.FragmentUtils;
@@ -34,9 +35,7 @@ import com.wintmain.dialer.common.FragmentUtils;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Fragment for the in call buttons (mute, speaker, ect.).
- */
+/** Fragment for the in call buttons (mute, speaker, ect.). */
 public class InCallButtonGridFragment extends Fragment {
 
     private static final int BUTTON_COUNT = 6;
@@ -140,12 +139,9 @@ public class InCallButtonGridFragment extends Fragment {
         }
     }
 
-    /**
-     * Interface to let the listener know the status of the button grid.
-     */
+    /** Interface to let the listener know the status of the button grid. */
     public interface OnButtonGridCreatedListener {
         void onButtonGridCreated(InCallButtonGridFragment inCallButtonGridFragment);
-
         void onButtonGridDestroyed();
 
         ButtonController getButtonController(@InCallButtonIds int id);

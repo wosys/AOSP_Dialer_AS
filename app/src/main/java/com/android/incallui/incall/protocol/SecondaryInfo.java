@@ -21,16 +21,33 @@ import android.os.Parcelable;
 
 import androidx.annotation.Nullable;
 
-import com.wintmain.dialer.common.LogUtil;
 import com.google.auto.value.AutoValue;
+import com.wintmain.dialer.common.LogUtil;
 
 import java.util.Locale;
 
-/**
- * Information about the secondary call.
- */
+/** Information about the secondary call. */
 @AutoValue
 public abstract class SecondaryInfo implements Parcelable {
+    public abstract boolean shouldShow();
+
+    @Nullable
+    public abstract String name();
+
+    public abstract boolean nameIsNumber();
+
+    @Nullable
+    public abstract String label();
+
+    @Nullable
+    public abstract String providerLabel();
+
+    public abstract boolean isConference();
+
+    public abstract boolean isVideoCall();
+
+    public abstract boolean isFullscreen();
+
     public static final Creator<SecondaryInfo> CREATOR =
             new Creator<SecondaryInfo>() {
                 @Override
@@ -62,25 +79,6 @@ public abstract class SecondaryInfo implements Parcelable {
                 .setIsFullscreen(false);
     }
 
-    public abstract boolean shouldShow();
-
-    @Nullable
-    public abstract String name();
-
-    public abstract boolean nameIsNumber();
-
-    @Nullable
-    public abstract String label();
-
-    @Nullable
-    public abstract String providerLabel();
-
-    public abstract boolean isConference();
-
-    public abstract boolean isVideoCall();
-
-    public abstract boolean isFullscreen();
-
     @Override
     public String toString() {
         return String.format(
@@ -92,26 +90,7 @@ public abstract class SecondaryInfo implements Parcelable {
                 providerLabel());
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeByte((byte) (shouldShow() ? 1 : 0));
-        dest.writeString(name());
-        dest.writeByte((byte) (nameIsNumber() ? 1 : 0));
-        dest.writeString(label());
-        dest.writeString(providerLabel());
-        dest.writeByte((byte) (isConference() ? 1 : 0));
-        dest.writeByte((byte) (isVideoCall() ? 1 : 0));
-        dest.writeByte((byte) (isFullscreen() ? 1 : 0));
-    }
-
-    /**
-     * Builder class for secondary info.
-     */
+    /** Builder class for secondary info. */
     @AutoValue.Builder
     public abstract static class Builder {
         public abstract Builder setShouldShow(boolean shouldShow);
@@ -131,5 +110,22 @@ public abstract class SecondaryInfo implements Parcelable {
         public abstract Builder setIsFullscreen(boolean isFullscreen);
 
         public abstract SecondaryInfo build();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeByte((byte) (shouldShow() ? 1 : 0));
+        dest.writeString(name());
+        dest.writeByte((byte) (nameIsNumber() ? 1 : 0));
+        dest.writeString(label());
+        dest.writeString(providerLabel());
+        dest.writeByte((byte) (isConference() ? 1 : 0));
+        dest.writeByte((byte) (isVideoCall() ? 1 : 0));
+        dest.writeByte((byte) (isFullscreen() ? 1 : 0));
     }
 }

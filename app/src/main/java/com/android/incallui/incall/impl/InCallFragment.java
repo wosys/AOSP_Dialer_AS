@@ -63,6 +63,7 @@ import com.android.incallui.incall.protocol.PrimaryCallState;
 import com.android.incallui.incall.protocol.PrimaryCallState.ButtonState;
 import com.android.incallui.incall.protocol.PrimaryInfo;
 import com.android.incallui.incall.protocol.SecondaryInfo;
+
 import com.wintmain.dialer.R;
 import com.wintmain.dialer.common.Assert;
 import com.wintmain.dialer.common.FragmentUtils;
@@ -76,9 +77,7 @@ import com.wintmain.dialer.widget.LockableViewPager;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Fragment that shows UI for an ongoing voice call.
- */
+/** Fragment that shows UI for an ongoing voice call. */
 public class InCallFragment extends Fragment
         implements InCallScreen,
         InCallButtonUi,
@@ -89,11 +88,14 @@ public class InCallFragment extends Fragment
     // Add animation to educate users. If a call has enriched calling attachments then we'll
     // initially show the attachment page. After a delay seconds we'll animate to the button grid.
     private final Handler handler = new Handler();
-    private final List<ButtonController> buttonControllers = new ArrayList<>();
     private View endCallButton;
     private InCallPaginator paginator;
     private LockableViewPager pager;
     private InCallPagerAdapter adapter;
+    private ContactGridManager contactGridManager;
+    private InCallScreenDelegate inCallScreenDelegate;
+    private InCallButtonUiDelegate inCallButtonUiDelegate;
+    private InCallButtonGridFragment inCallButtonGridFragment;
     private final Runnable pagerRunnable =
             new Runnable() {
                 @Override
@@ -101,16 +103,12 @@ public class InCallFragment extends Fragment
                     pager.setCurrentItem(adapter.getButtonGridPosition());
                 }
             };
-    private ContactGridManager contactGridManager;
-    private InCallScreenDelegate inCallScreenDelegate;
-    private InCallButtonUiDelegate inCallButtonUiDelegate;
-    private InCallButtonGridFragment inCallButtonGridFragment;
-    @Nullable
-    private ButtonChooser buttonChooser;
     private SecondaryInfo savedSecondaryInfo;
     private int voiceNetworkType;
     private int phoneType;
     private boolean stateRestored;
+    private final List<ButtonController> buttonControllers = new ArrayList<>();
+    @Nullable private ButtonChooser buttonChooser;
 
     private static boolean isSupportedButton(@InCallButtonIds int id) {
         return id == InCallButtonIds.BUTTON_AUDIO
@@ -154,7 +152,7 @@ public class InCallFragment extends Fragment
             @Nullable ViewGroup viewGroup,
             @Nullable Bundle bundle) {
         LogUtil.i("InCallFragment.onCreateView", null);
-        requireActivity().setTheme(R.style.Theme_InCallScreen);
+        getActivity().setTheme(R.style.Theme_InCallScreen);
         // Bypass to avoid StrictModeResourceMismatchViolation
         final View view =
                 StrictModeUtils.bypass(
@@ -162,10 +160,10 @@ public class InCallFragment extends Fragment
         contactGridManager =
                 new ContactGridManager(
                         view,
-                        view.findViewById(R.id.contactgrid_avatar),
+                        (ImageView) view.findViewById(R.id.contactgrid_avatar),
                         getResources().getDimensionPixelSize(R.dimen.incall_avatar_size),
                         true /* showAnonymousAvatar */);
-        contactGridManager.onMultiWindowModeChanged(requireActivity().isInMultiWindowMode());
+        contactGridManager.onMultiWindowModeChanged(getActivity().isInMultiWindowMode());
 
         paginator = (InCallPaginator) view.findViewById(R.id.incall_paginator);
         pager = (LockableViewPager) view.findViewById(R.id.incall_pager);
@@ -204,8 +202,7 @@ public class InCallFragment extends Fragment
                     }
 
                     @Override
-                    public void onViewDetachedFromWindow(View v) {
-                    }
+                    public void onViewDetachedFromWindow(View v) {}
                 });
         return view;
     }
@@ -337,7 +334,8 @@ public class InCallFragment extends Fragment
                 transaction.remove(oldBanner);
             }
         }
-        transaction.setCustomAnimations(androidx.appcompat.R.anim.abc_slide_in_top, androidx.appcompat.R.anim.abc_slide_out_top);
+        transaction.setCustomAnimations(androidx.appcompat.R.anim.abc_slide_in_top,
+                androidx.appcompat.R.anim.abc_slide_out_top);
         transaction.commitNowAllowingStateLoss();
     }
 
@@ -386,8 +384,7 @@ public class InCallFragment extends Fragment
     }
 
     @Override
-    public void updateInCallScreenColors() {
-    }
+    public void updateInCallScreenColors() {}
 
     @Override
     public void onInCallScreenDialpadVisibilityChange(boolean isShowing) {
@@ -461,12 +458,10 @@ public class InCallFragment extends Fragment
     }
 
     @Override
-    public void setCameraSwitched(boolean isBackFacingCamera) {
-    }
+    public void setCameraSwitched(boolean isBackFacingCamera) {}
 
     @Override
-    public void setVideoPaused(boolean isPaused) {
-    }
+    public void setVideoPaused(boolean isPaused) {}
 
     @Override
     public void setAudioState(CallAudioState audioState) {
@@ -526,8 +521,7 @@ public class InCallFragment extends Fragment
     }
 
     @Override
-    public void onAudioRouteSelectorDismiss() {
-    }
+    public void onAudioRouteSelectorDismiss() {}
 
     @NonNull
     @Override

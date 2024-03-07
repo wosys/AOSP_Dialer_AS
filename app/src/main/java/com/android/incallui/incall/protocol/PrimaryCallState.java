@@ -19,22 +19,24 @@ package com.android.incallui.incall.protocol;
 import android.graphics.drawable.Drawable;
 import android.telecom.DisconnectCause;
 import android.text.TextUtils;
+
 import androidx.annotation.ColorInt;
 import androidx.annotation.IntDef;
 import androidx.annotation.Nullable;
+
 import com.android.incallui.call.state.DialerCallState;
 import com.android.incallui.videotech.utils.SessionModificationState;
+
+import com.google.auto.value.AutoValue;
 import com.wintmain.dialer.assisteddialing.TransformationInfo;
 import com.wintmain.dialer.common.Assert;
 import com.wintmain.dialer.preferredsim.suggestion.SuggestionProvider;
-import com.google.auto.value.AutoValue;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Locale;
 
-/**
- * State of the primary call.
- */
+/** State of the primary call. */
 @AutoValue
 public abstract class PrimaryCallState {
 
@@ -59,10 +61,6 @@ public abstract class PrimaryCallState {
                 .setSwapToSecondaryButtonState(ButtonState.NOT_SUPPORT)
                 .setIsAssistedDialed(false)
                 .setPrimaryColor(0);
-    }
-
-    public static PrimaryCallState empty() {
-        return PrimaryCallState.builder().build();
     }
 
     public abstract int state();
@@ -128,10 +126,17 @@ public abstract class PrimaryCallState {
     @Nullable
     public abstract TransformationInfo assistedDialingExtras();
 
+    public static PrimaryCallState empty() {
+        return PrimaryCallState.builder().build();
+    }
+
     @Override
     public String toString() {
         return String.format(
-                Locale.US, "PrimaryCallState, state: %d, connectionLabel: %s", state(), connectionLabel());
+                Locale.US,
+                "PrimaryCallState, state: %d, connectionLabel: %s",
+                state(),
+                connectionLabel());
     }
 
     /**
@@ -146,9 +151,7 @@ public abstract class PrimaryCallState {
         int ENABLED = 2;
     }
 
-    /**
-     * Builder class for primary call state info.
-     */
+    /** Builder class for primary call state info. */
     @AutoValue.Builder
     public abstract static class Builder {
         public abstract Builder setState(int state);

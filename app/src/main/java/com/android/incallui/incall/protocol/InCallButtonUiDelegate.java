@@ -20,9 +20,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.telecom.CallAudioState;
 
-/**
- * Callbacks from the module out to the container.
- */
+/** Callbacks from the module out to the container. */
 public interface InCallButtonUiDelegate {
 
     void onInCallButtonUiReady(InCallButtonUi inCallButtonUi);

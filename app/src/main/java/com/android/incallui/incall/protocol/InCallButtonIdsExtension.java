@@ -16,9 +16,7 @@
 
 package com.android.incallui.incall.protocol;
 
-/**
- * Utility class for {@link InCallButtonIds}.
- */
+/** Utility class for {@link InCallButtonIds}. */
 public class InCallButtonIdsExtension {
 
     /**

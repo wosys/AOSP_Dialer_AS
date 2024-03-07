@@ -19,6 +19,7 @@ package com.android.incallui.incall.impl;
 import androidx.annotation.NonNull;
 
 import com.android.incallui.incall.protocol.InCallButtonIds;
+
 import com.wintmain.dialer.common.Assert;
 
 import java.util.ArrayList;
@@ -47,13 +48,14 @@ final class ButtonChooser {
     }
 
     /**
-     * Returns the buttons that should be shown in the {@link InCallFragment}, ordered appropriately.
+     * Returns the buttons that should be shown in the {@link InCallFragment}, ordered
+     * appropriately.
      *
-     * @param numUiButtons    the number of ui buttons available.
-     * @param allowedButtons  the {@link InCallButtonIds} that can be shown.
+     * @param numUiButtons the number of ui buttons available.
+     * @param allowedButtons the {@link InCallButtonIds} that can be shown.
      * @param disabledButtons the {@link InCallButtonIds} that can be shown but in disabled stats.
-     * @return an immutable list whose size is at most {@code numUiButtons}, containing the buttons to
-     * show.
+     * @return an immutable list whose size is at most {@code numUiButtons}, containing the buttons
+     *     to show.
      */
     @NonNull
     public List<Integer> getButtonPlacement(
@@ -123,7 +125,7 @@ final class ButtonChooser {
 
     private boolean isMutuallyExclusiveButtonAvailable(
             int mutuallyExclusiveButton, @NonNull Set<Integer> allowedButtons) {
-        if (mutuallyExclusiveButton == InCallButtonIds.NO_MUTUALLY_EXCLUSIVE_BUTTON_SET) {
+        if (mutuallyExclusiveButton == MappedButtonConfig.MappingInfo.NO_MUTUALLY_EXCLUSIVE_BUTTON_SET) {
             return false;
         }
         return allowedButtons.contains(mutuallyExclusiveButton);

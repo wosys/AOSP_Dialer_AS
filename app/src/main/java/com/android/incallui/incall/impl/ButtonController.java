@@ -32,12 +32,11 @@ import com.android.incallui.incall.protocol.InCallButtonIds;
 import com.android.incallui.incall.protocol.InCallButtonUiDelegate;
 import com.android.incallui.incall.protocol.InCallScreenDelegate;
 import com.android.incallui.speakerbuttonlogic.SpeakerButtonInfo;
+
 import com.wintmain.dialer.R;
 import com.wintmain.dialer.common.Assert;
 
-/**
- * Manages a single button.
- */
+/** Manages a single button. */
 interface ButtonController {
 
     boolean isEnabled();
@@ -67,14 +66,10 @@ interface ButtonController {
 
     abstract class CheckableButtonController implements ButtonController, OnCheckedChangeListener {
 
-        @NonNull
-        protected final InCallButtonUiDelegate delegate;
-        @InCallButtonIds
-        protected final int buttonId;
-        @StringRes
-        protected final int checkedDescription;
-        @StringRes
-        protected final int uncheckedDescription;
+        @NonNull protected final InCallButtonUiDelegate delegate;
+        @InCallButtonIds protected final int buttonId;
+        @StringRes protected final int checkedDescription;
+        @StringRes protected final int uncheckedDescription;
         protected boolean isEnabled;
         protected boolean isAllowed;
         protected boolean isChecked;
@@ -162,10 +157,8 @@ interface ButtonController {
 
     abstract class SimpleCheckableButtonController extends CheckableButtonController {
 
-        @StringRes
-        private final int label;
-        @DrawableRes
-        private final int icon;
+        @StringRes private final int label;
+        @DrawableRes private final int icon;
 
         protected SimpleCheckableButtonController(
                 @NonNull InCallButtonUiDelegate delegate,
@@ -197,10 +190,8 @@ interface ButtonController {
     abstract class NonCheckableButtonController implements ButtonController, OnClickListener {
 
         protected final InCallButtonUiDelegate delegate;
-        @InCallButtonIds
-        protected final int buttonId;
-        @StringRes
-        protected final int contentDescription;
+        @InCallButtonIds protected final int buttonId;
+        @StringRes protected final int contentDescription;
         protected boolean isEnabled;
         protected boolean isAllowed;
         protected CheckableLabeledButton button;
@@ -271,10 +262,8 @@ interface ButtonController {
 
     abstract class SimpleNonCheckableButtonController extends NonCheckableButtonController {
 
-        @StringRes
-        private final int label;
-        @DrawableRes
-        private final int icon;
+        @StringRes private final int label;
+        @DrawableRes private final int icon;
 
         protected SimpleNonCheckableButtonController(
                 InCallButtonUiDelegate delegate,
@@ -319,17 +308,14 @@ interface ButtonController {
     class SpeakerButtonController
             implements ButtonController, OnCheckedChangeListener, OnClickListener {
 
-        @NonNull
-        private final InCallButtonUiDelegate delegate;
+        @NonNull private final InCallButtonUiDelegate delegate;
         private boolean isEnabled;
         private boolean isAllowed;
         private boolean isChecked;
         private CheckableLabeledButton button;
 
-        @StringRes
-        private int label = R.string.incall_label_speaker;
-        @DrawableRes
-        private int icon = R.drawable.quantum_ic_volume_up_vd_theme_24;
+        @StringRes private int label = R.string.incall_label_speaker;
+        @DrawableRes private int icon = R.drawable.quantum_ic_volume_up_vd_theme_24;
         private boolean nonBluetoothMode;
         private CharSequence contentDescription;
         private CharSequence isOnContentDescription;

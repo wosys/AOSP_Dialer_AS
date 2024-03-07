@@ -19,9 +19,7 @@ package com.android.incallui.incall.bindings;
 import com.android.incallui.incall.impl.InCallFragment;
 import com.android.incallui.incall.protocol.InCallScreen;
 
-/**
- * Bindings for the in call module.
- */
+/** Bindings for the in call module. */
 public class InCallBindings {
 
     public static InCallScreen createInCallScreen() {

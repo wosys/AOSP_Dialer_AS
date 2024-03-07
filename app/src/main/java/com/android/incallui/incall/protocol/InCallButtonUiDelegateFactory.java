@@ -16,9 +16,7 @@
 
 package com.android.incallui.incall.protocol;
 
-/**
- * Callbacks from the module out to the container.
- */
+/** Callbacks from the module out to the container. */
 public interface InCallButtonUiDelegateFactory {
 
     InCallButtonUiDelegate newInCallButtonUiDelegate();
