@@ -23,6 +23,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    buildFeatures {
+        aidl true
+    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
@@ -35,6 +38,12 @@ android {
         exclude 'META-INF/INDEX.LIST'
         exclude 'META-INF/DEPENDENCIES'
         exclude 'META-INF/io.netty.versions.properties'
+    }
+
+    sourceSets {
+        main {
+            aidl.srcDirs = ['src/main/aidl']
+        }
     }
 }
 
@@ -93,7 +102,7 @@ dependencies {
     implementation 'io.grpc:grpc-all:1.52.1'
     compileOnly 'org.apache.tomcat:annotations-api:6.0.53' // necessary for Java 9+
     implementation 'androidx.fragment:fragment:1.5.5'
-    implementation("org.apache.james:apache-mime4j:0.8.9"){
+    implementation("org.apache.james:apache-mime4j:0.8.9") {
         exclude group: "org.apache.james", module: "apache-mime4j-benchmark"
     }
     implementation 'com.google.zxing:core:3.5.1'
