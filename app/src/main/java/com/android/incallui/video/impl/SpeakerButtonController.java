@@ -31,21 +31,15 @@ import com.wintmain.dialer.R;
 import com.wintmain.dialer.common.Assert;
 import com.wintmain.dialer.common.LogUtil;
 
-/**
- * Manages a single button.
- */
+/** Manages a single button. */
 public class SpeakerButtonController implements OnCheckedChangeListener, OnClickListener {
 
-    @NonNull
-    private final InCallButtonUiDelegate inCallButtonUiDelegate;
-    @NonNull
-    private final VideoCallScreenDelegate videoCallScreenDelegate;
+    @NonNull private final InCallButtonUiDelegate inCallButtonUiDelegate;
+    @NonNull private final VideoCallScreenDelegate videoCallScreenDelegate;
 
-    @NonNull
-    private final CheckableImageButton button;
+    @NonNull private CheckableImageButton button;
 
-    @DrawableRes
-    private int icon = R.drawable.quantum_ic_volume_up_vd_theme_24;
+    @DrawableRes private int icon = R.drawable.quantum_ic_volume_up_vd_theme_24;
 
     private boolean isChecked;
     private boolean checkable;

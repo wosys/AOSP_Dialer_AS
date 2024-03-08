@@ -27,6 +27,7 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 
+import com.android.incallui.Log;
 import com.android.incallui.incall.impl.CheckableLabeledButton.OnCheckedChangeListener;
 import com.android.incallui.incall.protocol.InCallButtonIds;
 import com.android.incallui.incall.protocol.InCallButtonUiDelegate;
@@ -140,15 +141,18 @@ interface ButtonController {
                 button.setOnClickListener(null);
                 button.setOnCheckedChangeListener(this);
                 button.setContentDescription(
-                        button.getContext().getText(isChecked ? checkedDescription : uncheckedDescription));
+                        button.getContext()
+                                .getText(isChecked ? checkedDescription : uncheckedDescription));
                 button.setShouldShowMoreIndicator(false);
             }
         }
 
         @Override
-        public void onCheckedChanged(CheckableLabeledButton checkableLabeledButton, boolean isChecked) {
+        public void onCheckedChanged(
+                CheckableLabeledButton checkableLabeledButton, boolean isChecked) {
             button.setContentDescription(
-                    button.getContext().getText(isChecked ? checkedDescription : uncheckedDescription));
+                    button.getContext()
+                            .getText(isChecked ? checkedDescription : uncheckedDescription));
             doCheckedChanged(isChecked);
         }
 
@@ -308,6 +312,7 @@ interface ButtonController {
     class SpeakerButtonController
             implements ButtonController, OnCheckedChangeListener, OnClickListener {
 
+        private static final String TAG = "SpeakerButtonController";
         @NonNull private final InCallButtonUiDelegate delegate;
         private boolean isEnabled;
         private boolean isAllowed;
@@ -333,6 +338,7 @@ interface ButtonController {
         @Override
         public void setEnabled(boolean isEnabled) {
             this.isEnabled = isEnabled;
+            Log.i(TAG, "wintmain-setEnabled:" + isEnabled);
             if (button != null) {
                 button.setEnabled(isEnabled && isAllowed);
             }
@@ -346,6 +352,7 @@ interface ButtonController {
         @Override
         public void setAllowed(boolean isAllowed) {
             this.isAllowed = isAllowed;
+            Log.i(TAG, "wintmain-setAllowed:" + isAllowed);
             if (button != null) {
                 button.setEnabled(isEnabled && isAllowed);
             }
@@ -355,6 +362,7 @@ interface ButtonController {
         public void setChecked(boolean isChecked) {
             this.isChecked = isChecked;
             if (button != null) {
+                Log.i(TAG, "wintmain-setChecked:" + isChecked);
                 button.setChecked(isChecked);
             }
         }
@@ -376,7 +384,9 @@ interface ButtonController {
                 button.setLabelText(label);
                 button.setIconDrawable(icon);
                 button.setContentDescription(
-                        (nonBluetoothMode && !isChecked) ? isOffContentDescription : isOnContentDescription);
+                        (nonBluetoothMode && !isChecked)
+                                ? isOffContentDescription
+                                : isOnContentDescription);
                 button.setShouldShowMoreIndicator(!nonBluetoothMode);
             }
         }
@@ -404,11 +414,13 @@ interface ButtonController {
 
         @Override
         public void onClick(View v) {
+            Log.i(TAG, "wintmain-onClick");
             delegate.showAudioRouteSelector();
         }
 
         @Override
-        public void onCheckedChanged(CheckableLabeledButton checkableLabeledButton, boolean isChecked) {
+        public void onCheckedChanged(
+                CheckableLabeledButton checkableLabeledButton, boolean isChecked) {
             checkableLabeledButton.setContentDescription(
                     isChecked ? isOnContentDescription : isOffContentDescription);
             delegate.toggleSpeakerphone();
@@ -447,6 +459,7 @@ interface ButtonController {
 
         @Override
         public void doCheckedChanged(boolean isChecked) {
+            Log.i("HoldButtonController", "wintmain-doCheckedChanged:" + isChecked);
             delegate.holdClicked(isChecked);
         }
     }
@@ -545,7 +558,8 @@ interface ButtonController {
 
         private final InCallScreenDelegate inCallScreenDelegate;
 
-        public ManageConferenceButtonController(@NonNull InCallScreenDelegate inCallScreenDelegate) {
+        public ManageConferenceButtonController(
+                @NonNull InCallScreenDelegate inCallScreenDelegate) {
             super(
                     null,
                     InCallButtonIds.BUTTON_MANAGE_VOICE_CONFERENCE,

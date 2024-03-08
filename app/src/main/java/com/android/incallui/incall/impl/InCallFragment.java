@@ -85,9 +85,7 @@ public class InCallFragment extends Fragment
         AudioRouteSelectorPresenter,
         OnButtonGridCreatedListener {
 
-    // Add animation to educate users. If a call has enriched calling attachments then we'll
-    // initially show the attachment page. After a delay seconds we'll animate to the button grid.
-    private final Handler handler = new Handler();
+    private List<ButtonController> buttonControllers = new ArrayList<>();
     private View endCallButton;
     private InCallPaginator paginator;
     private LockableViewPager pager;
@@ -96,6 +94,15 @@ public class InCallFragment extends Fragment
     private InCallScreenDelegate inCallScreenDelegate;
     private InCallButtonUiDelegate inCallButtonUiDelegate;
     private InCallButtonGridFragment inCallButtonGridFragment;
+    @Nullable private ButtonChooser buttonChooser;
+    private SecondaryInfo savedSecondaryInfo;
+    private int voiceNetworkType;
+    private int phoneType;
+    private boolean stateRestored;
+
+    // Add animation to educate users. If a call has enriched calling attachments then we'll
+    // initially show the attachment page. After a delay seconds we'll animate to the button grid.
+    private final Handler handler = new Handler();
     private final Runnable pagerRunnable =
             new Runnable() {
                 @Override
@@ -103,12 +110,6 @@ public class InCallFragment extends Fragment
                     pager.setCurrentItem(adapter.getButtonGridPosition());
                 }
             };
-    private SecondaryInfo savedSecondaryInfo;
-    private int voiceNetworkType;
-    private int phoneType;
-    private boolean stateRestored;
-    private final List<ButtonController> buttonControllers = new ArrayList<>();
-    @Nullable private ButtonChooser buttonChooser;
 
     private static boolean isSupportedButton(@InCallButtonIds int id) {
         return id == InCallButtonIds.BUTTON_AUDIO

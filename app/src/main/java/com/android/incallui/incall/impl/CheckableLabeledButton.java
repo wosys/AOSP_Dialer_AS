@@ -27,6 +27,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils.TruncateAt;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.SoundEffectConstants;
 import android.widget.Checkable;
@@ -45,6 +46,7 @@ import com.wintmain.dialer.R;
  */
 public class CheckableLabeledButton extends LinearLayout implements Checkable {
 
+    private static final String TAG = "CheckableLabeledButton";
     private static final int[] CHECKED_STATE_SET = {android.R.attr.state_checked};
     private static final float DISABLED_STATE_OPACITY = .3f;
     private boolean broadcasting;
@@ -135,11 +137,13 @@ public class CheckableLabeledButton extends LinearLayout implements Checkable {
     @Override
     public void refreshDrawableState() {
         super.refreshDrawableState();
+        Log.i(TAG, "wintmain-refreshDrawableState");
         iconView.setAlpha(isEnabled() ? 1f : DISABLED_STATE_OPACITY);
         labelView.setAlpha(isEnabled() ? 1f : DISABLED_STATE_OPACITY);
     }
 
     public void setCheckedColor(@ColorInt int color) {
+        Log.i(TAG, "wintmain-setCheckedColor:" + color);
         iconView.setImageTintList(
                 new ColorStateList(
                         new int[][] {new int[] {android.R.attr.state_checked}, new int[] {}},
@@ -193,6 +197,7 @@ public class CheckableLabeledButton extends LinearLayout implements Checkable {
     @Override
     protected void drawableStateChanged() {
         super.drawableStateChanged();
+        Log.i(TAG, "wintmain-drawableStateChanged");
         invalidate();
     }
 
@@ -208,6 +213,7 @@ public class CheckableLabeledButton extends LinearLayout implements Checkable {
 
         toggle();
         final boolean handled = super.performClick();
+        Log.i(TAG, "wintmain-performClick:" + handled);
         if (!handled) {
             // View only makes a sound effect if the onClickListener was
             // called, so we'll need to make one here instead.
@@ -244,6 +250,7 @@ public class CheckableLabeledButton extends LinearLayout implements Checkable {
         if (isChecked() == checked) {
             return;
         }
+        Log.i(TAG, "wintmain-performSetChecked:" + checked);
         isChecked = checked;
         refreshDrawableState();
     }
