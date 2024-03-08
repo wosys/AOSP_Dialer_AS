@@ -9,12 +9,12 @@ package com.wintmain.dialer.calllog.model;
  * Next ID: 17
  * </pre>
  * <p>
- * Protobuf type {@code com.fissy.dialer.calllog.model.CoalescedRow}
+ * Protobuf type {@code com.wintmain.dialer.calllog.model.CoalescedRow}
  */
 public final class CoalescedRow extends
         com.google.protobuf.GeneratedMessageLite<
                 CoalescedRow, CoalescedRow.Builder> implements
-        // @@protoc_insertion_point(message_implements:com.fissy.dialer.calllog.model.CoalescedRow)
+        // @@protoc_insertion_point(message_implements:com.wintmain.dialer.calllog.model.CoalescedRow)
         CoalescedRowOrBuilder {
     public static final int ID_FIELD_NUMBER = 1;
     public static final int TIMESTAMP_FIELD_NUMBER = 2;
@@ -32,7 +32,7 @@ public final class CoalescedRow extends
     public static final int IS_VOICEMAIL_CALL_FIELD_NUMBER = 14;
     public static final int VOICEMAIL_CALL_TAG_FIELD_NUMBER = 15;
     public static final int COALESCED_IDS_FIELD_NUMBER = 16;
-    // @@protoc_insertion_point(class_scope:com.fissy.dialer.calllog.model.CoalescedRow)
+    // @@protoc_insertion_point(class_scope:com.wintmain.dialer.calllog.model.CoalescedRow)
     private static final com.wintmain.dialer.calllog.model.CoalescedRow DEFAULT_INSTANCE;
     private static volatile com.google.protobuf.Parser<CoalescedRow> PARSER;
 
@@ -258,7 +258,7 @@ public final class CoalescedRow extends
      * Value in column CoalescedAnnotatedCallLog.NUMBER
      * </pre>
      *
-     * <code>optional .com.fissy.dialer.DialerPhoneNumber number = 3;</code>
+     * <code>optional .com.wintmain.dialer.DialerPhoneNumber number = 3;</code>
      */
     public boolean hasNumber() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
@@ -269,7 +269,7 @@ public final class CoalescedRow extends
      * Value in column CoalescedAnnotatedCallLog.NUMBER
      * </pre>
      *
-     * <code>optional .com.fissy.dialer.DialerPhoneNumber number = 3;</code>
+     * <code>optional .com.wintmain.dialer.DialerPhoneNumber number = 3;</code>
      */
     public com.wintmain.dialer.DialerPhoneNumber getNumber() {
         return number_ == null ? com.wintmain.dialer.DialerPhoneNumber.getDefaultInstance() : number_;
@@ -280,7 +280,7 @@ public final class CoalescedRow extends
      * Value in column CoalescedAnnotatedCallLog.NUMBER
      * </pre>
      *
-     * <code>optional .com.fissy.dialer.DialerPhoneNumber number = 3;</code>
+     * <code>optional .com.wintmain.dialer.DialerPhoneNumber number = 3;</code>
      */
     private void setNumber(com.wintmain.dialer.DialerPhoneNumber value) {
         if (value == null) {
@@ -295,7 +295,7 @@ public final class CoalescedRow extends
      * Value in column CoalescedAnnotatedCallLog.NUMBER
      * </pre>
      *
-     * <code>optional .com.fissy.dialer.DialerPhoneNumber number = 3;</code>
+     * <code>optional .com.wintmain.dialer.DialerPhoneNumber number = 3;</code>
      */
     private void setNumber(
             com.wintmain.dialer.DialerPhoneNumber.Builder builderForValue) {
@@ -308,7 +308,7 @@ public final class CoalescedRow extends
      * Value in column CoalescedAnnotatedCallLog.NUMBER
      * </pre>
      *
-     * <code>optional .com.fissy.dialer.DialerPhoneNumber number = 3;</code>
+     * <code>optional .com.wintmain.dialer.DialerPhoneNumber number = 3;</code>
      */
     private void mergeNumber(com.wintmain.dialer.DialerPhoneNumber value) {
         if (number_ != null &&
@@ -326,7 +326,7 @@ public final class CoalescedRow extends
      * Value in column CoalescedAnnotatedCallLog.NUMBER
      * </pre>
      *
-     * <code>optional .com.fissy.dialer.DialerPhoneNumber number = 3;</code>
+     * <code>optional .com.wintmain.dialer.DialerPhoneNumber number = 3;</code>
      */
     private void clearNumber() {
         number_ = null;
@@ -880,7 +880,7 @@ public final class CoalescedRow extends
      * Value in column CoalescedAnnotatedCallLog.NUMBER_ATTRIBUTES
      * </pre>
      *
-     * <code>optional .com.fissy.dialer.NumberAttributes number_attributes = 13;</code>
+     * <code>optional .com.wintmain.dialer.NumberAttributes number_attributes = 13;</code>
      */
     public boolean hasNumberAttributes() {
         return ((bitField0_ & 0x00001000) == 0x00001000);
@@ -891,7 +891,7 @@ public final class CoalescedRow extends
      * Value in column CoalescedAnnotatedCallLog.NUMBER_ATTRIBUTES
      * </pre>
      *
-     * <code>optional .com.fissy.dialer.NumberAttributes number_attributes = 13;</code>
+     * <code>optional .com.wintmain.dialer.NumberAttributes number_attributes = 13;</code>
      */
     public com.wintmain.dialer.NumberAttributes getNumberAttributes() {
         return numberAttributes_ == null ? com.wintmain.dialer.NumberAttributes.getDefaultInstance() : numberAttributes_;
@@ -902,7 +902,7 @@ public final class CoalescedRow extends
      * Value in column CoalescedAnnotatedCallLog.NUMBER_ATTRIBUTES
      * </pre>
      *
-     * <code>optional .com.fissy.dialer.NumberAttributes number_attributes = 13;</code>
+     * <code>optional .com.wintmain.dialer.NumberAttributes number_attributes = 13;</code>
      */
     private void setNumberAttributes(com.wintmain.dialer.NumberAttributes value) {
         if (value == null) {
@@ -917,7 +917,7 @@ public final class CoalescedRow extends
      * Value in column CoalescedAnnotatedCallLog.NUMBER_ATTRIBUTES
      * </pre>
      *
-     * <code>optional .com.fissy.dialer.NumberAttributes number_attributes = 13;</code>
+     * <code>optional .com.wintmain.dialer.NumberAttributes number_attributes = 13;</code>
      */
     private void setNumberAttributes(
             com.wintmain.dialer.NumberAttributes.Builder builderForValue) {
@@ -930,7 +930,7 @@ public final class CoalescedRow extends
      * Value in column CoalescedAnnotatedCallLog.NUMBER_ATTRIBUTES
      * </pre>
      *
-     * <code>optional .com.fissy.dialer.NumberAttributes number_attributes = 13;</code>
+     * <code>optional .com.wintmain.dialer.NumberAttributes number_attributes = 13;</code>
      */
     private void mergeNumberAttributes(com.wintmain.dialer.NumberAttributes value) {
         if (numberAttributes_ != null &&
@@ -948,7 +948,7 @@ public final class CoalescedRow extends
      * Value in column CoalescedAnnotatedCallLog.NUMBER_ATTRIBUTES
      * </pre>
      *
-     * <code>optional .com.fissy.dialer.NumberAttributes number_attributes = 13;</code>
+     * <code>optional .com.wintmain.dialer.NumberAttributes number_attributes = 13;</code>
      */
     private void clearNumberAttributes() {
         numberAttributes_ = null;
@@ -1084,7 +1084,7 @@ public final class CoalescedRow extends
      * Value in column CoalescedAnnotatedCallLog.COALESCED_IDS
      * </pre>
      *
-     * <code>optional .com.fissy.dialer.CoalescedIds coalesced_ids = 16;</code>
+     * <code>optional .com.wintmain.dialer.CoalescedIds coalesced_ids = 16;</code>
      */
     public boolean hasCoalescedIds() {
         return ((bitField0_ & 0x00008000) == 0x00008000);
@@ -1095,7 +1095,7 @@ public final class CoalescedRow extends
      * Value in column CoalescedAnnotatedCallLog.COALESCED_IDS
      * </pre>
      *
-     * <code>optional .com.fissy.dialer.CoalescedIds coalesced_ids = 16;</code>
+     * <code>optional .com.wintmain.dialer.CoalescedIds coalesced_ids = 16;</code>
      */
     public com.wintmain.dialer.CoalescedIds getCoalescedIds() {
         return coalescedIds_ == null ? com.wintmain.dialer.CoalescedIds.getDefaultInstance() : coalescedIds_;
@@ -1106,7 +1106,7 @@ public final class CoalescedRow extends
      * Value in column CoalescedAnnotatedCallLog.COALESCED_IDS
      * </pre>
      *
-     * <code>optional .com.fissy.dialer.CoalescedIds coalesced_ids = 16;</code>
+     * <code>optional .com.wintmain.dialer.CoalescedIds coalesced_ids = 16;</code>
      */
     private void setCoalescedIds(com.wintmain.dialer.CoalescedIds value) {
         if (value == null) {
@@ -1121,7 +1121,7 @@ public final class CoalescedRow extends
      * Value in column CoalescedAnnotatedCallLog.COALESCED_IDS
      * </pre>
      *
-     * <code>optional .com.fissy.dialer.CoalescedIds coalesced_ids = 16;</code>
+     * <code>optional .com.wintmain.dialer.CoalescedIds coalesced_ids = 16;</code>
      */
     private void setCoalescedIds(
             com.wintmain.dialer.CoalescedIds.Builder builderForValue) {
@@ -1134,7 +1134,7 @@ public final class CoalescedRow extends
      * Value in column CoalescedAnnotatedCallLog.COALESCED_IDS
      * </pre>
      *
-     * <code>optional .com.fissy.dialer.CoalescedIds coalesced_ids = 16;</code>
+     * <code>optional .com.wintmain.dialer.CoalescedIds coalesced_ids = 16;</code>
      */
     private void mergeCoalescedIds(com.wintmain.dialer.CoalescedIds value) {
         if (coalescedIds_ != null &&
@@ -1152,7 +1152,7 @@ public final class CoalescedRow extends
      * Value in column CoalescedAnnotatedCallLog.COALESCED_IDS
      * </pre>
      *
-     * <code>optional .com.fissy.dialer.CoalescedIds coalesced_ids = 16;</code>
+     * <code>optional .com.wintmain.dialer.CoalescedIds coalesced_ids = 16;</code>
      */
     private void clearCoalescedIds() {
         coalescedIds_ = null;
@@ -1514,14 +1514,14 @@ public final class CoalescedRow extends
      * Next ID: 17
      * </pre>
      * <p>
-     * Protobuf type {@code com.fissy.dialer.calllog.model.CoalescedRow}
+     * Protobuf type {@code com.wintmain.dialer.calllog.model.CoalescedRow}
      */
     public static final class Builder extends
             com.google.protobuf.GeneratedMessageLite.Builder<
                     com.wintmain.dialer.calllog.model.CoalescedRow, Builder> implements
-            // @@protoc_insertion_point(builder_implements:com.fissy.dialer.calllog.model.CoalescedRow)
+            // @@protoc_insertion_point(builder_implements:com.wintmain.dialer.calllog.model.CoalescedRow)
             com.wintmain.dialer.calllog.model.CoalescedRowOrBuilder {
-        // Construct using com.fissy.dialer.calllog.model.CoalescedRow.newBuilder()
+        // Construct using com.wintmain.dialer.calllog.model.CoalescedRow.newBuilder()
         private Builder() {
             super(DEFAULT_INSTANCE);
         }
@@ -1628,7 +1628,7 @@ public final class CoalescedRow extends
          * Value in column CoalescedAnnotatedCallLog.NUMBER
          * </pre>
          *
-         * <code>optional .com.fissy.dialer.DialerPhoneNumber number = 3;</code>
+         * <code>optional .com.wintmain.dialer.DialerPhoneNumber number = 3;</code>
          */
         public boolean hasNumber() {
             return instance.hasNumber();
@@ -1639,7 +1639,7 @@ public final class CoalescedRow extends
          * Value in column CoalescedAnnotatedCallLog.NUMBER
          * </pre>
          *
-         * <code>optional .com.fissy.dialer.DialerPhoneNumber number = 3;</code>
+         * <code>optional .com.wintmain.dialer.DialerPhoneNumber number = 3;</code>
          */
         public com.wintmain.dialer.DialerPhoneNumber getNumber() {
             return instance.getNumber();
@@ -1650,7 +1650,7 @@ public final class CoalescedRow extends
          * Value in column CoalescedAnnotatedCallLog.NUMBER
          * </pre>
          *
-         * <code>optional .com.fissy.dialer.DialerPhoneNumber number = 3;</code>
+         * <code>optional .com.wintmain.dialer.DialerPhoneNumber number = 3;</code>
          */
         public Builder setNumber(com.wintmain.dialer.DialerPhoneNumber value) {
             copyOnWrite();
@@ -1663,7 +1663,7 @@ public final class CoalescedRow extends
          * Value in column CoalescedAnnotatedCallLog.NUMBER
          * </pre>
          *
-         * <code>optional .com.fissy.dialer.DialerPhoneNumber number = 3;</code>
+         * <code>optional .com.wintmain.dialer.DialerPhoneNumber number = 3;</code>
          */
         public Builder setNumber(
                 com.wintmain.dialer.DialerPhoneNumber.Builder builderForValue) {
@@ -1677,7 +1677,7 @@ public final class CoalescedRow extends
          * Value in column CoalescedAnnotatedCallLog.NUMBER
          * </pre>
          *
-         * <code>optional .com.fissy.dialer.DialerPhoneNumber number = 3;</code>
+         * <code>optional .com.wintmain.dialer.DialerPhoneNumber number = 3;</code>
          */
         public Builder mergeNumber(com.wintmain.dialer.DialerPhoneNumber value) {
             copyOnWrite();
@@ -1690,7 +1690,7 @@ public final class CoalescedRow extends
          * Value in column CoalescedAnnotatedCallLog.NUMBER
          * </pre>
          *
-         * <code>optional .com.fissy.dialer.DialerPhoneNumber number = 3;</code>
+         * <code>optional .com.wintmain.dialer.DialerPhoneNumber number = 3;</code>
          */
         public Builder clearNumber() {
             copyOnWrite();
@@ -2243,7 +2243,7 @@ public final class CoalescedRow extends
          * Value in column CoalescedAnnotatedCallLog.NUMBER_ATTRIBUTES
          * </pre>
          *
-         * <code>optional .com.fissy.dialer.NumberAttributes number_attributes = 13;</code>
+         * <code>optional .com.wintmain.dialer.NumberAttributes number_attributes = 13;</code>
          */
         public boolean hasNumberAttributes() {
             return instance.hasNumberAttributes();
@@ -2254,7 +2254,7 @@ public final class CoalescedRow extends
          * Value in column CoalescedAnnotatedCallLog.NUMBER_ATTRIBUTES
          * </pre>
          *
-         * <code>optional .com.fissy.dialer.NumberAttributes number_attributes = 13;</code>
+         * <code>optional .com.wintmain.dialer.NumberAttributes number_attributes = 13;</code>
          */
         public com.wintmain.dialer.NumberAttributes getNumberAttributes() {
             return instance.getNumberAttributes();
@@ -2265,7 +2265,7 @@ public final class CoalescedRow extends
          * Value in column CoalescedAnnotatedCallLog.NUMBER_ATTRIBUTES
          * </pre>
          *
-         * <code>optional .com.fissy.dialer.NumberAttributes number_attributes = 13;</code>
+         * <code>optional .com.wintmain.dialer.NumberAttributes number_attributes = 13;</code>
          */
         public Builder setNumberAttributes(com.wintmain.dialer.NumberAttributes value) {
             copyOnWrite();
@@ -2278,7 +2278,7 @@ public final class CoalescedRow extends
          * Value in column CoalescedAnnotatedCallLog.NUMBER_ATTRIBUTES
          * </pre>
          *
-         * <code>optional .com.fissy.dialer.NumberAttributes number_attributes = 13;</code>
+         * <code>optional .com.wintmain.dialer.NumberAttributes number_attributes = 13;</code>
          */
         public Builder setNumberAttributes(
                 com.wintmain.dialer.NumberAttributes.Builder builderForValue) {
@@ -2292,7 +2292,7 @@ public final class CoalescedRow extends
          * Value in column CoalescedAnnotatedCallLog.NUMBER_ATTRIBUTES
          * </pre>
          *
-         * <code>optional .com.fissy.dialer.NumberAttributes number_attributes = 13;</code>
+         * <code>optional .com.wintmain.dialer.NumberAttributes number_attributes = 13;</code>
          */
         public Builder mergeNumberAttributes(com.wintmain.dialer.NumberAttributes value) {
             copyOnWrite();
@@ -2305,7 +2305,7 @@ public final class CoalescedRow extends
          * Value in column CoalescedAnnotatedCallLog.NUMBER_ATTRIBUTES
          * </pre>
          *
-         * <code>optional .com.fissy.dialer.NumberAttributes number_attributes = 13;</code>
+         * <code>optional .com.wintmain.dialer.NumberAttributes number_attributes = 13;</code>
          */
         public Builder clearNumberAttributes() {
             copyOnWrite();
@@ -2441,7 +2441,7 @@ public final class CoalescedRow extends
          * Value in column CoalescedAnnotatedCallLog.COALESCED_IDS
          * </pre>
          *
-         * <code>optional .com.fissy.dialer.CoalescedIds coalesced_ids = 16;</code>
+         * <code>optional .com.wintmain.dialer.CoalescedIds coalesced_ids = 16;</code>
          */
         public boolean hasCoalescedIds() {
             return instance.hasCoalescedIds();
@@ -2452,7 +2452,7 @@ public final class CoalescedRow extends
          * Value in column CoalescedAnnotatedCallLog.COALESCED_IDS
          * </pre>
          *
-         * <code>optional .com.fissy.dialer.CoalescedIds coalesced_ids = 16;</code>
+         * <code>optional .com.wintmain.dialer.CoalescedIds coalesced_ids = 16;</code>
          */
         public com.wintmain.dialer.CoalescedIds getCoalescedIds() {
             return instance.getCoalescedIds();
@@ -2463,7 +2463,7 @@ public final class CoalescedRow extends
          * Value in column CoalescedAnnotatedCallLog.COALESCED_IDS
          * </pre>
          *
-         * <code>optional .com.fissy.dialer.CoalescedIds coalesced_ids = 16;</code>
+         * <code>optional .com.wintmain.dialer.CoalescedIds coalesced_ids = 16;</code>
          */
         public Builder setCoalescedIds(com.wintmain.dialer.CoalescedIds value) {
             copyOnWrite();
@@ -2476,7 +2476,7 @@ public final class CoalescedRow extends
          * Value in column CoalescedAnnotatedCallLog.COALESCED_IDS
          * </pre>
          *
-         * <code>optional .com.fissy.dialer.CoalescedIds coalesced_ids = 16;</code>
+         * <code>optional .com.wintmain.dialer.CoalescedIds coalesced_ids = 16;</code>
          */
         public Builder setCoalescedIds(
                 com.wintmain.dialer.CoalescedIds.Builder builderForValue) {
@@ -2490,7 +2490,7 @@ public final class CoalescedRow extends
          * Value in column CoalescedAnnotatedCallLog.COALESCED_IDS
          * </pre>
          *
-         * <code>optional .com.fissy.dialer.CoalescedIds coalesced_ids = 16;</code>
+         * <code>optional .com.wintmain.dialer.CoalescedIds coalesced_ids = 16;</code>
          */
         public Builder mergeCoalescedIds(com.wintmain.dialer.CoalescedIds value) {
             copyOnWrite();
@@ -2503,7 +2503,7 @@ public final class CoalescedRow extends
          * Value in column CoalescedAnnotatedCallLog.COALESCED_IDS
          * </pre>
          *
-         * <code>optional .com.fissy.dialer.CoalescedIds coalesced_ids = 16;</code>
+         * <code>optional .com.wintmain.dialer.CoalescedIds coalesced_ids = 16;</code>
          */
         public Builder clearCoalescedIds() {
             copyOnWrite();
@@ -2511,7 +2511,7 @@ public final class CoalescedRow extends
             return this;
         }
 
-        // @@protoc_insertion_point(builder_scope:com.fissy.dialer.calllog.model.CoalescedRow)
+        // @@protoc_insertion_point(builder_scope:com.wintmain.dialer.calllog.model.CoalescedRow)
     }
 }
 

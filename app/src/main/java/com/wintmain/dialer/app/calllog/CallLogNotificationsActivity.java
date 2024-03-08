@@ -37,7 +37,7 @@ import com.wintmain.dialer.util.PermissionsUtil;
 public class CallLogNotificationsActivity extends AppCompatActivity {
 
     public static final String ACTION_SEND_SMS_FROM_MISSED_CALL_NOTIFICATION =
-            "com.fissy.dialer.calllog.SEND_SMS_FROM_MISSED_CALL_NOTIFICATION";
+            "com.wintmain.dialer.calllog.SEND_SMS_FROM_MISSED_CALL_NOTIFICATION";
 
     /**
      * Extra to be included with {@link #ACTION_SEND_SMS_FROM_MISSED_CALL_NOTIFICATION} to identify

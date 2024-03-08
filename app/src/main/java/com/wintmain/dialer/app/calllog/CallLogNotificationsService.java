@@ -54,23 +54,23 @@ public class CallLogNotificationsService extends IntentService {
      * Action to call back a missed call.
      */
     public static final String ACTION_CALL_BACK_FROM_MISSED_CALL_NOTIFICATION =
-            "com.fissy.dialer.calllog.CALL_BACK_FROM_MISSED_CALL_NOTIFICATION";
+            "com.wintmain.dialer.calllog.CALL_BACK_FROM_MISSED_CALL_NOTIFICATION";
     /**
      * Action mark legacy voicemail as dismissed.
      */
     public static final String ACTION_LEGACY_VOICEMAIL_DISMISSED =
-            "com.fissy.dialer.calllog.ACTION_LEGACY_VOICEMAIL_DISMISSED";
+            "com.wintmain.dialer.calllog.ACTION_LEGACY_VOICEMAIL_DISMISSED";
     public static final int UNKNOWN_MISSED_CALL_COUNT = -1;
     @VisibleForTesting
     static final String ACTION_MARK_ALL_NEW_VOICEMAILS_AS_OLD =
-            "com.fissy.dialer.calllog.ACTION_MARK_ALL_NEW_VOICEMAILS_AS_OLD";
+            "com.wintmain.dialer.calllog.ACTION_MARK_ALL_NEW_VOICEMAILS_AS_OLD";
     @VisibleForTesting
     static final String ACTION_CANCEL_ALL_MISSED_CALLS =
-            "com.fissy.dialer.calllog.ACTION_CANCEL_ALL_MISSED_CALLS";
+            "com.wintmain.dialer.calllog.ACTION_CANCEL_ALL_MISSED_CALLS";
     private static final String ACTION_MARK_SINGLE_NEW_VOICEMAIL_AS_OLD =
-            "com.fissy.dialer.calllog.ACTION_MARK_SINGLE_NEW_VOICEMAIL_AS_OLD ";
+            "com.wintmain.dialer.calllog.ACTION_MARK_SINGLE_NEW_VOICEMAIL_AS_OLD ";
     private static final String ACTION_CANCEL_SINGLE_MISSED_CALL =
-            "com.fissy.dialer.calllog.ACTION_CANCEL_SINGLE_MISSED_CALL";
+            "com.wintmain.dialer.calllog.ACTION_CANCEL_SINGLE_MISSED_CALL";
     private static final String EXTRA_PHONE_ACCOUNT_HANDLE = "PHONE_ACCOUNT_HANDLE";
 
     public CallLogNotificationsService() {

@@ -48,7 +48,7 @@ public class CallContactActivity extends AppCompatActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if ("com.fissy.dialer.shortcuts.CALL_CONTACT".equals(getIntent().getAction())) {
+        if ("com.wintmain.dialer.shortcuts.CALL_CONTACT".equals(getIntent().getAction())) {
             if (Shortcuts.areDynamicShortcutsEnabled(this)) {
                 LogUtil.i("CallContactActivity.onCreate", "shortcut clicked");
                 contactUri = getIntent().getData();

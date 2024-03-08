@@ -4,7 +4,7 @@
 package com.wintmain.dialer.rtt;
 
 public interface RttTranscriptMessageOrBuilder extends
-        // @@protoc_insertion_point(interface_extends:com.fissy.dialer.rtt.RttTranscriptMessage)
+        // @@protoc_insertion_point(interface_extends:com.wintmain.dialer.rtt.RttTranscriptMessage)
         com.google.protobuf.MessageLiteOrBuilder {
 
     /**

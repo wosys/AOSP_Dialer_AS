@@ -8,18 +8,18 @@ package com.wintmain.dialer.rtt;
  * Single chat message inside a RTT call.
  * </pre>
  * <p>
- * Protobuf type {@code com.fissy.dialer.rtt.RttTranscriptMessage}
+ * Protobuf type {@code com.wintmain.dialer.rtt.RttTranscriptMessage}
  */
 public final class RttTranscriptMessage extends
         com.google.protobuf.GeneratedMessageLite<
                 RttTranscriptMessage, RttTranscriptMessage.Builder> implements
-        // @@protoc_insertion_point(message_implements:com.fissy.dialer.rtt.RttTranscriptMessage)
+        // @@protoc_insertion_point(message_implements:com.wintmain.dialer.rtt.RttTranscriptMessage)
         RttTranscriptMessageOrBuilder {
     public static final int CONTENT_FIELD_NUMBER = 1;
     public static final int TIMESTAMP_FIELD_NUMBER = 2;
     public static final int IS_REMOTE_FIELD_NUMBER = 3;
     public static final int IS_FINISHED_FIELD_NUMBER = 4;
-    // @@protoc_insertion_point(class_scope:com.fissy.dialer.rtt.RttTranscriptMessage)
+    // @@protoc_insertion_point(class_scope:com.wintmain.dialer.rtt.RttTranscriptMessage)
     private static final com.wintmain.dialer.rtt.RttTranscriptMessage DEFAULT_INSTANCE;
     private static volatile com.google.protobuf.Parser<RttTranscriptMessage> PARSER;
 
@@ -443,14 +443,14 @@ public final class RttTranscriptMessage extends
      * Single chat message inside a RTT call.
      * </pre>
      * <p>
-     * Protobuf type {@code com.fissy.dialer.rtt.RttTranscriptMessage}
+     * Protobuf type {@code com.wintmain.dialer.rtt.RttTranscriptMessage}
      */
     public static final class Builder extends
             com.google.protobuf.GeneratedMessageLite.Builder<
                     com.wintmain.dialer.rtt.RttTranscriptMessage, Builder> implements
-            // @@protoc_insertion_point(builder_implements:com.fissy.dialer.rtt.RttTranscriptMessage)
+            // @@protoc_insertion_point(builder_implements:com.wintmain.dialer.rtt.RttTranscriptMessage)
             com.wintmain.dialer.rtt.RttTranscriptMessageOrBuilder {
-        // Construct using com.fissy.dialer.rtt.RttTranscriptMessage.newBuilder()
+        // Construct using com.wintmain.dialer.rtt.RttTranscriptMessage.newBuilder()
         private Builder() {
             super(DEFAULT_INSTANCE);
         }
@@ -623,7 +623,7 @@ public final class RttTranscriptMessage extends
             return this;
         }
 
-        // @@protoc_insertion_point(builder_scope:com.fissy.dialer.rtt.RttTranscriptMessage)
+        // @@protoc_insertion_point(builder_scope:com.wintmain.dialer.rtt.RttTranscriptMessage)
     }
 }
 

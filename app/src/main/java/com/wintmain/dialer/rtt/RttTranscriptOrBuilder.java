@@ -4,7 +4,7 @@
 package com.wintmain.dialer.rtt;
 
 public interface RttTranscriptOrBuilder extends
-        // @@protoc_insertion_point(interface_extends:com.fissy.dialer.rtt.RttTranscript)
+        // @@protoc_insertion_point(interface_extends:com.wintmain.dialer.rtt.RttTranscript)
         com.google.protobuf.MessageLiteOrBuilder {
 
     /**
@@ -86,7 +86,7 @@ public interface RttTranscriptOrBuilder extends
      * Chat messages.
      * </pre>
      *
-     * <code>repeated .com.fissy.dialer.rtt.RttTranscriptMessage messages = 4;</code>
+     * <code>repeated .com.wintmain.dialer.rtt.RttTranscriptMessage messages = 4;</code>
      */
     java.util.List<com.wintmain.dialer.rtt.RttTranscriptMessage>
     getMessagesList();
@@ -96,7 +96,7 @@ public interface RttTranscriptOrBuilder extends
      * Chat messages.
      * </pre>
      *
-     * <code>repeated .com.fissy.dialer.rtt.RttTranscriptMessage messages = 4;</code>
+     * <code>repeated .com.wintmain.dialer.rtt.RttTranscriptMessage messages = 4;</code>
      */
     com.wintmain.dialer.rtt.RttTranscriptMessage getMessages(int index);
 
@@ -105,7 +105,7 @@ public interface RttTranscriptOrBuilder extends
      * Chat messages.
      * </pre>
      *
-     * <code>repeated .com.fissy.dialer.rtt.RttTranscriptMessage messages = 4;</code>
+     * <code>repeated .com.wintmain.dialer.rtt.RttTranscriptMessage messages = 4;</code>
      */
     int getMessagesCount();
 }

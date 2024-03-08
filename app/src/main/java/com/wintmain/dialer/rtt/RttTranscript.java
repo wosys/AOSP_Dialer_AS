@@ -8,18 +8,18 @@ package com.wintmain.dialer.rtt;
  * RTT transcript which contains chat history of a RTT call.
  * </pre>
  * <p>
- * Protobuf type {@code com.fissy.dialer.rtt.RttTranscript}
+ * Protobuf type {@code com.wintmain.dialer.rtt.RttTranscript}
  */
 public final class RttTranscript extends
         com.google.protobuf.GeneratedMessageLite<
                 RttTranscript, RttTranscript.Builder> implements
-        // @@protoc_insertion_point(message_implements:com.fissy.dialer.rtt.RttTranscript)
+        // @@protoc_insertion_point(message_implements:com.wintmain.dialer.rtt.RttTranscript)
         RttTranscriptOrBuilder {
     public static final int ID_FIELD_NUMBER = 1;
     public static final int NUMBER_FIELD_NUMBER = 2;
     public static final int TIMESTAMP_FIELD_NUMBER = 3;
     public static final int MESSAGES_FIELD_NUMBER = 4;
-    // @@protoc_insertion_point(class_scope:com.fissy.dialer.rtt.RttTranscript)
+    // @@protoc_insertion_point(class_scope:com.wintmain.dialer.rtt.RttTranscript)
     private static final com.wintmain.dialer.rtt.RttTranscript DEFAULT_INSTANCE;
     private static volatile com.google.protobuf.Parser<RttTranscript> PARSER;
 
@@ -334,7 +334,7 @@ public final class RttTranscript extends
      * Chat messages.
      * </pre>
      *
-     * <code>repeated .com.fissy.dialer.rtt.RttTranscriptMessage messages = 4;</code>
+     * <code>repeated .com.wintmain.dialer.rtt.RttTranscriptMessage messages = 4;</code>
      */
     public java.util.List<com.wintmain.dialer.rtt.RttTranscriptMessage> getMessagesList() {
         return messages_;
@@ -345,7 +345,7 @@ public final class RttTranscript extends
      * Chat messages.
      * </pre>
      *
-     * <code>repeated .com.fissy.dialer.rtt.RttTranscriptMessage messages = 4;</code>
+     * <code>repeated .com.wintmain.dialer.rtt.RttTranscriptMessage messages = 4;</code>
      */
     public java.util.List<? extends com.wintmain.dialer.rtt.RttTranscriptMessageOrBuilder>
     getMessagesOrBuilderList() {
@@ -357,7 +357,7 @@ public final class RttTranscript extends
      * Chat messages.
      * </pre>
      *
-     * <code>repeated .com.fissy.dialer.rtt.RttTranscriptMessage messages = 4;</code>
+     * <code>repeated .com.wintmain.dialer.rtt.RttTranscriptMessage messages = 4;</code>
      */
     public int getMessagesCount() {
         return messages_.size();
@@ -368,7 +368,7 @@ public final class RttTranscript extends
      * Chat messages.
      * </pre>
      *
-     * <code>repeated .com.fissy.dialer.rtt.RttTranscriptMessage messages = 4;</code>
+     * <code>repeated .com.wintmain.dialer.rtt.RttTranscriptMessage messages = 4;</code>
      */
     public com.wintmain.dialer.rtt.RttTranscriptMessage getMessages(int index) {
         return messages_.get(index);
@@ -379,7 +379,7 @@ public final class RttTranscript extends
      * Chat messages.
      * </pre>
      *
-     * <code>repeated .com.fissy.dialer.rtt.RttTranscriptMessage messages = 4;</code>
+     * <code>repeated .com.wintmain.dialer.rtt.RttTranscriptMessage messages = 4;</code>
      */
     public com.wintmain.dialer.rtt.RttTranscriptMessageOrBuilder getMessagesOrBuilder(
             int index) {
@@ -398,7 +398,7 @@ public final class RttTranscript extends
      * Chat messages.
      * </pre>
      *
-     * <code>repeated .com.fissy.dialer.rtt.RttTranscriptMessage messages = 4;</code>
+     * <code>repeated .com.wintmain.dialer.rtt.RttTranscriptMessage messages = 4;</code>
      */
     private void setMessages(
             int index, com.wintmain.dialer.rtt.RttTranscriptMessage value) {
@@ -414,7 +414,7 @@ public final class RttTranscript extends
      * Chat messages.
      * </pre>
      *
-     * <code>repeated .com.fissy.dialer.rtt.RttTranscriptMessage messages = 4;</code>
+     * <code>repeated .com.wintmain.dialer.rtt.RttTranscriptMessage messages = 4;</code>
      */
     private void setMessages(
             int index, com.wintmain.dialer.rtt.RttTranscriptMessage.Builder builderForValue) {
@@ -427,7 +427,7 @@ public final class RttTranscript extends
      * Chat messages.
      * </pre>
      *
-     * <code>repeated .com.fissy.dialer.rtt.RttTranscriptMessage messages = 4;</code>
+     * <code>repeated .com.wintmain.dialer.rtt.RttTranscriptMessage messages = 4;</code>
      */
     private void addMessages(com.wintmain.dialer.rtt.RttTranscriptMessage value) {
         if (value == null) {
@@ -442,7 +442,7 @@ public final class RttTranscript extends
      * Chat messages.
      * </pre>
      *
-     * <code>repeated .com.fissy.dialer.rtt.RttTranscriptMessage messages = 4;</code>
+     * <code>repeated .com.wintmain.dialer.rtt.RttTranscriptMessage messages = 4;</code>
      */
     private void addMessages(
             int index, com.wintmain.dialer.rtt.RttTranscriptMessage value) {
@@ -458,7 +458,7 @@ public final class RttTranscript extends
      * Chat messages.
      * </pre>
      *
-     * <code>repeated .com.fissy.dialer.rtt.RttTranscriptMessage messages = 4;</code>
+     * <code>repeated .com.wintmain.dialer.rtt.RttTranscriptMessage messages = 4;</code>
      */
     private void addMessages(
             com.wintmain.dialer.rtt.RttTranscriptMessage.Builder builderForValue) {
@@ -471,7 +471,7 @@ public final class RttTranscript extends
      * Chat messages.
      * </pre>
      *
-     * <code>repeated .com.fissy.dialer.rtt.RttTranscriptMessage messages = 4;</code>
+     * <code>repeated .com.wintmain.dialer.rtt.RttTranscriptMessage messages = 4;</code>
      */
     private void addMessages(
             int index, com.wintmain.dialer.rtt.RttTranscriptMessage.Builder builderForValue) {
@@ -484,7 +484,7 @@ public final class RttTranscript extends
      * Chat messages.
      * </pre>
      *
-     * <code>repeated .com.fissy.dialer.rtt.RttTranscriptMessage messages = 4;</code>
+     * <code>repeated .com.wintmain.dialer.rtt.RttTranscriptMessage messages = 4;</code>
      */
     private void addAllMessages(
             java.lang.Iterable<? extends com.wintmain.dialer.rtt.RttTranscriptMessage> values) {
@@ -498,7 +498,7 @@ public final class RttTranscript extends
      * Chat messages.
      * </pre>
      *
-     * <code>repeated .com.fissy.dialer.rtt.RttTranscriptMessage messages = 4;</code>
+     * <code>repeated .com.wintmain.dialer.rtt.RttTranscriptMessage messages = 4;</code>
      */
     private void clearMessages() {
         messages_ = emptyProtobufList();
@@ -509,7 +509,7 @@ public final class RttTranscript extends
      * Chat messages.
      * </pre>
      *
-     * <code>repeated .com.fissy.dialer.rtt.RttTranscriptMessage messages = 4;</code>
+     * <code>repeated .com.wintmain.dialer.rtt.RttTranscriptMessage messages = 4;</code>
      */
     private void removeMessages(int index) {
         ensureMessagesIsMutable();
@@ -672,14 +672,14 @@ public final class RttTranscript extends
      * RTT transcript which contains chat history of a RTT call.
      * </pre>
      * <p>
-     * Protobuf type {@code com.fissy.dialer.rtt.RttTranscript}
+     * Protobuf type {@code com.wintmain.dialer.rtt.RttTranscript}
      */
     public static final class Builder extends
             com.google.protobuf.GeneratedMessageLite.Builder<
                     com.wintmain.dialer.rtt.RttTranscript, Builder> implements
-            // @@protoc_insertion_point(builder_implements:com.fissy.dialer.rtt.RttTranscript)
+            // @@protoc_insertion_point(builder_implements:com.wintmain.dialer.rtt.RttTranscript)
             com.wintmain.dialer.rtt.RttTranscriptOrBuilder {
-        // Construct using com.fissy.dialer.rtt.RttTranscript.newBuilder()
+        // Construct using com.wintmain.dialer.rtt.RttTranscript.newBuilder()
         private Builder() {
             super(DEFAULT_INSTANCE);
         }
@@ -888,7 +888,7 @@ public final class RttTranscript extends
          * Chat messages.
          * </pre>
          *
-         * <code>repeated .com.fissy.dialer.rtt.RttTranscriptMessage messages = 4;</code>
+         * <code>repeated .com.wintmain.dialer.rtt.RttTranscriptMessage messages = 4;</code>
          */
         public java.util.List<com.wintmain.dialer.rtt.RttTranscriptMessage> getMessagesList() {
             return java.util.Collections.unmodifiableList(
@@ -900,7 +900,7 @@ public final class RttTranscript extends
          * Chat messages.
          * </pre>
          *
-         * <code>repeated .com.fissy.dialer.rtt.RttTranscriptMessage messages = 4;</code>
+         * <code>repeated .com.wintmain.dialer.rtt.RttTranscriptMessage messages = 4;</code>
          */
         public int getMessagesCount() {
             return instance.getMessagesCount();
@@ -911,7 +911,7 @@ public final class RttTranscript extends
          * Chat messages.
          * </pre>
          *
-         * <code>repeated .com.fissy.dialer.rtt.RttTranscriptMessage messages = 4;</code>
+         * <code>repeated .com.wintmain.dialer.rtt.RttTranscriptMessage messages = 4;</code>
          */
         public com.wintmain.dialer.rtt.RttTranscriptMessage getMessages(int index) {
             return instance.getMessages(index);
@@ -922,7 +922,7 @@ public final class RttTranscript extends
          * Chat messages.
          * </pre>
          *
-         * <code>repeated .com.fissy.dialer.rtt.RttTranscriptMessage messages = 4;</code>
+         * <code>repeated .com.wintmain.dialer.rtt.RttTranscriptMessage messages = 4;</code>
          */
         public Builder setMessages(
                 int index, com.wintmain.dialer.rtt.RttTranscriptMessage value) {
@@ -936,7 +936,7 @@ public final class RttTranscript extends
          * Chat messages.
          * </pre>
          *
-         * <code>repeated .com.fissy.dialer.rtt.RttTranscriptMessage messages = 4;</code>
+         * <code>repeated .com.wintmain.dialer.rtt.RttTranscriptMessage messages = 4;</code>
          */
         public Builder setMessages(
                 int index, com.wintmain.dialer.rtt.RttTranscriptMessage.Builder builderForValue) {
@@ -950,7 +950,7 @@ public final class RttTranscript extends
          * Chat messages.
          * </pre>
          *
-         * <code>repeated .com.fissy.dialer.rtt.RttTranscriptMessage messages = 4;</code>
+         * <code>repeated .com.wintmain.dialer.rtt.RttTranscriptMessage messages = 4;</code>
          */
         public Builder addMessages(com.wintmain.dialer.rtt.RttTranscriptMessage value) {
             copyOnWrite();
@@ -963,7 +963,7 @@ public final class RttTranscript extends
          * Chat messages.
          * </pre>
          *
-         * <code>repeated .com.fissy.dialer.rtt.RttTranscriptMessage messages = 4;</code>
+         * <code>repeated .com.wintmain.dialer.rtt.RttTranscriptMessage messages = 4;</code>
          */
         public Builder addMessages(
                 int index, com.wintmain.dialer.rtt.RttTranscriptMessage value) {
@@ -977,7 +977,7 @@ public final class RttTranscript extends
          * Chat messages.
          * </pre>
          *
-         * <code>repeated .com.fissy.dialer.rtt.RttTranscriptMessage messages = 4;</code>
+         * <code>repeated .com.wintmain.dialer.rtt.RttTranscriptMessage messages = 4;</code>
          */
         public Builder addMessages(
                 com.wintmain.dialer.rtt.RttTranscriptMessage.Builder builderForValue) {
@@ -991,7 +991,7 @@ public final class RttTranscript extends
          * Chat messages.
          * </pre>
          *
-         * <code>repeated .com.fissy.dialer.rtt.RttTranscriptMessage messages = 4;</code>
+         * <code>repeated .com.wintmain.dialer.rtt.RttTranscriptMessage messages = 4;</code>
          */
         public Builder addMessages(
                 int index, com.wintmain.dialer.rtt.RttTranscriptMessage.Builder builderForValue) {
@@ -1005,7 +1005,7 @@ public final class RttTranscript extends
          * Chat messages.
          * </pre>
          *
-         * <code>repeated .com.fissy.dialer.rtt.RttTranscriptMessage messages = 4;</code>
+         * <code>repeated .com.wintmain.dialer.rtt.RttTranscriptMessage messages = 4;</code>
          */
         public Builder addAllMessages(
                 java.lang.Iterable<? extends com.wintmain.dialer.rtt.RttTranscriptMessage> values) {
@@ -1019,7 +1019,7 @@ public final class RttTranscript extends
          * Chat messages.
          * </pre>
          *
-         * <code>repeated .com.fissy.dialer.rtt.RttTranscriptMessage messages = 4;</code>
+         * <code>repeated .com.wintmain.dialer.rtt.RttTranscriptMessage messages = 4;</code>
          */
         public Builder clearMessages() {
             copyOnWrite();
@@ -1032,7 +1032,7 @@ public final class RttTranscript extends
          * Chat messages.
          * </pre>
          *
-         * <code>repeated .com.fissy.dialer.rtt.RttTranscriptMessage messages = 4;</code>
+         * <code>repeated .com.wintmain.dialer.rtt.RttTranscriptMessage messages = 4;</code>
          */
         public Builder removeMessages(int index) {
             copyOnWrite();
@@ -1040,7 +1040,7 @@ public final class RttTranscript extends
             return this;
         }
 
-        // @@protoc_insertion_point(builder_scope:com.fissy.dialer.rtt.RttTranscript)
+        // @@protoc_insertion_point(builder_scope:com.wintmain.dialer.rtt.RttTranscript)
     }
 }
 

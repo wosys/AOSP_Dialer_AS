@@ -109,7 +109,7 @@ public final class StrictModeUtils {
      */
     public static void warmupSharedPrefs(Application application) {
         // From credential-encrypted (CE) storage, i.e.:
-        //    /data/data/com.fissy.dialer/shared_prefs
+        //    /data/data/com.wintmain.dialer/shared_prefs
 
         if (UserManagerCompat.isUserUnlocked(application)) {
             // <package_name>_preferences.xml
@@ -120,7 +120,7 @@ public final class StrictModeUtils {
         }
 
         // From device-encrypted (DE) storage, i.e.:
-        //   /data/user_de/0/com.fissy.dialer/shared_prefs/
+        //   /data/user_de/0/com.wintmain.dialer/shared_prefs/
 
         // <package_name>_preferences.xml
         StorageComponent.get(application).unencryptedSharedPrefs();

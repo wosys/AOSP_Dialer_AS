@@ -106,7 +106,7 @@ final class PinnedShortcuts {
             if (shortcutInfo.getIntent() != null) {
                 action = shortcutInfo.getIntent().getAction();
             }
-            if (action == null || !action.equals("com.fissy.dialer.shortcuts.CALL_CONTACT")) {
+            if (action == null || !action.equals("com.wintmain.dialer.shortcuts.CALL_CONTACT")) {
                 continue;
             }
 

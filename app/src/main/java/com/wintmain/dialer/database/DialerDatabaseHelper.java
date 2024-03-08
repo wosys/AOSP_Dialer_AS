@@ -75,7 +75,7 @@ public class DialerDatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "dialer.db";
 
     public static final String ACTION_SMART_DIAL_UPDATED =
-            "com.fissy.dialer.database.ACTION_SMART_DIAL_UPDATED";
+            "com.wintmain.dialer.database.ACTION_SMART_DIAL_UPDATED";
     @VisibleForTesting
     static final String DEFAULT_LAST_UPDATED_CONFIG_KEY = "smart_dial_default_last_update_millis";
     private static final String TAG = "DialerDatabaseHelper";
@@ -83,7 +83,7 @@ public class DialerDatabaseHelper extends SQLiteOpenHelper {
     /**
      * Saves the last update time of smart dial databases to shared preferences.
      */
-    private static final String DATABASE_LAST_CREATED_SHARED_PREF = "com.fissy.dialer";
+    private static final String DATABASE_LAST_CREATED_SHARED_PREF = "com.wintmain.dialer";
     private static final String LAST_UPDATED_MILLIS = "last_updated_millis";
     private static final String DATABASE_VERSION_PROPERTY = "database_version";
     private static final int MAX_ENTRIES = 20;

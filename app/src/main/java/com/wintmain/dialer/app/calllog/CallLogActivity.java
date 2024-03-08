@@ -182,7 +182,7 @@ public class CallLogActivity extends AppCompatActivity
 
         if (item.getItemId() == android.R.id.home) {
             PerformanceReport.recordClick(UiAction.Type.CLOSE_CALL_HISTORY_WITH_CANCEL_BUTTON);
-            final Intent intent = new Intent("com.fissy.dialer.main.impl.MAIN");
+            final Intent intent = new Intent("com.wintmain.dialer.main.impl.MAIN");
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             return true;

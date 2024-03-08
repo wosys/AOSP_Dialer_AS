@@ -31,31 +31,31 @@ public class ConstantsImpl extends Constants {
     @Override
     @NonNull
     public String getFilteredNumberProviderAuthority() {
-        return "com.fissy.dialer.blocking.filterednumberprovider";
+        return "com.wintmain.dialer.blocking.filterednumberprovider";
     }
 
     @Override
     @NonNull
     public String getFileProviderAuthority() {
-        return "com.fissy.dialer.files";
+        return "com.wintmain.dialer.files";
     }
 
     @NonNull
     @Override
     public String getAnnotatedCallLogProviderAuthority() {
-        return "com.fissy.dialer.annotatedcalllog";
+        return "com.wintmain.dialer.annotatedcalllog";
     }
 
     @NonNull
     @Override
     public String getPhoneLookupHistoryProviderAuthority() {
-        return "com.fissy.dialer.phonelookuphistory";
+        return "com.wintmain.dialer.phonelookuphistory";
     }
 
     @NonNull
     @Override
     public String getPreferredSimFallbackProviderAuthority() {
-        return "com.fissy.dialer.preferredsimfallback";
+        return "com.wintmain.dialer.preferredsimfallback";
     }
 
     @Override
@@ -66,6 +66,6 @@ public class ConstantsImpl extends Constants {
     @NonNull
     @Override
     public String getSettingsActivity() {
-        return "com.fissy.dialer.app.settings.DialerSettingsActivity";
+        return "com.wintmain.dialer.app.settings.DialerSettingsActivity";
     }
 }

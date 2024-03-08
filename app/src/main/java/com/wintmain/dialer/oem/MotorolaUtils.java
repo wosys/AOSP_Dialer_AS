@@ -63,13 +63,13 @@ public class MotorolaUtils {
      */
     private static boolean isSpnMatched(Context context) {
         try {
-            for (String spnResource :
-                    context.getResources().getStringArray(R.array.motorola_enabled_spn)) {
-                if (spnResource.equalsIgnoreCase(
-                        context.getSystemService(TelephonyManager.class).getSimOperatorName())) {
-                    return true;
-                }
-            }
+//            for (String spnResource :
+//                    context.getResources().getStringArray(R.array.motorola_enabled_spn)) {
+//                if (spnResource.equalsIgnoreCase(
+//                        context.getSystemService(TelephonyManager.class).getSimOperatorName())) {
+//                    return true;
+//                }
+//            }
             return false;
         } catch (Resources.NotFoundException exception) {
             // If SPN is not specified we consider as not necessary to enable/disable the feature.

@@ -35,7 +35,7 @@ import com.wintmain.dialer.constants.Constants;
 public final class PreferredSimFallbackContract {
 
     /**
-     * Check the meta-data "com.fissy.dialer.PREFERRED_SIM_FALLBACK_AUTHORITY" to get the authority
+     * Check the meta-data "com.wintmain.dialer.PREFERRED_SIM_FALLBACK_AUTHORITY" to get the authority
      * of the default dialer if it support it.
      */
     public static final String AUTHORITY = Constants.get().getPreferredSimFallbackProviderAuthority();

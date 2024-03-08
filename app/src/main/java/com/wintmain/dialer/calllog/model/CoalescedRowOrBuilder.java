@@ -4,7 +4,7 @@
 package com.wintmain.dialer.calllog.model;
 
 public interface CoalescedRowOrBuilder extends
-        // @@protoc_insertion_point(interface_extends:com.fissy.dialer.calllog.model.CoalescedRow)
+        // @@protoc_insertion_point(interface_extends:com.wintmain.dialer.calllog.model.CoalescedRow)
         com.google.protobuf.MessageLiteOrBuilder {
 
     /**
@@ -48,7 +48,7 @@ public interface CoalescedRowOrBuilder extends
      * Value in column CoalescedAnnotatedCallLog.NUMBER
      * </pre>
      *
-     * <code>optional .com.fissy.dialer.DialerPhoneNumber number = 3;</code>
+     * <code>optional .com.wintmain.dialer.DialerPhoneNumber number = 3;</code>
      */
     boolean hasNumber();
 
@@ -57,7 +57,7 @@ public interface CoalescedRowOrBuilder extends
      * Value in column CoalescedAnnotatedCallLog.NUMBER
      * </pre>
      *
-     * <code>optional .com.fissy.dialer.DialerPhoneNumber number = 3;</code>
+     * <code>optional .com.wintmain.dialer.DialerPhoneNumber number = 3;</code>
      */
     com.wintmain.dialer.DialerPhoneNumber getNumber();
 
@@ -268,7 +268,7 @@ public interface CoalescedRowOrBuilder extends
      * Value in column CoalescedAnnotatedCallLog.NUMBER_ATTRIBUTES
      * </pre>
      *
-     * <code>optional .com.fissy.dialer.NumberAttributes number_attributes = 13;</code>
+     * <code>optional .com.wintmain.dialer.NumberAttributes number_attributes = 13;</code>
      */
     boolean hasNumberAttributes();
 
@@ -277,7 +277,7 @@ public interface CoalescedRowOrBuilder extends
      * Value in column CoalescedAnnotatedCallLog.NUMBER_ATTRIBUTES
      * </pre>
      *
-     * <code>optional .com.fissy.dialer.NumberAttributes number_attributes = 13;</code>
+     * <code>optional .com.wintmain.dialer.NumberAttributes number_attributes = 13;</code>
      */
     com.wintmain.dialer.NumberAttributes getNumberAttributes();
 
@@ -332,7 +332,7 @@ public interface CoalescedRowOrBuilder extends
      * Value in column CoalescedAnnotatedCallLog.COALESCED_IDS
      * </pre>
      *
-     * <code>optional .com.fissy.dialer.CoalescedIds coalesced_ids = 16;</code>
+     * <code>optional .com.wintmain.dialer.CoalescedIds coalesced_ids = 16;</code>
      */
     boolean hasCoalescedIds();
 
@@ -341,7 +341,7 @@ public interface CoalescedRowOrBuilder extends
      * Value in column CoalescedAnnotatedCallLog.COALESCED_IDS
      * </pre>
      *
-     * <code>optional .com.fissy.dialer.CoalescedIds coalesced_ids = 16;</code>
+     * <code>optional .com.wintmain.dialer.CoalescedIds coalesced_ids = 16;</code>
      */
     com.wintmain.dialer.CoalescedIds getCoalescedIds();
 }

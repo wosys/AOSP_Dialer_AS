@@ -27,7 +27,7 @@ import com.wintmain.dialer.proguard.UsedByReflection;
  * Utility to access constants that are different across build variants (Google Dialer, AOSP,
  * etc...). This functionality depends on a an implementation being present in the app that has the
  * same package and the class name ending in "Impl". For example,
- * com.fissy.dialer.constants.ConstantsImpl. This class is found by the module using reflection.
+ * com.wintmain.dialer.constants.ConstantsImpl. This class is found by the module using reflection.
  */
 @UsedByReflection(value = "Constants.java")
 public abstract class Constants {

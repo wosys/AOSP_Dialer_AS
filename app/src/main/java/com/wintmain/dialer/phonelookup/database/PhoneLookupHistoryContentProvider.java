@@ -49,14 +49,14 @@ import java.util.Objects;
  * <p>Operations may run against the entire table using the URI:
  *
  * <pre>
- *   content://com.fissy.dialer.phonelookuphistory/PhoneLookupHistory
+ *   content://com.wintmain.dialer.phonelookuphistory/PhoneLookupHistory
  * </pre>
  *
  * <p>Or against an individual row keyed by normalized number where the number is the last component
  * in the URI path, for example:
  *
  * <pre>
- *     content://com.fissy.dialer.phonelookuphistory/PhoneLookupHistory/+11234567890
+ *     content://com.wintmain.dialer.phonelookuphistory/PhoneLookupHistory/+11234567890
  * </pre>
  */
 public class PhoneLookupHistoryContentProvider extends ContentProvider {
@@ -203,7 +203,7 @@ public class PhoneLookupHistoryContentProvider extends ContentProvider {
 
     /**
      * Note: If the normalized number is included as part of the URI (for example,
-     * "content://com.fissy.dialer.phonelookuphistory/PhoneLookupHistory/+123") then the update
+     * "content://com.wintmain.dialer.phonelookuphistory/PhoneLookupHistory/+123") then the update
      * operation will actually be a "replace" operation, inserting a new row if one does not already
      * exist.
      *
@@ -323,10 +323,10 @@ public class PhoneLookupHistoryContentProvider extends ContentProvider {
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({UriType.PHONE_LOOKUP_HISTORY_TABLE_CODE, UriType.PHONE_LOOKUP_HISTORY_TABLE_ID_CODE})
     private @interface UriType {
-        // For operations against: content://com.fissy.dialer.phonelookuphistory/PhoneLookupHistory
+        // For operations against: content://com.wintmain.dialer.phonelookuphistory/PhoneLookupHistory
         int PHONE_LOOKUP_HISTORY_TABLE_CODE = 1;
         // For operations against:
-        // content://com.fissy.dialer.phonelookuphistory/PhoneLookupHistory?number=123
+        // content://com.wintmain.dialer.phonelookuphistory/PhoneLookupHistory?number=123
         int PHONE_LOOKUP_HISTORY_TABLE_ID_CODE = 2;
     }
 }

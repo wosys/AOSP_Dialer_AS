@@ -39,7 +39,7 @@ import java.util.Map;
 public class DialerPersistentBackupAgent extends PersistentBackupAgentHelper {
 
     private static final String[] BACKUP_NAMED_SHARED_PREFS = {
-            "com.google.android.dialer_preferences", "com.google.android.dialer", "com.fissy.dialer"
+            "com.google.android.dialer_preferences", "com.google.android.dialer", "com.wintmain.dialer"
     };
 
     @NonNull

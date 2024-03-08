@@ -22,7 +22,7 @@ package com.wintmain.dialer.callintent;
 /* package */ class Constants {
     // This is a Dialer extra that is set for outgoing calls and used by the InCallUI.
     /* package */ static final String EXTRA_CALL_SPECIFIC_APP_DATA =
-            "com.fissy.dialer.callintent.CALL_SPECIFIC_APP_DATA";
+            "com.wintmain.dialer.callintent.CALL_SPECIFIC_APP_DATA";
 
     // This is a hidden system extra. For outgoing calls Dialer sets it and parses it but for incoming
     // calls Telecom sets it and Dialer parses it.

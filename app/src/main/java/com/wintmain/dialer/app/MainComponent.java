@@ -50,6 +50,6 @@ public class MainComponent {
     }
 
     private static String getComponentName() {
-        return "com.fissy.dialer.app.DialtactsActivity";
+        return "com.wintmain.dialer.app.DialtactsActivity";
     }
 }

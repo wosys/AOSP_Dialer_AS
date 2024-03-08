@@ -64,9 +64,9 @@ final class ShortcutInfoFactory {
         List<ShortcutInfo> shortcuts = new ArrayList<>(shortcutsById.size());
         for (DialerShortcut shortcut : shortcutsById.values()) {
             Intent intent = new Intent();
-            intent.setClassName(context, "com.fissy.dialer.shortcuts.CallContactActivity");
+            intent.setClassName(context, "com.wintmain.dialer.shortcuts.CallContactActivity");
             intent.setData(shortcut.getLookupUri());
-            intent.setAction("com.fissy.dialer.shortcuts.CALL_CONTACT");
+            intent.setAction("com.wintmain.dialer.shortcuts.CALL_CONTACT");
             intent.putExtra(EXTRA_CONTACT_ID, shortcut.getContactId());
 
             ShortcutInfo.Builder shortcutInfo =

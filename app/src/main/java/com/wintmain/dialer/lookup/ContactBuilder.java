@@ -46,7 +46,7 @@ public class ContactBuilder {
      */
     public static final String PHOTO_URI_BUSINESS_DARK = new Uri.Builder()
             .scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
-            .authority("com.fissy.dialer")
+            .authority("com.wintmain.dialer")
             .appendPath(String.valueOf(R.drawable.businesslookup))
             .build()
             .toString();
@@ -55,7 +55,7 @@ public class ContactBuilder {
      */
     public static final String PHOTO_URI_BUSINESS = new Uri.Builder()
             .scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
-            .authority("com.fissy.dialer")
+            .authority("com.wintmain.dialer")
             .appendPath(String.valueOf(R.drawable.businesslookupdark))
             .build()
             .toString();

@@ -257,7 +257,7 @@ public class FilteredNumberCompat {
         if (canUseNewFiltering() && hasMigratedToNewBlocking(context)) {
             return context.getSystemService(TelecomManager.class).createManageBlockedNumbersIntent();
         }
-        Intent intent = new Intent("com.fissy.dialer.action.BLOCKED_NUMBERS_SETTINGS");
+        Intent intent = new Intent("com.wintmain.dialer.action.BLOCKED_NUMBERS_SETTINGS");
         intent.setPackage(context.getPackageName());
         return intent;
     }

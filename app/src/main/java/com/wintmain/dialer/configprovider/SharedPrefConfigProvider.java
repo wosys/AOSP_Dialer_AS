@@ -39,7 +39,7 @@ import javax.inject.Inject;
  * <pre>
  *   adb root
  *   adb shell am startservice -n \
- *     'com.fissy.dialer/.configprovider.SharedPrefConfigProvider\$Service' \
+ *     'com.wintmain.dialer/.configprovider.SharedPrefConfigProvider\$Service' \
  *     --ez boolean_flag_name flag_value
  * </pre>
  *
@@ -49,7 +49,7 @@ import javax.inject.Inject;
  *
  * <pre>
  *   adb shell cat \
- *     /data/user_de/0/com.fissy.dialer/shared_prefs/com.fissy.dialer_preferences.xml
+ *     /data/user_de/0/com.wintmain.dialer/shared_prefs/com.wintmain.dialer_preferences.xml
  * </pre>
  */
 public class SharedPrefConfigProvider implements ConfigProvider {

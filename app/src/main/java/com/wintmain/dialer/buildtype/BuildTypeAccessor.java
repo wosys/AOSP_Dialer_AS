@@ -21,7 +21,7 @@ import com.wintmain.dialer.proguard.UsedByReflection;
 /**
  * Gets the build type. The functionality depends on a an implementation being present in the app
  * that has the same package and the class name ending in "Impl". For example,
- * com.fissy.dialer.buildtype.BuildTypeAccessorImpl. This class is found by the module using
+ * com.wintmain.dialer.buildtype.BuildTypeAccessorImpl. This class is found by the module using
  * reflection.
  */
 @UsedByReflection(value = "BuildType.java")
