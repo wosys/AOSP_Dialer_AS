@@ -448,7 +448,7 @@
     <string name="listSingleContact" translatable="false">Single contact</string>
     <string name="list_filter_all_accounts" translatable="false">All contacts</string>
     <string name="list_filter_phones" translatable="false">All contacts with phone numbers</string>
-    <string name="main_activity_label" translatable="false">Phone</string>
+    <string name="main_activity_label">Phone</string>
     <string name="main_menu_call_history" translatable="false">Call history</string>
     <string name="main_menu_clear_frequents" translatable="false">Clear frequents</string>
     <string name="main_remove_contact" translatable="false">Remove</string>

@@ -97,6 +97,96 @@
             android:name="org.apache.http.legacy"
             android:required="true" />
 
+        <!-- com.wintmain.dialer.main.impl BEGIN -->
+        <!-- TODO(a bug): remove activity themes and only have application wide themes -->
+        <!-- The entrance point for Phone UI.
+             stateAlwaysHidden is set to suppress keyboard show up on dialpad screen. -->
+        <activity
+            android:name=".main.impl.MainActivity"
+            android:clearTaskOnLaunch="true"
+            android:directBootAware="true"
+            android:exported="true"
+            android:label="@string/main_activity_label"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:theme="@style/MainActivityTheme"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustNothing">
+            <intent-filter>
+                <action android:name="com.wintmain.dialer.main.impl.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.DIAL" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:mimeType="vnd.android.cursor.item/phone" />
+                <data android:mimeType="vnd.android.cursor.item/person" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.DIAL" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="voicemail" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.DIAL" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.DIAL" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="tel" />
+            </intent-filter>
+            <intent-filter tools:ignore="AppLinkUrlError">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:mimeType="vnd.android.cursor.dir/calls" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.CALL_BUTTON" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+            <!-- This was never intended to be public, but is here for backward
+                 compatibility.  Use Intent.ACTION_DIAL instead. -->
+            <intent-filter>
+                <action android:name="com.android.phone.action.TOUCH_DIALER" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.TAB" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.android.phone.action.RECENT_CALLS" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.TAB" />
+            </intent-filter>
+
+            <meta-data
+                android:name="com.android.keyguard.layout"
+                android:resource="@layout/keyguard_preview" />
+        </activity>
+        <!-- This is the historical name of the "main" activity and is kept as an alias for backwards
+             compatibility in case older apps refer to the activity in this way. -->
+
+        <!--  {@deprecated Use .MainActivity instead.} -->
+        <activity-alias
+            android:name=".app.DialtactsActivity"
+            android:exported="true"
+            android:targetActivity=".main.impl.MainActivity" />
+        <!-- com.wintmain.dialer.main.impl END -->
+
         <activity
             android:name="com.android.contacts.common.dialog.CallSubjectDialog"
             android:exported="true"
@@ -232,93 +322,6 @@
             </intent-filter>
         </receiver>
         <receiver android:name="com.wintmain.dialer.location.CountryDetector$LocationChangedReceiver" />
-
-        <activity
-            android:name="com.wintmain.dialer.main.impl.MainActivity"
-            android:clearTaskOnLaunch="true"
-            android:directBootAware="true"
-            android:exported="true"
-            android:label="@string/main_activity_label"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true"
-            android:theme="@style/MainActivityTheme"
-            android:windowSoftInputMode="adjustNothing|stateAlwaysHidden">
-            <intent-filter>
-                <action android:name="com.wintmain.dialer.main.impl.MAIN" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.DIAL" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:mimeType="vnd.android.cursor.item/phone" />
-                <data android:mimeType="vnd.android.cursor.item/person" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.DIAL" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="voicemail" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.DIAL" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.LAUNCHER" />
-                <category android:name="android.intent.category.BROWSABLE" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.DIAL" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="tel" />
-            </intent-filter>
-            <intent-filter tools:ignore="AppLinkUrlError">
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:mimeType="vnd.android.cursor.dir/calls" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.CALL_BUTTON" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="com.android.phone.action.TOUCH_DIALER" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.TAB" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="com.android.phone.action.RECENT_CALLS" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.TAB" />
-            </intent-filter>
-
-            <meta-data
-                android:name="com.android.keyguard.layout"
-                android:resource="@layout/keyguard_preview" />
-        </activity>
-        <activity-alias
-            android:name="com.wintmain.dialer.app.DialtactsActivity"
-            android:exported="true"
-            android:targetActivity="com.wintmain.dialer.main.impl.MainActivity" />
         <provider
             android:name="com.wintmain.dialer.phonelookup.database.PhoneLookupHistoryContentProvider"
             android:authorities="com.wintmain.dialer.phonelookuphistory"
