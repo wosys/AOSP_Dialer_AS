@@ -19,8 +19,8 @@ package com.wintmain.dialer.util;
 import android.app.Activity;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 
 /**
  * A common superclass that keeps track of whether an {@link Activity} has saved its state yet or
@@ -49,11 +49,18 @@ public abstract class TransactionSafeActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
+    protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         isSafeToCommitTransactions = false;
     }
 
+    /**
+     * Returns true if it is safe to commit {@link FragmentTransaction}s at this time, based on
+     * whether {@link Activity#onSaveInstanceState} has been called or not.
+     *
+     * <p>Make sure that the current activity calls into {super.onSaveInstanceState(Bundle
+     * outState)} (if that method is overridden), so the flag is properly set.
+     */
     public boolean isSafeToCommitTransactions() {
         return isSafeToCommitTransactions;
     }

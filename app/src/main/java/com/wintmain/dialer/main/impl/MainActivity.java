@@ -34,37 +34,51 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.wintmain.dialer.R;
 import com.wintmain.dialer.app.settings.DialerSettingsActivityCompt;
 import com.wintmain.dialer.blockreportspam.ShowBlockReportSpamDialogReceiver;
+import com.wintmain.dialer.calllog.config.CallLogConfigComponent;
 import com.wintmain.dialer.common.Assert;
 import com.wintmain.dialer.common.LogUtil;
 import com.wintmain.dialer.constants.ActivityRequestCodes;
 import com.wintmain.dialer.interactions.PhoneNumberInteraction.DisambigDialogDismissedListener;
 import com.wintmain.dialer.interactions.PhoneNumberInteraction.InteractionErrorCode;
 import com.wintmain.dialer.interactions.PhoneNumberInteraction.InteractionErrorListener;
+import com.wintmain.dialer.main.impl.bottomnav.BottomNavBar;
+import com.wintmain.dialer.util.TransactionSafeActivity;
 
 import java.util.Objects;
 
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends TransactionSafeActivity
         implements com.wintmain.dialer.main.MainActivityPeer.PeerSupplier,
         // TODO(calderwoodra): remove these 2 interfaces when we migrate to new speed dial fragment
         InteractionErrorListener,
         DisambigDialogDismissedListener {
 
+    private com.wintmain.dialer.main.MainActivityPeer activePeer;
 
     public static Activity main;
     public static Boolean boolConfigUsingLatestAbout;
-    private com.wintmain.dialer.main.MainActivityPeer activePeer;
+    public static Boolean boolConfigUsingLatestPeer;
     /**
      * {@link android.content.BroadcastReceiver} that shows a dialog to block a number and/or report
      * it as spam when notified.
      */
     private ShowBlockReportSpamDialogReceiver showBlockReportSpamDialogReceiver;
 
+    public static Intent getShowCallLogIntent(Context context) {
+        return getShowTabIntent(context, BottomNavBar.TabIndex.CALL_LOG);
+    }
+
+    /** Returns intent that will open MainActivity to the specified tab. */
+    public static Intent getShowTabIntent(Context context, @BottomNavBar.TabIndex int tabIndex) {
+        if (CallLogConfigComponent.get(context).callLogConfig().isNewPeerEnabled()) {
+            // TODO(calderwoodra): implement this in NewMainActivityPeer
+            return null;
+        }
+        return OldMainActivityPeer.getShowTabIntent(context, tabIndex);
+    }
+
     /**
      * Returns intent that will open MainActivity to the specified tab.
-     * <p>
-     * <p>
-     * /**
      *
      * @param context Context of the application package implementing MainActivity class.
      * @return intent for MainActivity.class
@@ -128,9 +142,15 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
     protected com.wintmain.dialer.main.MainActivityPeer getNewPeer() {
-        return new MainActivityPeer(this);
+        boolConfigUsingLatestPeer = getApplicationContext().
+                getResources().getBoolean(R.bool.config_using_latest_peer);
+        if (boolConfigUsingLatestPeer) {
+            // TODO 这边用新的有个bug，暂时还是用原来的Peer
+            return new NewMainActivityPeer(this);
+        } else {
+            return new MainActivityPeer(this);
+        }
     }
 
     @Override

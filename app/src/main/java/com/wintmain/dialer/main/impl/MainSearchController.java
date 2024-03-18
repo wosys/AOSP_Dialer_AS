@@ -27,7 +27,10 @@ import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.android.contacts.common.dialog.ClearFrequentsDialog;
@@ -86,9 +89,7 @@ public class MainSearchController implements SearchBarListener {
     private final MainToolbar toolbar;
     private final View toolbarShadow;
 
-    /**
-     * View located underneath the toolbar that needs to animate with it.
-     */
+    /** View located underneath the toolbar that needs to animate with it. */
     private final View fragmentContainer;
 
     private final List<OnSearchShowListener> onSearchShowListenerList = new ArrayList<>();
@@ -125,9 +126,7 @@ public class MainSearchController implements SearchBarListener {
                 (NewSearchFragment) activity.getSupportFragmentManager().findFragmentByTag(SEARCH_FRAGMENT_TAG);
     }
 
-    /**
-     * Should be called if we're showing the dialpad because of a new ACTION_DIAL intent.
-     */
+    /** Should be called if we're showing the dialpad because of a new ACTION_DIAL intent. */
     public void showDialpadFromNewIntent() {
         LogUtil.enterBlock("MainSearchController.showDialpadFromNewIntent");
         if (isDialpadVisible()) {
@@ -142,9 +141,7 @@ public class MainSearchController implements SearchBarListener {
         showDialpad(/* animate=*/ false, /* fromNewIntent=*/ true);
     }
 
-    /**
-     * Shows the dialpad, hides the FAB and slides the toolbar off screen.
-     */
+    /** Shows the dialpad, hides the FAB and slides the toolbar off screen. */
     public void showDialpad(boolean animate) {
         LogUtil.enterBlock("MainSearchController.showDialpad");
         showDialpad(animate, false);
@@ -193,6 +190,12 @@ public class MainSearchController implements SearchBarListener {
 
     /**
      * Hides the dialpad, reveals the FAB and slides the toolbar back onto the screen.
+     *
+     * <p>This method intentionally "hides" and does not "remove" the dialpad in order to preserve its
+     * state (i.e. we call {@link FragmentTransaction#hide(Fragment)} instead of {@link
+     * FragmentTransaction#remove(Fragment)}.
+     *
+     * @see {@link #closeSearch(boolean)} to "remove" the dialpad.
      */
     private void hideDialpad(boolean animate) {
         LogUtil.enterBlock("MainSearchController.hideDialpad");
@@ -226,19 +229,20 @@ public class MainSearchController implements SearchBarListener {
                 animate,
                 new AnimationListener() {
                     @Override
-                    public void onAnimationStart(Animation animation) {
-                    }
+                    public void onAnimationStart(Animation animation) {}
 
                     @Override
                     public void onAnimationEnd(Animation animation) {
                         if (!(activity.isFinishing() || activity.isDestroyed())) {
-                            activity.getSupportFragmentManager().beginTransaction().hide(dialpadFragment).commit();
+                            activity.getSupportFragmentManager()
+                                    .beginTransaction()
+                                    .hide(dialpadFragment)
+                                    .commit();
                         }
                     }
 
                     @Override
-                    public void onAnimationRepeat(Animation animation) {
-                    }
+                    public void onAnimationRepeat(Animation animation) {}
                 });
     }
 
@@ -250,9 +254,7 @@ public class MainSearchController implements SearchBarListener {
         bottomNav.setVisibility(View.VISIBLE);
     }
 
-    /**
-     * Should be called when {@link DialpadListener#onDialpadShown()} is called.
-     */
+    /** Should be called when {@link DialpadListener#onDialpadShown()} is called. */
     public void onDialpadShown() {
         LogUtil.enterBlock("MainSearchController.onDialpadShown");
         dialpadFragment.slideUp(true);
@@ -261,13 +263,13 @@ public class MainSearchController implements SearchBarListener {
 
     /**
      * @see SearchFragmentListener#onSearchListTouch()
-     * <p>There are 4 scenarios we support to provide a nice UX experience:
-     * <ol>
-     *   <li>When the dialpad is visible with an empty query, close the search UI.
-     *   <li>When the dialpad is visible with a non-empty query, hide the dialpad.
-     *   <li>When the regular search UI is visible with an empty query, close the search UI.
-     *   <li>When the regular search UI is visible with a non-empty query, hide the keyboard.
-     * </ol>
+     *     <p>There are 4 scenarios we support to provide a nice UX experience:
+     *     <ol>
+     *       <li>When the dialpad is visible with an empty query, close the search UI.
+     *       <li>When the dialpad is visible with a non-empty query, hide the dialpad.
+     *       <li>When the regular search UI is visible with an empty query, close the search UI.
+     *       <li>When the regular search UI is visible with a non-empty query, hide the keyboard.
+     *     </ol>
      */
     public void onSearchListTouch() {
         LogUtil.enterBlock("MainSearchController.onSearchListTouched");
@@ -321,9 +323,7 @@ public class MainSearchController implements SearchBarListener {
         }
     }
 
-    /**
-     * Calls {@link #hideDialpad(boolean)}, removes the search fragment and clears the dialpad.
-     */
+    /** Calls {@link #hideDialpad(boolean)}, removes the search fragment and clears the dialpad. */
     private void closeSearch(boolean animate) {
         LogUtil.enterBlock("MainSearchController.closeSearch");
         if (searchFragment == null) {
@@ -367,6 +367,10 @@ public class MainSearchController implements SearchBarListener {
         notifyListenersOnSearchClose();
     }
 
+    @Nullable
+    protected DialpadFragment getDialpadFragment() {
+        return dialpadFragment;
+    }
 
     private boolean isDialpadVisible() {
         return dialpadFragment != null
@@ -379,16 +383,12 @@ public class MainSearchController implements SearchBarListener {
         return searchFragment != null && searchFragment.isAdded() && !searchFragment.isHidden();
     }
 
-    /**
-     * Returns true if the search UI is visible.
-     */
+    /** Returns true if the search UI is visible. */
     public boolean isInSearch() {
         return isSearchVisible();
     }
 
-    /**
-     * Closes the keyboard if necessary.
-     */
+    /** Closes the keyboard if necessary. */
     private void closeKeyboard() {
         if (searchFragment != null && searchFragment.isAdded()) {
             toolbar.hideKeyboard();
@@ -451,9 +451,7 @@ public class MainSearchController implements SearchBarListener {
         }
     }
 
-    /**
-     * @see OnDialpadQueryChangedListener#onDialpadQueryChanged(String)
-     */
+    /** @see OnDialpadQueryChangedListener#onDialpadQueryChanged(java.lang.String) */
     public void onDialpadQueryChanged(String query) {
         String normalizedQuery = SmartDialNameMatcher.normalizeNumber(/* context = */ activity, query);
         if (searchFragment != null) {
@@ -571,6 +569,14 @@ public class MainSearchController implements SearchBarListener {
         }
     }
 
+    public void addOnSearchShowListener(OnSearchShowListener listener) {
+        onSearchShowListenerList.add(listener);
+    }
+
+    public void removeOnSearchShowListener(OnSearchShowListener listener) {
+        onSearchShowListenerList.remove(listener);
+    }
+
     private void notifyListenersOnSearchOpen() {
         for (OnSearchShowListener listener : onSearchShowListenerList) {
             listener.onSearchOpen();
@@ -583,13 +589,20 @@ public class MainSearchController implements SearchBarListener {
         }
     }
 
-
-    /**
-     * Listener for search fragment show states change
-     */
+    /** Listener for search fragment show states change */
     public interface OnSearchShowListener {
         void onSearchOpen();
 
         void onSearchClose();
+    }
+
+    @VisibleForTesting
+    void setDialpadFragment(DialpadFragment dialpadFragment) {
+        this.dialpadFragment = dialpadFragment;
+    }
+
+    @VisibleForTesting
+    void setSearchFragment(NewSearchFragment searchFragment) {
+        this.searchFragment = searchFragment;
     }
 }

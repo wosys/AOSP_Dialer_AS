@@ -21,9 +21,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 
-/**
- * Interface for peers of MainActivity.
- */
+/** Interface for peers of MainActivity. */
 public interface MainActivityPeer {
 
     void onActivityCreate(Bundle saveInstanceState);
@@ -48,9 +46,7 @@ public interface MainActivityPeer {
 
     boolean onBackPressed();
 
-    /**
-     * Supplies the MainActivityPeer
-     */
+    /** Supplies the MainActivityPeer */
     interface PeerSupplier {
 
         MainActivityPeer getPeer();
