@@ -22,16 +22,9 @@ import com.wintmain.dialer.inject.HasRootComponent;
 
 import dagger.Subcomponent;
 
-/**
- * Dagger component for the call log package.
- */
+/** Dagger component for the call log package. */
 @Subcomponent
 public abstract class CallLogComponent {
-
-    public static CallLogComponent get(Context context) {
-        return ((HasComponent) ((HasRootComponent) context.getApplicationContext()).component())
-                .callLogComponent();
-    }
 
     public abstract CallLogFramework callLogFramework();
 
@@ -41,9 +34,12 @@ public abstract class CallLogComponent {
 
     public abstract ClearMissedCalls getClearMissedCalls();
 
-    /**
-     * Used to refer to the root application component.
-     */
+    public static CallLogComponent get(Context context) {
+        return ((HasComponent) ((HasRootComponent) context.getApplicationContext()).component())
+                .callLogComponent();
+    }
+
+    /** Used to refer to the root application component. */
     public interface HasComponent {
         CallLogComponent callLogComponent();
     }

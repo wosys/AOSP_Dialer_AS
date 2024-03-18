@@ -39,9 +39,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * {@link HistoryItemActionModule} for deleting a call log item in the new call log.
- */
+/** {@link HistoryItemActionModule} for deleting a call log item in the new call log. */
 final class DeleteCallLogItemModule implements HistoryItemActionModule {
     private static final String TAG = DeleteCallLogItemModule.class.getName();
 
@@ -88,18 +86,6 @@ final class DeleteCallLogItemModule implements HistoryItemActionModule {
             contextWeakReference = new WeakReference<>(context);
         }
 
-        private static List<String> getCallLogIdsAsStrings(CoalescedIds coalescedIds) {
-            Assert.checkArgument(coalescedIds.getCoalescedIdCount() > 0);
-
-            List<String> idStrings = new ArrayList<>(coalescedIds.getCoalescedIdCount());
-
-            for (long callLogId : coalescedIds.getCoalescedIdList()) {
-                idStrings.add(String.valueOf(callLogId));
-            }
-
-            return idStrings;
-        }
-
         @Nullable
         @Override
         @RequiresPermission(value = permission.WRITE_CALL_LOG)
@@ -128,6 +114,18 @@ final class DeleteCallLogItemModule implements HistoryItemActionModule {
             }
 
             return null;
+        }
+
+        private static List<String> getCallLogIdsAsStrings(CoalescedIds coalescedIds) {
+            Assert.checkArgument(coalescedIds.getCoalescedIdCount() > 0);
+
+            List<String> idStrings = new ArrayList<>(coalescedIds.getCoalescedIdCount());
+
+            for (long callLogId : coalescedIds.getCoalescedIdList()) {
+                idStrings.add(String.valueOf(callLogId));
+            }
+
+            return idStrings;
         }
     }
 }

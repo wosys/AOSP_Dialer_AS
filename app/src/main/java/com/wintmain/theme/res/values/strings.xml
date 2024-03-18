@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <!-- Composed from https://www.iso.org/obp/ui/#search and
      https://github.com/googlei18n/libphonenumber/blob/master/javascript/i18n/phonenumbers/metadata.js#L34 -->
     <!-- Excluding ['Antarctica', 'Bouvet Island', 'French Southern Territories (the)', 'Heard Island and McDonald Islands', 'Pitcairn', 'South Georgia and the South Sandwich Islands', 'United States Minor Outlying Islands (the)'] -->
@@ -494,4 +494,43 @@
         <item>ZM</item>
         <item>ZW</item>
     </string-array>
+
+    <!-- CallLog UI START-->
+    <!--
+      A string informing a11y users that activating a call log entry will expand the menu
+      (a bottom sheet) for it.
+      [CHAR LIMIT=NONE]
+    -->
+    <string name="a11y_new_call_log_entry_tap_action">expand menu</string>
+
+    <!--
+      A string describing the call button of a call log entry for a11y users.
+      An example will be read as "call Jane Smith".
+      [CHAR LIMIT=NONE]
+    -->
+    <string name="a11y_new_call_log_entry_voice_call">
+    call <xliff:g example="Jane Smith" id="primaryTextForEntry">^1</xliff:g>
+  </string>
+
+    <!--
+      A string describing the call button of a call log entry for a11y users.
+      An example will be read as "make a video call to Jane Smith".
+      [CHAR LIMIT=NONE]
+    -->
+    <string name="a11y_new_call_log_entry_video_call">
+    make a video call to <xliff:g example="Jane Smith" id="primaryTextForEntry">^1</xliff:g>
+  </string>
+
+    <!-- Header in call log to group calls from the current day.  [CHAR LIMIT=30] -->
+    <string name="new_call_log_header_today">Today</string>
+
+    <!-- Header in call log to group calls from the previous day.  [CHAR LIMIT=30] -->
+    <string name="new_call_log_header_yesterday">Yesterday</string>
+
+    <!-- Header in call log to group calls from before yesterday.  [CHAR LIMIT=30] -->
+    <string name="new_call_log_header_older">Older</string>
+
+    <!-- Shown as a prompt to turn on the phone permission to enable the call log [CHAR LIMIT=NONE]-->
+    <string name="new_call_log_permission_no_calllog">To see your call log, turn on the Phone permission.</string>
+    <!-- CallLog UI END-->
 </resources>

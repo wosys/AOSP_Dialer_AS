@@ -57,19 +57,9 @@ public final class RefreshAnnotatedCallLogReceiver extends BroadcastReceiver {
     private final FutureTimer futureTimer;
     private final LoggingBindings logger;
 
-    @Nullable
-    private Runnable refreshAnnotatedCallLogRunnable;
+    @Nullable private Runnable refreshAnnotatedCallLogRunnable;
 
-    public RefreshAnnotatedCallLogReceiver(Context context) {
-        refreshAnnotatedCallLogWorker =
-                CallLogComponent.get(context).getRefreshAnnotatedCallLogWorker();
-        futureTimer = MetricsComponent.get(context).futureTimer();
-        logger = Logger.get(context);
-    }
-
-    /**
-     * Returns an {@link IntentFilter} containing all actions accepted by this broadcast receiver.
-     */
+    /** Returns an {@link IntentFilter} containing all actions accepted by this broadcast receiver. */
     public static IntentFilter getIntentFilter() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(IntentNames.ACTION_REFRESH_ANNOTATED_CALL_LOG);
@@ -77,22 +67,11 @@ public final class RefreshAnnotatedCallLogReceiver extends BroadcastReceiver {
         return intentFilter;
     }
 
-    private static DialerImpression.Type getImpressionType(
-            boolean checkDirty, RefreshResult refreshResult) {
-        switch (refreshResult) {
-            case NOT_DIRTY:
-                return DialerImpression.Type.ANNOTATED_CALL_LOG_NOT_DIRTY;
-            case REBUILT_BUT_NO_CHANGES_NEEDED:
-                return checkDirty
-                        ? DialerImpression.Type.ANNOTATED_CALL_LOG_NO_CHANGES_NEEDED
-                        : DialerImpression.Type.ANNOTATED_CALL_LOG_FORCE_REFRESH_NO_CHANGES_NEEDED;
-            case REBUILT_AND_CHANGES_NEEDED:
-                return checkDirty
-                        ? DialerImpression.Type.ANNOTATED_CALL_LOG_CHANGES_NEEDED
-                        : DialerImpression.Type.ANNOTATED_CALL_LOG_FORCE_REFRESH_CHANGES_NEEDED;
-            default:
-                throw new IllegalStateException("Unsupported result: " + refreshResult);
-        }
+    public RefreshAnnotatedCallLogReceiver(Context context) {
+        refreshAnnotatedCallLogWorker =
+                CallLogComponent.get(context).getRefreshAnnotatedCallLogWorker();
+        futureTimer = MetricsComponent.get(context).futureTimer();
+        logger = Logger.get(context);
     }
 
     @Override
@@ -146,7 +125,7 @@ public final class RefreshAnnotatedCallLogReceiver extends BroadcastReceiver {
                                 }
 
                                 @Override
-                                public void onFailure(@NonNull Throwable throwable) {
+                                public void onFailure(Throwable throwable) {
                                     ThreadUtil.getUiThreadHandler()
                                             .post(
                                                     () -> {
@@ -196,6 +175,24 @@ public final class RefreshAnnotatedCallLogReceiver extends BroadcastReceiver {
                 default:
                     throw new IllegalStateException("Unsupported result: " + refreshResult);
             }
+        }
+    }
+
+    private static DialerImpression.Type getImpressionType(
+            boolean checkDirty, RefreshResult refreshResult) {
+        switch (refreshResult) {
+            case NOT_DIRTY:
+                return DialerImpression.Type.ANNOTATED_CALL_LOG_NOT_DIRTY;
+            case REBUILT_BUT_NO_CHANGES_NEEDED:
+                return checkDirty
+                        ? DialerImpression.Type.ANNOTATED_CALL_LOG_NO_CHANGES_NEEDED
+                        : DialerImpression.Type.ANNOTATED_CALL_LOG_FORCE_REFRESH_NO_CHANGES_NEEDED;
+            case REBUILT_AND_CHANGES_NEEDED:
+                return checkDirty
+                        ? DialerImpression.Type.ANNOTATED_CALL_LOG_CHANGES_NEEDED
+                        : DialerImpression.Type.ANNOTATED_CALL_LOG_FORCE_REFRESH_CHANGES_NEEDED;
+            default:
+                throw new IllegalStateException("Unsupported result: " + refreshResult);
         }
     }
 }

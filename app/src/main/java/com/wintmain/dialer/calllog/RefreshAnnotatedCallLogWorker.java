@@ -19,8 +19,6 @@ package com.wintmain.dialer.calllog;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import androidx.annotation.NonNull;
-
 import com.wintmain.dialer.calllog.constants.SharedPrefKeys;
 import com.wintmain.dialer.calllog.database.MutationApplier;
 import com.wintmain.dialer.calllog.datasources.CallLogDataSource;
@@ -42,16 +40,12 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-/**
- * Brings the annotated call log up to date, if necessary.
- */
+/** Brings the annotated call log up to date, if necessary. */
 @Singleton
 public class RefreshAnnotatedCallLogWorker {
 
@@ -90,47 +84,19 @@ public class RefreshAnnotatedCallLogWorker {
         this.lightweightExecutorService = lightweightExecutorService;
     }
 
-    private static String eventNameForFill(CallLogDataSource dataSource, boolean isBuilt) {
-        return String.format(
-                !isBuilt ? Metrics.INITIAL_FILL_TEMPLATE : Metrics.FILL_TEMPLATE,
-                dataSource.getLoggingName());
+    /** Result of refreshing the annotated call log. */
+    public enum RefreshResult {
+        NOT_DIRTY,
+        REBUILT_BUT_NO_CHANGES_NEEDED,
+        REBUILT_AND_CHANGES_NEEDED
     }
 
-    private static String eventNameForOverallFill(boolean isBuilt) {
-        return !isBuilt ? Metrics.INITIAL_FILL_EVENT_NAME : Metrics.FILL_EVENT_NAME;
-    }
-
-    private static String eventNameForOnSuccessfulFill(
-            CallLogDataSource dataSource, boolean isBuilt) {
-        return String.format(
-                !isBuilt
-                        ? Metrics.INITIAL_ON_SUCCESSFUL_FILL_TEMPLATE
-                        : Metrics.ON_SUCCESSFUL_FILL_TEMPLATE,
-                dataSource.getLoggingName());
-    }
-
-    private static String eventNameForOverallOnSuccessfulFill(boolean isBuilt) {
-        return !isBuilt
-                ? Metrics.INITIAL_ON_SUCCESSFUL_FILL_EVENT_NAME
-                : Metrics.ON_SUCCESSFUL_FILL_EVENT_NAME;
-    }
-
-    private static String eventNameForApplyMutations(boolean isBuilt) {
-        return !isBuilt
-                ? Metrics.INITIAL_APPLY_MUTATIONS_EVENT_NAME
-                : Metrics.APPLY_MUTATIONS_EVENT_NAME;
-    }
-
-    /**
-     * Checks if the annotated call log is dirty and refreshes it if necessary.
-     */
+    /** Checks if the annotated call log is dirty and refreshes it if necessary. */
     ListenableFuture<RefreshResult> refreshWithDirtyCheck() {
         return refresh(true);
     }
 
-    /**
-     * Refreshes the annotated call log, bypassing dirty checks.
-     */
+    /** Refreshes the annotated call log, bypassing dirty checks. */
     ListenableFuture<RefreshResult> refreshWithoutDirtyCheck() {
         return refresh(false);
     }
@@ -205,7 +171,6 @@ public class RefreshAnnotatedCallLogWorker {
         return isDirtyFuture;
     }
 
-    @NonNull
     private ListenableFuture<RefreshResult> rebuild(boolean isBuilt) {
         CallLogMutations mutations = new CallLogMutations();
 
@@ -286,12 +251,34 @@ public class RefreshAnnotatedCallLogWorker {
                 backgroundExecutorService);
     }
 
-    /**
-     * Result of refreshing the annotated call log.
-     */
-    public enum RefreshResult {
-        NOT_DIRTY,
-        REBUILT_BUT_NO_CHANGES_NEEDED,
-        REBUILT_AND_CHANGES_NEEDED
+    private static String eventNameForFill(CallLogDataSource dataSource, boolean isBuilt) {
+        return String.format(
+                !isBuilt ? Metrics.INITIAL_FILL_TEMPLATE : Metrics.FILL_TEMPLATE,
+                dataSource.getLoggingName());
+    }
+
+    private static String eventNameForOverallFill(boolean isBuilt) {
+        return !isBuilt ? Metrics.INITIAL_FILL_EVENT_NAME : Metrics.FILL_EVENT_NAME;
+    }
+
+    private static String eventNameForOnSuccessfulFill(
+            CallLogDataSource dataSource, boolean isBuilt) {
+        return String.format(
+                !isBuilt
+                        ? Metrics.INITIAL_ON_SUCCESSFUL_FILL_TEMPLATE
+                        : Metrics.ON_SUCCESSFUL_FILL_TEMPLATE,
+                dataSource.getLoggingName());
+    }
+
+    private static String eventNameForOverallOnSuccessfulFill(boolean isBuilt) {
+        return !isBuilt
+                ? Metrics.INITIAL_ON_SUCCESSFUL_FILL_EVENT_NAME
+                : Metrics.ON_SUCCESSFUL_FILL_EVENT_NAME;
+    }
+
+    private static String eventNameForApplyMutations(boolean isBuilt) {
+        return !isBuilt
+                ? Metrics.INITIAL_APPLY_MUTATIONS_EVENT_NAME
+                : Metrics.APPLY_MUTATIONS_EVENT_NAME;
     }
 }

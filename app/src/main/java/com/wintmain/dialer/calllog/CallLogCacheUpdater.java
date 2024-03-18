@@ -39,11 +39,9 @@ import com.wintmain.dialer.protos.ProtoParsers;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Stream;
-
 import javax.inject.Inject;
 
 /**
@@ -52,16 +50,16 @@ import javax.inject.Inject;
  */
 public final class CallLogCacheUpdater {
 
+    private final Context appContext;
+    private final ListeningExecutorService backgroundExecutor;
+    private final CallLogState callLogState;
+
     /**
      * Maximum numbers of operations the updater can do. Each transaction to the system call log will
      * trigger a call log refresh, so the updater can only do a single batch. If there are more
      * operations it will be truncated. Under normal circumstances there will only be 1 operation
      */
-    @VisibleForTesting
-    static final int CACHE_UPDATE_LIMIT = 100;
-    private final Context appContext;
-    private final ListeningExecutorService backgroundExecutor;
-    private final CallLogState callLogState;
+    @VisibleForTesting static final int CACHE_UPDATE_LIMIT = 100;
 
     @Inject
     CallLogCacheUpdater(
@@ -138,7 +136,7 @@ public final class CallLogCacheUpdater {
                                             // other content observers such as the voicemail client.
                                             .withSelection(
                                                     Calls.CACHED_NAME + " IS NOT ?",
-                                                    new String[]{numberAttributes.getName()})
+                                                    new String[] {numberAttributes.getName()})
                                             .build());
                         });
         try {

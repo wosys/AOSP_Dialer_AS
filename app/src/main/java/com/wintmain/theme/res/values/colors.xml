@@ -18,4 +18,14 @@
     <color name="google_blue_50">#E8F0FE</color>
 
     <color name="google_grey_500">#9AA0A6</color>
+
+    <!-- CallLog UI START-->
+    <!-- TODO(a bug): remove these? -->
+    <color name="feature_icon_read_color">#9E9E9E</color>
+    <color name="feature_icon_unread_color">#474747</color>
+
+    <color name="call_type_icon_read_color">#757575</color>
+    <color name="call_type_icon_unread_color">#D32F2F</color>
+    <!-- CallLog UI END-->
+
 </resources>

@@ -16,27 +16,21 @@
 package com.wintmain.dialer.calllog.ui;
 
 import android.content.Context;
-
 import com.wintmain.dialer.inject.HasRootComponent;
-
 import dagger.Subcomponent;
 
-/**
- * Dagger component for the call log UI package.
- */
+/** Dagger component for the call log UI package. */
 @Subcomponent
 public abstract class CallLogUiComponent {
+
+    public abstract RealtimeRowProcessor realtimeRowProcessor();
 
     public static CallLogUiComponent get(Context context) {
         return ((HasComponent) ((HasRootComponent) context.getApplicationContext()).component())
                 .callLogUiComponent();
     }
 
-    public abstract RealtimeRowProcessor realtimeRowProcessor();
-
-    /**
-     * Used to refer to the root application component.
-     */
+    /** Used to refer to the root application component. */
     public interface HasComponent {
         CallLogUiComponent callLogUiComponent();
     }

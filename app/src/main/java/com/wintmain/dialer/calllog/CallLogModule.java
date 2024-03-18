@@ -24,13 +24,10 @@ import com.wintmain.dialer.calllog.datasources.systemcalllog.SystemCallLogDataSo
 import com.wintmain.dialer.inject.DialerVariant;
 import com.wintmain.dialer.inject.InstallIn;
 import com.google.common.collect.ImmutableList;
-
 import dagger.Module;
 import dagger.Provides;
 
-/**
- * Dagger module which satisfies call log dependencies.
- */
+/** Dagger module which satisfies call log dependencies. */
 @InstallIn(variants = {DialerVariant.DIALER_TEST})
 @Module(includes = CallLogDatabaseModule.class)
 public abstract class CallLogModule {

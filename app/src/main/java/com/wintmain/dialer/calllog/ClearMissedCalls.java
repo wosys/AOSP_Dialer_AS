@@ -36,9 +36,7 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
-
 import java.util.Collection;
-
 import javax.inject.Inject;
 
 /**
@@ -59,15 +57,6 @@ public final class ClearMissedCalls {
         this.appContext = appContext;
         this.backgroundExecutor = backgroundExecutor;
         this.uiThreadExecutor = uiThreadExecutor;
-    }
-
-    private static String[] toStrings(Collection<Long> longs) {
-        String[] strings = new String[longs.size()];
-        int i = 0;
-        for (long value : longs) {
-            strings[i++] = Long.toString(value);
-        }
-        return strings;
     }
 
     /**
@@ -171,5 +160,14 @@ public final class ClearMissedCalls {
                                     selection.getSelectionArgs());
                     return null;
                 });
+    }
+
+    private static String[] toStrings(Collection<Long> longs) {
+        String[] strings = new String[longs.size()];
+        int i = 0;
+        for (long value : longs) {
+            strings[i++] = Long.toString(value);
+        }
+        return strings;
     }
 }

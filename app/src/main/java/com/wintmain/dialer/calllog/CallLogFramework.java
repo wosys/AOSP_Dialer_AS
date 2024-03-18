@@ -30,10 +30,8 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -65,9 +63,7 @@ public final class CallLogFramework {
         this.callLogState = callLogState;
     }
 
-    /**
-     * Registers the content observers for all data sources.
-     */
+    /** Registers the content observers for all data sources. */
     public void registerContentObservers() {
         LogUtil.enterBlock("CallLogFramework.registerContentObservers");
         for (CallLogDataSource dataSource : dataSources.getDataSourcesIncludingSystemCallLog()) {
@@ -75,17 +71,13 @@ public final class CallLogFramework {
         }
     }
 
-    /**
-     * Enables the framework.
-     */
+    /** Enables the framework. */
     public ListenableFuture<Void> enable() {
         registerContentObservers();
         return annotatedCallLogMigrator.migrate();
     }
 
-    /**
-     * Disables the framework.
-     */
+    /** Disables the framework. */
     public ListenableFuture<Void> disable() {
         return Futures.transform(
                 Futures.allAsList(disableDataSources(), annotatedCallLogMigrator.clearData()),
@@ -111,7 +103,7 @@ public final class CallLogFramework {
         return Futures.transform(
                 Futures.allAsList(allFutures),
                 unused -> {
-                    // Send a broadcast to the MainActivityPeer to remove the NewCallLogFragment and
+                    // Send a broadcast to the OldMainActivityPeer to remove the NewCallLogFragment and
                     // NewVoicemailFragment if it is currently attached. If this is not done, user interaction
                     // with the fragment could cause call log framework state to be unexpectedly written. For
                     // example scrolling could cause the AnnotatedCallLog to be read (which would trigger

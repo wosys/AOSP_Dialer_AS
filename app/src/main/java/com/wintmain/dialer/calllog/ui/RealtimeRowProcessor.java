@@ -43,13 +43,11 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
-
 import javax.inject.Inject;
 
 /**
@@ -70,8 +68,7 @@ public final class RealtimeRowProcessor {
     /*
      * The time to wait between writing batches of records to PhoneLookupHistory.
      */
-    @VisibleForTesting
-    static final long BATCH_WAIT_MILLIS = TimeUnit.SECONDS.toMillis(3);
+    @VisibleForTesting static final long BATCH_WAIT_MILLIS = TimeUnit.SECONDS.toMillis(3);
 
     private final Context appContext;
     private final CompositePhoneLookup compositePhoneLookup;
@@ -124,9 +121,7 @@ public final class RealtimeRowProcessor {
                 uiExecutor /* ensures the cache is updated on a single thread */);
     }
 
-    /**
-     * Clears the internal cache.
-     */
+    /** Clears the internal cache. */
     @MainThread
     public void clearCache() {
         Assert.isMainThread();
@@ -197,7 +192,7 @@ public final class RealtimeRowProcessor {
                     }
 
                     @Override
-                    public void onFailure(@NonNull Throwable throwable) {
+                    public void onFailure(Throwable throwable) {
                         throw new RuntimeException(throwable);
                     }
                 },

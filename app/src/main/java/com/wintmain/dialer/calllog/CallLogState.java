@@ -25,13 +25,10 @@ import com.wintmain.dialer.common.concurrent.Annotations.BackgroundExecutor;
 import com.wintmain.dialer.storage.Unencrypted;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
-
 import javax.annotation.concurrent.ThreadSafe;
 import javax.inject.Inject;
 
-/**
- * Provides information about the state of the annotated call log.
- */
+/** Provides information about the state of the annotated call log. */
 @ThreadSafe
 public final class CallLogState {
 
