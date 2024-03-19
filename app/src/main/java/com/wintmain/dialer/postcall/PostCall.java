@@ -43,11 +43,7 @@ import com.wintmain.dialer.util.IntentUtil;
 import com.google.android.material.snackbar.BaseTransientBottomBar.BaseCallback;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.Objects;
-
-/**
- * Helper class to handle all post call actions.
- */
+/** Helper class to handle all post call actions. */
 public class PostCall {
 
     private static final String KEY_POST_CALL_CALL_DISCONNECT_TIME = "post_call_call_disconnect_time";
@@ -79,39 +75,32 @@ public class PostCall {
 
     private static void promptUserToSendMessage(Activity activity, View rootView) {
         LogUtil.i("PostCall.promptUserToSendMessage", "returned from call, showing post call SnackBar");
+        String number = Assert.isNotNull(getPhoneNumber(activity));
         String message = activity.getString(R.string.post_call_message);
         EnrichedCallManager manager = EnrichedCallComponent.get(activity).getEnrichedCallManager();
-        EnrichedCallCapabilities capabilities = manager.getCapabilities(Objects.requireNonNull(getPhoneNumber(activity)));
+        EnrichedCallCapabilities capabilities = manager.getCapabilities(number);
         LogUtil.i(
                 "PostCall.promptUserToSendMessage",
                 "number: %s, capabilities: %s",
-                LogUtil.sanitizePhoneNumber(getPhoneNumber(activity)),
-                capabilities);
+                LogUtil.sanitizePhoneNumber(number), capabilities);
 
         boolean isRcsPostCall = capabilities != null && capabilities.isPostCallCapable();
-        String actionText =
-                isRcsPostCall
-                        ? activity.getString(R.string.post_call_add_message)
-                        : activity.getString(R.string.post_call_send_message);
+        String actionText = isRcsPostCall ? activity.getString(R.string.post_call_add_message) : activity.getString(R.string.post_call_send_message);
 
-        String number = Assert.isNotNull(getPhoneNumber(activity));
         OnClickListener onClickListener =
                 v -> {
-                    Logger.get(activity)
-                            .logImpression(DialerImpression.Type.POST_CALL_PROMPT_USER_TO_SEND_MESSAGE_CLICKED);
-                    activity.startActivity(PostCallActivity.newIntent(activity, number, isRcsPostCall));
+                    Logger.get(activity).logImpression(
+                            DialerImpression.Type.POST_CALL_PROMPT_USER_TO_SEND_MESSAGE_CLICKED);
+                    activity.startActivity(
+                            PostCallActivity.newIntent(activity, number, isRcsPostCall));
                 };
 
-        int durationMs =
-                (int)
-                        ConfigProviderComponent.get(activity)
-                                .getConfigProvider()
-                                .getLong("post_call_prompt_duration_ms", 8_000);
-        activeSnackbar =
-                Snackbar.make(rootView, message, durationMs)
-                        .setAction(actionText, onClickListener)
-                        .setActionTextColor(
-                                activity.getResources().getColor(R.color.dialer_snackbar_action_text_color));
+        int durationMs = (int) ConfigProviderComponent.get(activity)
+                .getConfigProvider()
+                .getLong("post_call_prompt_duration_ms", 8_000);
+        activeSnackbar = Snackbar.make(rootView, message, durationMs)
+                .setAction(actionText, onClickListener)
+                .setActionTextColor(activity.getResources().getColor(R.color.dialer_snackbar_action_text_color));
         activeSnackbar.show();
         Logger.get(activity).logImpression(DialerImpression.Type.POST_CALL_PROMPT_USER_TO_SEND_MESSAGE);
         StorageComponent.get(activity)
@@ -137,19 +126,17 @@ public class PostCall {
                     DialerUtils.startActivityWithErrorToast(activity, intent);
                 };
 
-        activeSnackbar =
-                Snackbar.make(rootView, message, Snackbar.LENGTH_LONG)
-                        .setAction(addMessage, onClickListener)
-                        .setActionTextColor(
-                                activity.getResources().getColor(R.color.dialer_snackbar_action_text_color))
-                        .addCallback(
-                                new BaseCallback<Snackbar>() {
-                                    @Override
-                                    public void onDismissed(Snackbar snackbar, int i) {
-                                        super.onDismissed(snackbar, i);
-                                        clear(snackbar.getContext());
-                                    }
-                                });
+        activeSnackbar = Snackbar.make(rootView, message, Snackbar.LENGTH_LONG)
+                .setAction(addMessage, onClickListener)
+                .setActionTextColor(
+                        activity.getResources().getColor(R.color.dialer_snackbar_action_text_color))
+                .addCallback(new BaseCallback<Snackbar>() {
+                    @Override
+                    public void onDismissed(Snackbar snackbar, int i) {
+                        super.onDismissed(snackbar, i);
+                        clear(snackbar.getContext());
+                    }
+                });
         activeSnackbar.show();
         Logger.get(activity)
                 .logImpression(DialerImpression.Type.POST_CALL_PROMPT_USER_TO_VIEW_SENT_MESSAGE);

@@ -43,6 +43,8 @@ import com.wintmain.dialer.util.PermissionsUtil;
 import com.wintmain.dialer.widget.DialerToolbar;
 import com.wintmain.dialer.widget.MessageFragment;
 
+import java.util.Objects;
+
 /**
  * Activity used to send post call messages after a phone call.
  */
@@ -67,12 +69,15 @@ public class PostCallActivity extends AppCompatActivity implements MessageFragme
     protected void onCreate(@Nullable Bundle bundle) {
         Boolean conf = MainActivity.getBoolConfigUsingLatestAbout();
         if (!conf) {
-            DialerSettingsActivityCompt.PrefsFragment.ThemeButtonBehavior mThemeBehavior = getThemeButtonBehavior(MainActivityPeer.themeprefs);
+            DialerSettingsActivityCompt.PrefsFragment.ThemeButtonBehavior mThemeBehavior =
+                    getThemeButtonBehavior(MainActivityPeer.themeprefs);
 
-            if (mThemeBehavior == DialerSettingsActivityCompt.PrefsFragment.ThemeButtonBehavior.DARK) {
+            if (mThemeBehavior ==
+                    DialerSettingsActivityCompt.PrefsFragment.ThemeButtonBehavior.DARK) {
                 getTheme().applyStyle(R.style.DialerDark, true);
             }
-            if (mThemeBehavior == DialerSettingsActivityCompt.PrefsFragment.ThemeButtonBehavior.LIGHT) {
+            if (mThemeBehavior ==
+                    DialerSettingsActivityCompt.PrefsFragment.ThemeButtonBehavior.LIGHT) {
                 getTheme().applyStyle(R.style.DialerLight, true);
             }
         }
@@ -83,16 +88,12 @@ public class PostCallActivity extends AppCompatActivity implements MessageFragme
         useRcs = getIntent().getBooleanExtra(KEY_RCS_POST_CALL, false);
         LogUtil.i("PostCallActivity.onCreate", "useRcs: %b", useRcs);
 
-        int postCallCharLimit =
-                useRcs
-                        ? getResources().getInteger(R.integer.post_call_char_limit)
-                        : MessageFragment.NO_CHAR_LIMIT;
-        String[] messages =
-                new String[]{
-                        getString(R.string.post_call_message_1),
-                        getString(R.string.post_call_message_2),
-                        getString(R.string.post_call_message_3)
-                };
+        int postCallCharLimit = useRcs ? getResources().getInteger(R.integer.post_call_char_limit) : MessageFragment.NO_CHAR_LIMIT;
+        String[] messages = new String[] {
+                getString(R.string.post_call_message_1),
+                getString(R.string.post_call_message_2),
+                getString(R.string.post_call_message_3)
+        };
         MessageFragment fragment =
                 MessageFragment.builder()
                         .setCharLimit(postCallCharLimit)
@@ -111,15 +112,16 @@ public class PostCallActivity extends AppCompatActivity implements MessageFragme
         getIntent().putExtra(KEY_MESSAGE, message);
 
         if (useRcs) {
-            LogUtil.i("PostCallActivity.onMessageFragmentSendMessage", "sending post call Rcs.");
+            LogUtil.i("PostCallActivity.onMessageFragmentSendMessage",
+                    "sending post call Rcs.");
             getEnrichedCallManager().sendPostCallNote(number, message);
             PostCall.onMessageSent(this, number);
             finish();
         } else if (PermissionsUtil.hasPermission(this, permission.SEND_SMS)) {
             LogUtil.i("PostCallActivity.sendMessage", "Sending post call SMS.");
             SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendMultipartTextMessage(
-                    number, null, smsManager.divideMessage(message), null, null);
+            smsManager.sendMultipartTextMessage(number, null,
+                    smsManager.divideMessage(message), null, null);
             PostCall.onMessageSent(this, number);
             finish();
         } else if (PermissionsUtil.isFirstRequest(this, permission.SEND_SMS)
@@ -127,8 +129,8 @@ public class PostCallActivity extends AppCompatActivity implements MessageFragme
             LogUtil.i("PostCallActivity.sendMessage", "Requesting SMS_SEND permission.");
             requestPermissions(new String[]{permission.SEND_SMS}, REQUEST_CODE_SEND_SMS);
         } else {
-            LogUtil.i(
-                    "PostCallActivity.sendMessage", "Permission permanently denied, sending to settings.");
+            LogUtil.i("PostCallActivity.sendMessage",
+                    "Permission permanently denied, sending to settings.");
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -145,14 +147,14 @@ public class PostCallActivity extends AppCompatActivity implements MessageFragme
     public void onRequestPermissionsResult(
             int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (permissions.length > 0 && permissions[0].equals(permission.SEND_SMS)) {
             PermissionsUtil.permissionRequested(this, permissions[0]);
         }
         if (requestCode == REQUEST_CODE_SEND_SMS
                 && grantResults.length > 0
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            onMessageFragmentSendMessage(getIntent().getStringExtra(KEY_MESSAGE));
+            onMessageFragmentSendMessage(Objects.requireNonNull(getIntent()
+                    .getStringExtra(KEY_MESSAGE)));
         }
     }
 
