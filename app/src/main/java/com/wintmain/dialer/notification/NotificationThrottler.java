@@ -30,6 +30,8 @@ import com.wintmain.dialer.logging.DialerImpression;
 import com.wintmain.dialer.logging.Logger;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -49,9 +51,6 @@ class NotificationThrottler {
     private static final int HIGH_GLOBAL_NOTIFICATION_COUNT = 45;
 
     private static boolean didLogHighGlobalNotificationCountReached;
-
-    private NotificationThrottler() {
-    }
 
     /**
      * For all the active notifications in the same group as the provided notification, cancel the
@@ -118,7 +117,14 @@ class NotificationThrottler {
                 notifications.add(notification);
             }
         }
-        notifications.sort((left, right) -> Long.compare(left.getPostTime(), right.getPostTime()));
+        Collections.sort(
+                notifications,
+                new Comparator<StatusBarNotification>() {
+                    @Override
+                    public int compare(StatusBarNotification left, StatusBarNotification right) {
+                        return Long.compare(left.getPostTime(), right.getPostTime());
+                    }
+                });
         return notifications;
     }
 
@@ -131,4 +137,6 @@ class NotificationThrottler {
 
         return TextUtils.equals(groupKey, notification.getNotification().getGroup());
     }
+
+    private NotificationThrottler() {}
 }

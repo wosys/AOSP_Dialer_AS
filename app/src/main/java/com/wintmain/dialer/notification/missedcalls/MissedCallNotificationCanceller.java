@@ -25,21 +25,15 @@ import com.wintmain.dialer.common.LogUtil;
 import com.wintmain.dialer.notification.DialerNotificationManager;
 import com.wintmain.dialer.notification.NotificationManagerUtils;
 
-/**
- * Cancels missed calls notifications.
- */
+/** Cancels missed calls notifications. */
 public final class MissedCallNotificationCanceller {
 
-    /**
-     * Cancels all missed call notifications.
-     */
+    /** Cancels all missed call notifications. */
     public static void cancelAll(@NonNull Context context) {
         NotificationManagerUtils.cancelAllInGroup(context, MissedCallConstants.GROUP_KEY);
     }
 
-    /**
-     * Cancels a missed call notification for a single call.
-     */
+    /** Cancels a missed call notification for a single call. */
     public static void cancelSingle(@NonNull Context context, @Nullable Uri callUri) {
         if (callUri == null) {
             LogUtil.e(

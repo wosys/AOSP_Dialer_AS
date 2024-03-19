@@ -21,9 +21,7 @@ import androidx.annotation.StringDef;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-/**
- * Centralized source of all notification channels used by Dialer.
- */
+/** Centralized source of all notification channels used by Dialer. */
 @Retention(RetentionPolicy.SOURCE)
 @StringDef({
         NotificationChannelId.INCOMING_CALL,

@@ -25,13 +25,8 @@ import androidx.annotation.NonNull;
 
 import com.wintmain.dialer.common.Assert;
 
-/**
- * Utilities to manage notifications.
- */
+/** Utilities to manage notifications. */
 public final class NotificationManagerUtils {
-    private NotificationManagerUtils() {
-    }
-
     public static void cancelAllInGroup(@NonNull Context context, @NonNull String groupKey) {
         Assert.isNotNull(context);
         Assert.checkArgument(!TextUtils.isEmpty(groupKey));
@@ -43,4 +38,6 @@ public final class NotificationManagerUtils {
             }
         }
     }
+
+    private NotificationManagerUtils() {}
 }

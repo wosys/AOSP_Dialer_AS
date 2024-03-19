@@ -16,6 +16,7 @@
 
 package com.wintmain.dialer.notification;
 
+import android.annotation.TargetApi;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -31,13 +32,8 @@ import com.wintmain.dialer.common.LogUtil;
 
 import java.util.Set;
 
-/**
- * Creates all notification channels for Dialer.
- */
+/** Creates all notification channels for Dialer. */
 public final class NotificationChannelManager {
-
-    private NotificationChannelManager() {
-    }
 
     /**
      * Creates all the notification channels Dialer will need. This method is called at app startup
@@ -161,4 +157,6 @@ public final class NotificationChannelManager {
         channel.enableVibration(true);
         context.getSystemService(NotificationManager.class).createNotificationChannel(channel);
     }
+
+    private NotificationChannelManager() {}
 }

@@ -16,24 +16,16 @@
 
 package com.wintmain.dialer.notification.missedcalls;
 
-/**
- * Constants related to missed call notifications.
- */
+/** Constants related to missed call notifications. */
 public final class MissedCallConstants {
 
-    /**
-     * Prefix used to generate a unique tag for each missed call notification.
-     */
+    /** Prefix used to generate a unique tag for each missed call notification. */
     public static final String NOTIFICATION_TAG_PREFIX = "MissedCall_";
 
-    /**
-     * Common ID for all missed call notifications.
-     */
+    /** Common ID for all missed call notifications. */
     public static final int NOTIFICATION_ID = 1;
 
-    /**
-     * Tag for the group summary notification.
-     */
+    /** Tag for the group summary notification. */
     public static final String GROUP_SUMMARY_NOTIFICATION_TAG = "GroupSummary_MissedCall";
 
     /**

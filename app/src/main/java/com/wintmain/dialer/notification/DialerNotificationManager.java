@@ -31,7 +31,6 @@ import com.wintmain.dialer.common.Assert;
 import com.wintmain.dialer.common.LogUtil;
 
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -41,9 +40,6 @@ import java.util.Set;
 public final class DialerNotificationManager {
 
     private static final Set<StatusBarNotification> throttledNotificationSet = new HashSet<>();
-
-    private DialerNotificationManager() {
-    }
 
     public static void notify(@NonNull Context context, int id, @NonNull Notification notification) {
         Assert.isNotNull(context);
@@ -81,7 +77,7 @@ public final class DialerNotificationManager {
         String groupKey = findGroupKey(notifications, tag, id);
         if (!TextUtils.isEmpty(groupKey)) {
             Pair<StatusBarNotification, Integer> groupSummaryAndCount =
-                    getGroupSummaryAndCount(notifications, Objects.requireNonNull(groupKey));
+                    getGroupSummaryAndCount(notifications, groupKey);
             if (groupSummaryAndCount.first != null && groupSummaryAndCount.second <= 1) {
                 LogUtil.i(
                         "DialerNotificationManager.cancel",
@@ -146,4 +142,6 @@ public final class DialerNotificationManager {
     public static Set<StatusBarNotification> getThrottledNotificationSet() {
         return throttledNotificationSet;
     }
+
+    private DialerNotificationManager() {}
 }
