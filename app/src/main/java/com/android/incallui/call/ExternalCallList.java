@@ -22,7 +22,6 @@ import android.telecom.Call;
 import android.util.ArraySet;
 import androidx.annotation.NonNull;
 import com.android.contacts.common.compat.CallCompat;
-import com.android.incallui.entry.ExternalCallNotifier;
 import com.wintmain.dialer.common.Assert;
 import com.wintmain.dialer.common.LogUtil;
 import java.util.Collections;
@@ -39,19 +38,7 @@ public class ExternalCallList {
     private final Set<Call> externalCalls = new ArraySet<>();
     private final Set<ExternalCallListener> externalCallListeners =
             Collections.newSetFromMap(new ConcurrentHashMap<ExternalCallListener, Boolean>(8, 0.9f, 1));
-
-    /**
-     * Begins tracking an external call and notifies listeners of the new call.
-     */
-    public void onCallAdded(Call telecomCall) {
-        Assert.checkArgument(
-                telecomCall.getDetails().hasProperty(CallCompat.Details.PROPERTY_IS_EXTERNAL_CALL));
-        externalCalls.add(telecomCall);
-        telecomCall.registerCallback(telecomCallCallback, new Handler(Looper.getMainLooper()));
-        notifyExternalCallAdded(telecomCall);
-    }    /**
-     * Handles {@link android.telecom.Call.Callback} callbacks.
-     */
+    /** Handles {@link android.telecom.Call.Callback} callbacks. */
     private final Call.Callback telecomCallCallback =
             new Call.Callback() {
                 @Override
@@ -60,9 +47,16 @@ public class ExternalCallList {
                 }
             };
 
-    /**
-     * Stops tracking an external call and notifies listeners of the removal of the call.
-     */
+    /** Begins tracking an external call and notifies listeners of the new call. */
+    public void onCallAdded(Call telecomCall) {
+        Assert.checkArgument(
+                telecomCall.getDetails().hasProperty(CallCompat.Details.PROPERTY_IS_EXTERNAL_CALL));
+        externalCalls.add(telecomCall);
+        telecomCall.registerCallback(telecomCallCallback, new Handler(Looper.getMainLooper()));
+        notifyExternalCallAdded(telecomCall);
+    }
+
+    /** Stops tracking an external call and notifies listeners of the removal of the call. */
     public void onCallRemoved(Call telecomCall) {
         if (!externalCalls.contains(telecomCall)) {
             // This can happen on M for external calls from blocked numbers
@@ -74,16 +68,12 @@ public class ExternalCallList {
         notifyExternalCallRemoved(telecomCall);
     }
 
-    /**
-     * Adds a new listener to external call events.
-     */
+    /** Adds a new listener to external call events. */
     public void addExternalCallListener(@NonNull ExternalCallListener listener) {
         externalCallListeners.add(listener);
     }
 
-    /**
-     * Removes a listener to external call events.
-     */
+    /** Removes a listener to external call events. */
     public void removeExternalCallListener(@NonNull ExternalCallListener listener) {
         if (!externalCallListeners.contains(listener)) {
             LogUtil.i(
@@ -97,27 +87,21 @@ public class ExternalCallList {
         return externalCalls.contains(telecomCall);
     }
 
-    /**
-     * Notifies listeners of the addition of a new external call.
-     */
+    /** Notifies listeners of the addition of a new external call. */
     private void notifyExternalCallAdded(Call call) {
         for (ExternalCallListener listener : externalCallListeners) {
             listener.onExternalCallAdded(call);
         }
     }
 
-    /**
-     * Notifies listeners of the removal of an external call.
-     */
+    /** Notifies listeners of the removal of an external call. */
     private void notifyExternalCallRemoved(Call call) {
         for (ExternalCallListener listener : externalCallListeners) {
             listener.onExternalCallRemoved(call);
         }
     }
 
-    /**
-     * Notifies listeners of changes to an external call.
-     */
+    /** Notifies listeners of changes to an external call. */
     private void notifyExternalCallUpdated(Call call) {
         if (!call.getDetails().hasProperty(CallCompat.Details.PROPERTY_IS_EXTERNAL_CALL)) {
             // A previous external call has been pulled and is now a regular call, so we will remove
@@ -137,7 +121,7 @@ public class ExternalCallList {
 
     /**
      * Defines events which the {@link ExternalCallList} exposes to interested components (e.g. {@link
-     * ExternalCallNotifier ExternalCallNotifier}).
+     * com.android.incallui.entry.ExternalCallNotifier ExternalCallNotifier}).
      */
     public interface ExternalCallListener {
 

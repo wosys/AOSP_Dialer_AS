@@ -29,9 +29,7 @@ import com.wintmain.dialer.common.Assert;
 import com.wintmain.dialer.common.LogUtil;
 import java.util.List;
 
-/**
- * Wrapper around Telecom APIs.
- */
+/** Wrapper around Telecom APIs. */
 public class TelecomAdapter implements InCallServiceListener {
 
     private static final String ADD_CALL_MODE_KEY = "add_call_mode";
@@ -39,8 +37,7 @@ public class TelecomAdapter implements InCallServiceListener {
     private static TelecomAdapter instance;
     private InCallService inCallService;
 
-    private TelecomAdapter() {
-    }
+    private TelecomAdapter() {}
 
     @MainThread
     public static TelecomAdapter getInstance() {

@@ -23,15 +23,11 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * Class used to notify interested parties of incoming video related events.
- */
+/** Class used to notify interested parties of incoming video related events. */
 public class InCallVideoCallCallbackNotifier {
 
-    /**
-     * Singleton instance of this class.
-     */
-    private static final InCallVideoCallCallbackNotifier instance = new InCallVideoCallCallbackNotifier();
+    /** Singleton instance of this class. */
+    private static InCallVideoCallCallbackNotifier instance = new InCallVideoCallCallbackNotifier();
 
     /**
      * ConcurrentHashMap constructor params: 8 is initial table size, 0.9f is load factor before
@@ -40,15 +36,10 @@ public class InCallVideoCallCallbackNotifier {
     private final Set<SurfaceChangeListener> surfaceChangeListeners =
             Collections.newSetFromMap(new ConcurrentHashMap<SurfaceChangeListener, Boolean>(8, 0.9f, 1));
 
-    /**
-     * Private constructor. Instance should only be acquired through getRunningInstance().
-     */
-    private InCallVideoCallCallbackNotifier() {
-    }
+    /** Private constructor. Instance should only be acquired through getRunningInstance(). */
+    private InCallVideoCallCallbackNotifier() {}
 
-    /**
-     * Static singleton accessor method.
-     */
+    /** Static singleton accessor method. */
     public static InCallVideoCallCallbackNotifier getInstance() {
         return instance;
     }
@@ -77,8 +68,8 @@ public class InCallVideoCallCallbackNotifier {
     /**
      * Inform listeners of a change to peer dimensions.
      *
-     * @param call   The call.
-     * @param width  New peer width.
+     * @param call The call.
+     * @param width New peer width.
      * @param height New peer height.
      */
     public void peerDimensionsChanged(DialerCall call, int width, int height) {
@@ -90,8 +81,8 @@ public class InCallVideoCallCallbackNotifier {
     /**
      * Inform listeners of a change to camera dimensions.
      *
-     * @param call   The call.
-     * @param width  The new camera video width.
+     * @param call The call.
+     * @param width The new camera video width.
      * @param height The new camera video height.
      */
     public void cameraDimensionsChanged(DialerCall call, int width, int height) {
@@ -116,8 +107,8 @@ public class InCallVideoCallCallbackNotifier {
         /**
          * Called when the local camera changes dimensions. This occurs when a change in camera occurs.
          *
-         * @param call   The call which experienced the camera dimension change.
-         * @param width  The new camera video width.
+         * @param call The call which experienced the camera dimension change.
+         * @param width The new camera video width.
          * @param height The new camera video height.
          */
         void onCameraDimensionsChange(DialerCall call, int width, int height);

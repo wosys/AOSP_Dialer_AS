@@ -16,9 +16,7 @@
 
 package com.android.incallui.call.state;
 
-/**
- * Defines different states of {@link com.android.incallui.call.DialerCall}
- */
+/** Defines different states of {@link com.android.incallui.call.DialerCall} */
 public class DialerCallState {
 
     public static final int INVALID = 0;

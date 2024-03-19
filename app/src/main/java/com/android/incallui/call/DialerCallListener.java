@@ -16,9 +16,7 @@
 
 package com.android.incallui.call;
 
-/**
- * Used to monitor state changes in a dialer call.
- */
+/** Used to monitor state changes in a dialer call. */
 public interface DialerCallListener {
 
     void onDialerCallDisconnect();
@@ -31,11 +29,9 @@ public interface DialerCallListener {
 
     void onDialerCallUpgradeToVideo();
 
-    default void onDialerCallUpgradeToRtt(int rttRequestId) {
-    }
+    default void onDialerCallUpgradeToRtt(int rttRequestId) {}
 
-    default void onDialerCallSpeakEasyStateChange() {
-    }
+    default void onDialerCallSpeakEasyStateChange() {}
 
     void onDialerCallSessionModificationStateChange();
 

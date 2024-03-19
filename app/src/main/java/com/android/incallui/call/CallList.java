@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2017 The Android Open Source Project
- * Copyright 2023 wintmain
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -91,41 +90,40 @@ public class CallList implements DialerCallDelegate {
             Collections.newSetFromMap(new ConcurrentHashMap<DialerCall, Boolean>(8, 0.9f, 1));
 
     private UiListener uiListeners;
+    /** Handles the timeout for destroying disconnected calls. */
+    @SuppressLint("HandlerLeak")
+    private final Handler handler =
+            new Handler() {
+                @Override
+                public void handleMessage(Message msg) {
+                    switch (msg.what) {
+                        case EVENT_DISCONNECTED_TIMEOUT:
+                            LogUtil.d("CallList.handleMessage", "EVENT_DISCONNECTED_TIMEOUT ", msg.obj);
+                            finishDisconnectedCall((DialerCall) msg.obj);
+                            break;
+                        default:
+                            LogUtil.e("CallList.handleMessage", "Message not expected: " + msg.what);
+                            break;
+                    }
+                }
+            };
 
     /**
      * USED ONLY FOR TESTING Testing-only constructor. Instance should only be acquired through
      * getRunningInstance().
      */
     @VisibleForTesting
-    public CallList() {
-    }
+    public CallList() {}
 
     @VisibleForTesting
     public static void setCallListInstance(CallList callList) {
         instance = callList;
     }
 
-    /**
-     * Static singleton accessor method.
-     */
+    /** Static singleton accessor method. */
     public static CallList getInstance() {
         return instance;
-    }    /**
-     * Handles the timeout for destroying disconnected calls.
-     */
-    @SuppressLint("HandlerLeak")
-    private final Handler handler =
-            new Handler() {
-                @Override
-                public void handleMessage(Message msg) {
-                    if (msg.what == EVENT_DISCONNECTED_TIMEOUT) {
-                        LogUtil.d("CallList.handleMessage", "EVENT_DISCONNECTED_TIMEOUT ", msg.obj);
-                        finishDisconnectedCall((DialerCall) msg.obj);
-                    } else {
-                        LogUtil.e("CallList.handleMessage", "Message not expected: " + msg.what);
-                    }
-                }
-            };
+    }
 
     public void onCallAdded(
             final Context context, final android.telecom.Call telecomCall, LatencyReport latencyReport) {
@@ -168,7 +166,7 @@ public class CallList implements DialerCallDelegate {
                             boolean isIncomingCall =
                                     call.getState() == DialerCallState.INCOMING
                                             || call.getState() == DialerCallState.CALL_WAITING;
-                            boolean isSpam = Objects.requireNonNull(result).isSpam();
+                            boolean isSpam = result.isSpam();
                             call.setSpamStatus(result);
 
                             if (isIncomingCall) {
@@ -331,7 +329,7 @@ public class CallList implements DialerCallDelegate {
 
             // Don't log an already logged call. logCall() might be called multiple times
             // for the same call due to a bug.
-            if (Objects.requireNonNull(call).getLogState() != null && !call.getLogState().isLogged) {
+            if (call.getLogState() != null && !call.getLogState().isLogged) {
                 getLegacyBindings(context).logCall(call);
                 call.getLogState().isLogged = true;
             }
@@ -346,9 +344,7 @@ public class CallList implements DialerCallDelegate {
         }
     }
 
-    /**
-     * Called when a single call has changed.
-     */
+    /** Called when a single call has changed. */
     private void onIncoming(DialerCall call) {
         Trace.beginSection("CallList.onIncoming");
         if (updateCallInMap(call)) {
@@ -401,9 +397,7 @@ public class CallList implements DialerCallDelegate {
         return retval;
     }
 
-    /**
-     * A call that is waiting for {@link PhoneAccount} selection
-     */
+    /** A call that is waiting for {@link PhoneAccount} selection */
     public DialerCall getWaitingForAccountCall() {
         return getFirstCallWithState(DialerCallState.SELECT_PHONE_ACCOUNT);
     }
@@ -521,9 +515,7 @@ public class CallList implements DialerCallDelegate {
         return callById.values();
     }
 
-    /**
-     * Returns first call found in the call map with the specified state.
-     */
+    /** Returns first call found in the call map with the specified state. */
     public DialerCall getFirstCallWithState(int state) {
         return getCallWithState(state, 0);
     }
@@ -714,11 +706,11 @@ public class CallList implements DialerCallDelegate {
         return DialerCallState.IDLE == state || DialerCallState.INVALID == state;
     }
 
-    /**
-     * Sets up a call for deletion and notifies listeners of change.
-     */
+    /** Sets up a call for deletion and notifies listeners of change. */
     private void finishDisconnectedCall(DialerCall call) {
-        pendingDisconnectCalls.remove(call);
+        if (pendingDisconnectCalls.contains(call)) {
+            pendingDisconnectCalls.remove(call);
+        }
         call.setState(DialerCallState.IDLE);
         updateCallInMap(call);
         notifyGenericListeners();
@@ -777,18 +769,12 @@ public class CallList implements DialerCallDelegate {
          * Called when a new RTT call request comes in This is the only method that gets called for RTT
          * requests.
          */
-        default void onUpgradeToRtt(DialerCall call, int rttRequestId) {
-        }
+        default void onUpgradeToRtt(DialerCall call, int rttRequestId) {}
 
-        /**
-         * Called when the SpeakEasy state of a Dialer call is mutated.
-         */
-        default void onSpeakEasyStateChange() {
-        }
+        /** Called when the SpeakEasy state of a Dialer call is mutated. */
+        default void onSpeakEasyStateChange() {}
 
-        /**
-         * Called when the session modification state of a call changes.
-         */
+        /** Called when the session modification state of a call changes. */
         void onSessionModificationStateChange(DialerCall call);
 
         /**
@@ -813,32 +799,23 @@ public class CallList implements DialerCallDelegate {
          */
         void onHandoverToWifiFailed(DialerCall call);
 
-        /**
-         * Called when the user initiates a call to an international number while on WiFi.
-         */
+        /** Called when the user initiates a call to an international number while on WiFi. */
         void onInternationalCallOnWifi(@NonNull DialerCall call);
     }
 
-    /**
-     * UiListener interface for measuring incall latency.(used by testing only)
-     */
+    /** UiListener interface for measuring incall latency.(used by testing only) */
     public interface UiListener {
 
-        /**
-         * Called when a new call gets added into call list from IncallServiceImpl
-         */
+        /** Called when a new call gets added into call list from IncallServiceImpl */
         void onCallAdded();
 
-        /**
-         * Called in the end of onResume method of IncallActivityCommon.
-         */
+        /** Called in the end of onResume method of IncallActivityCommon. */
         void onInCallUiShown();
     }
 
     private class DialerCallListenerImpl implements DialerCallListener {
 
-        @NonNull
-        private final DialerCall call;
+        @NonNull private final DialerCall call;
 
         DialerCallListenerImpl(@NonNull DialerCall call) {
             this.call = Assert.isNotNull(call);
@@ -862,12 +839,10 @@ public class CallList implements DialerCallDelegate {
         }
 
         @Override
-        public void onDialerCallChildNumberChange() {
-        }
+        public void onDialerCallChildNumberChange() {}
 
         @Override
-        public void onDialerCallLastForwardedNumberChange() {
-        }
+        public void onDialerCallLastForwardedNumberChange() {}
 
         @Override
         public void onDialerCallUpgradeToRtt(int rttRequestId) {
@@ -913,8 +888,7 @@ public class CallList implements DialerCallDelegate {
         }
 
         @Override
-        public void onEnrichedCallSessionUpdate() {
-        }
+        public void onEnrichedCallSessionUpdate() {}
 
         @Override
         public void onDialerCallSessionModificationStateChange() {
@@ -923,6 +897,4 @@ public class CallList implements DialerCallDelegate {
             }
         }
     }
-
-
 }
