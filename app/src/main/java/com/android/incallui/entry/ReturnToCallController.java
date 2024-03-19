@@ -28,6 +28,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
+import androidx.core.content.ContextCompat;
 
 import com.android.bubble.Bubble;
 import com.android.bubble.BubbleComponent;
@@ -66,18 +67,30 @@ import java.util.List;
  */
 public class ReturnToCallController implements InCallUiListener, Listener, AudioModeListener {
 
-    private static Boolean canShowBubblesForTesting = null;
     private final Context context;
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    Bubble bubble;
+
+    private static Boolean canShowBubblesForTesting = null;
+
+    private CallAudioState audioState;
+
     private final PendingIntent toggleSpeaker;
     private final PendingIntent showSpeakerSelect;
     private final PendingIntent toggleMute;
     private final PendingIntent endCall;
     private final PendingIntent fullScreen;
+
     private final ContactInfoCache contactInfoCache;
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    Bubble bubble;
-    private CallAudioState audioState;
+
     private InCallState inCallState;
+
+    public static boolean isEnabled(Context context) {
+        return ConfigProviderComponent.get(context)
+                .getConfigProvider()
+                .getBoolean("enable_return_to_call_bubble_v2", false);
+    }
 
     public ReturnToCallController(Context context, ContactInfoCache contactInfoCache) {
         this.context = context;
@@ -94,30 +107,6 @@ public class ReturnToCallController implements InCallUiListener, Listener, Audio
         audioState = AudioModeProvider.getInstance().getAudioState();
         InCallPresenter.getInstance().addInCallUiListener(this);
         CallList.getInstance().addListener(this);
-    }
-
-    public static boolean isEnabled(Context context) {
-        return ConfigProviderComponent.get(context)
-                .getConfigProvider()
-                .getBoolean("enable_return_to_call_bubble_v2", false);
-    }
-
-    /**
-     * Determines whether bubbles can be shown based on permissions obtained. This should be checked
-     * before attempting to create a Bubble.
-     *
-     * @return true iff bubbles are able to be shown.
-     * @see Settings#canDrawOverlays(Context)
-     */
-    private static boolean canShowBubbles(@NonNull Context context) {
-        return canShowBubblesForTesting != null
-                ? canShowBubblesForTesting
-                : Settings.canDrawOverlays(context);
-    }
-
-    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
-    static void setCanShowBubblesForTesting(boolean canShowBubbles) {
-        canShowBubblesForTesting = canShowBubbles;
     }
 
     public void tearDown() {
@@ -163,6 +152,24 @@ public class ReturnToCallController implements InCallUiListener, Listener, Audio
         startContactInfoSearch();
     }
 
+    /**
+     * Determines whether bubbles can be shown based on permissions obtained. This should be checked
+     * before attempting to create a Bubble.
+     *
+     * @return true iff bubbles are able to be shown.
+     * @see Settings#canDrawOverlays(Context)
+     */
+    private static boolean canShowBubbles(@NonNull Context context) {
+        return canShowBubblesForTesting != null
+                ? canShowBubblesForTesting
+                : Settings.canDrawOverlays(context);
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
+    static void setCanShowBubblesForTesting(boolean canShowBubbles) {
+        canShowBubblesForTesting = canShowBubbles;
+    }
+
     private Bubble startBubble() {
         if (!canShowBubbles(context)) {
             LogUtil.i("ReturnToCallController.startBubble", "can't show bubble, no permission");
@@ -175,16 +182,13 @@ public class ReturnToCallController implements InCallUiListener, Listener, Audio
     }
 
     @Override
-    public void onIncomingCall(DialerCall call) {
-    }
+    public void onIncomingCall(DialerCall call) {}
 
     @Override
-    public void onUpgradeToVideo(DialerCall call) {
-    }
+    public void onUpgradeToVideo(DialerCall call) {}
 
     @Override
-    public void onSessionModificationStateChange(DialerCall call) {
-    }
+    public void onSessionModificationStateChange(DialerCall call) {}
 
     @Override
     public void onCallListChange(CallList callList) {
@@ -241,16 +245,13 @@ public class ReturnToCallController implements InCallUiListener, Listener, Audio
     }
 
     @Override
-    public void onWiFiToLteHandover(DialerCall call) {
-    }
+    public void onWiFiToLteHandover(DialerCall call) {}
 
     @Override
-    public void onHandoverToWifiFailed(DialerCall call) {
-    }
+    public void onHandoverToWifiFailed(DialerCall call) {}
 
     @Override
-    public void onInternationalCallOnWifi(@NonNull DialerCall call) {
-    }
+    public void onInternationalCallOnWifi(@NonNull DialerCall call) {}
 
     @Override
     public void onAudioStateChanged(CallAudioState audioState) {
@@ -324,8 +325,8 @@ public class ReturnToCallController implements InCallUiListener, Listener, Audio
         // Return to call
         actions.add(
                 Action.builder()
-                        .setIconDrawable(
-                                context.getDrawable(R.drawable.quantum_ic_exit_to_app_flip_vd_theme_24))
+                        .setIconDrawable(ContextCompat.getDrawable(context,
+                                R.drawable.quantum_ic_exit_to_app_flip_vd_theme_24))
                         .setIntent(fullScreen)
                         .setName(context.getText(R.string.bubble_return_to_call))
                         .setCheckable(false)
@@ -333,7 +334,8 @@ public class ReturnToCallController implements InCallUiListener, Listener, Audio
         // Mute/unmute
         actions.add(
                 Action.builder()
-                        .setIconDrawable(context.getDrawable(R.drawable.quantum_ic_mic_off_vd_theme_24))
+                        .setIconDrawable(ContextCompat.getDrawable(context,
+                                R.drawable.quantum_ic_mic_off_vd_theme_24))
                         .setChecked(audioState.isMuted())
                         .setIntent(toggleMute)
                         .setName(context.getText(R.string.incall_label_mute))
@@ -341,11 +343,11 @@ public class ReturnToCallController implements InCallUiListener, Listener, Audio
         // Speaker/audio selector
         actions.add(
                 Action.builder()
-                        .setIconDrawable(context.getDrawable(speakerButtonInfo.icon))
+                        .setIconDrawable(ContextCompat.getDrawable(context, speakerButtonInfo.icon))
                         .setSecondaryIconDrawable(
-                                speakerButtonInfo.nonBluetoothMode
-                                        ? null
-                                        : context.getDrawable(R.drawable.quantum_ic_arrow_drop_down_vd_theme_24))
+                                speakerButtonInfo.nonBluetoothMode ? null :
+                                        ContextCompat.getDrawable(context,
+                                                R.drawable.quantum_ic_arrow_drop_down_vd_theme_24))
                         .setName(context.getText(speakerButtonInfo.label))
                         .setCheckable(speakerButtonInfo.nonBluetoothMode)
                         .setChecked(speakerButtonInfo.isChecked)
@@ -354,7 +356,8 @@ public class ReturnToCallController implements InCallUiListener, Listener, Audio
         // End call
         actions.add(
                 Action.builder()
-                        .setIconDrawable(context.getDrawable(R.drawable.quantum_ic_call_end_vd_theme_24))
+                        .setIconDrawable(ContextCompat.getDrawable(context,
+                                R.drawable.quantum_ic_call_end_vd_theme_24))
                         .setIntent(endCall)
                         .setName(context.getText(R.string.incall_label_end_call))
                         .setCheckable(false)

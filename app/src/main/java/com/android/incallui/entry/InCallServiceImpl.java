@@ -23,16 +23,16 @@ import android.os.Trace;
 import android.telecom.Call;
 import android.telecom.CallAudioState;
 import android.telecom.InCallService;
+import android.util.Log;
 
-import com.android.incallui.Log;
+import com.wintmain.dialer.blocking.FilteredNumberAsyncQueryHandler;
+import com.wintmain.dialer.feedback.FeedbackComponent;
 import com.android.incallui.audiomode.AudioModeProvider;
 import com.android.incallui.call.CallList;
 import com.android.incallui.call.ExternalCallList;
 import com.android.incallui.call.TelecomAdapter;
 import com.android.incallui.speakeasy.SpeakEasyCallManager;
 import com.android.incallui.speakeasy.SpeakEasyComponent;
-import com.wintmain.dialer.blocking.FilteredNumberAsyncQueryHandler;
-import com.wintmain.dialer.feedback.FeedbackComponent;
 
 /**
  * Used to receive updates about calls from the Telecom component. This service is bound to Telecom
@@ -41,6 +41,8 @@ import com.wintmain.dialer.feedback.FeedbackComponent;
  * service triggering InCallActivity (via CallList) to finish soon after.
  */
 public class InCallServiceImpl extends InCallService {
+
+    private static final String TAG = "wintmain-InCallServiceImpl";
 
     private ReturnToCallController returnToCallController;
     private CallList.Listener feedbackListener;
@@ -96,6 +98,7 @@ public class InCallServiceImpl extends InCallService {
     @Override
     public IBinder onBind(Intent intent) {
         Trace.beginSection("InCallServiceImpl.onBind");
+        Log.d(TAG, "onBind");
         final Context context = getApplicationContext();
         final ContactInfoCache contactInfoCache = ContactInfoCache.getInstance(context);
         AudioModeProvider.getInstance().initializeAudioState(this);
@@ -107,8 +110,8 @@ public class InCallServiceImpl extends InCallService {
                         new StatusBarNotifier(context, contactInfoCache),
                         new ExternalCallNotifier(context, contactInfoCache),
                         contactInfoCache,
-                        new ProximitySensor(
-                                context, AudioModeProvider.getInstance(), new AccelerometerListener(context)),
+                        new ProximitySensor(context, AudioModeProvider.getInstance(),
+                                new AccelerometerListener(context)),
                         new FilteredNumberAsyncQueryHandler(context),
                         speakEasyCallManager);
         InCallPresenter.getInstance().onServiceBind();
@@ -138,7 +141,7 @@ public class InCallServiceImpl extends InCallService {
 
     private void tearDown() {
         Trace.beginSection("InCallServiceImpl.tearDown");
-        Log.v(this, "tearDown");
+        Log.d(TAG, "tearDown");
         // Tear down the InCall system
         InCallPresenter.getInstance().tearDown();
         TelecomAdapter.getInstance().clearInCallService();
