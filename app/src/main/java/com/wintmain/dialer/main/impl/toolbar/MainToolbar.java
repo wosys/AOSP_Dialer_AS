@@ -26,19 +26,16 @@ import android.widget.PopupMenu;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-
 import com.wintmain.dialer.R;
 import com.wintmain.dialer.common.Assert;
 import com.wintmain.dialer.common.LogUtil;
-import com.wintmain.dialer.main.impl.MainActivity;
 import com.wintmain.dialer.util.ViewUtil;
 
 import java.util.Optional;
 
-/**
- * Toolbar for {@link MainActivity}.
- */
+/** Toolbar for {@link com.wintmain.dialer.main.impl.MainActivity}. */
 public final class MainToolbar extends Toolbar implements PopupMenu.OnMenuItemClickListener {
 
     private static final int SLIDE_DURATION = 300;
@@ -77,9 +74,7 @@ public final class MainToolbar extends Toolbar implements PopupMenu.OnMenuItemCl
         searchBar.setSearchBarListener(listener);
     }
 
-    /**
-     * Slides the toolbar up and off the screen.
-     */
+    /** Slides the toolbar up and off the screen. */
     public void slideUp(boolean animate, View container) {
         if (hasGlobalLayoutListener) {
             // Return early since we've already scheduled the toolbar to slide up
@@ -115,9 +110,7 @@ public final class MainToolbar extends Toolbar implements PopupMenu.OnMenuItemCl
                 .start();
     }
 
-    /**
-     * Slides the toolbar down and back onto the screen.
-     */
+    /** Slides the toolbar down and back onto the screen. */
     public void slideDown(boolean animate, View container) {
         if (getTranslationY() == 0) {
             LogUtil.e("MainToolbar.slideDown", "Already slide down.");
@@ -136,16 +129,12 @@ public final class MainToolbar extends Toolbar implements PopupMenu.OnMenuItemCl
                 .start();
     }
 
-    /**
-     * @see SearchBarView#collapse(boolean)
-     */
+    /** @see SearchBarView#collapse(boolean) */
     public void collapse(boolean animate) {
         searchBar.collapse(animate);
     }
 
-    /**
-     * @see SearchBarView#expand(boolean, Optional, boolean)
-     */
+    /** @see SearchBarView#expand(boolean, Optional, boolean) */
     public void expand(boolean animate, Optional<String> text, boolean requestFocus) {
         searchBar.expand(animate, text, requestFocus);
     }
@@ -186,4 +175,7 @@ public final class MainToolbar extends Toolbar implements PopupMenu.OnMenuItemCl
         overflowMenu.showClearFrequents(show);
     }
 
+    public void maybeShowSimulator(AppCompatActivity appCompatActivity) {
+        overflowMenu.maybeShowSimulator(appCompatActivity);
+    }
 }

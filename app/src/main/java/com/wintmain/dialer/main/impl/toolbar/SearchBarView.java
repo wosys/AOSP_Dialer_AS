@@ -41,10 +41,8 @@ import com.wintmain.dialer.util.DialerUtils;
 
 import java.util.Optional;
 
-/**
- * Search bar for {@link MainToolbar}. Mostly used to handle expand and collapse animation.
- */
-public final class SearchBarView extends FrameLayout {
+/** Search bar for {@link MainToolbar}. Mostly used to handle expand and collapse animation. */
+final class SearchBarView extends FrameLayout {
 
     private static final int ANIMATION_DURATION = 200;
     private static final float EXPAND_MARGIN_FRACTION_START = 0.8f;
@@ -148,15 +146,13 @@ public final class SearchBarView extends FrameLayout {
                         if (requestFocus) {
                             searchBox.requestFocus();
                         }
-                        setBackgroundResource(R.drawable.search_bar_background_rounded_corners);
+                        setBackgroundResource(R.drawable.search_bar_background);
                     }
                 });
         animator.start();
     }
 
-    /**
-     * Collapse the search bar and clear it's text.
-     */
+    /** Collapse the search bar and clear it's text. */
     /* package-private */ void collapse(boolean animate) {
         if (!isExpanded) {
             return;
@@ -235,18 +231,14 @@ public final class SearchBarView extends FrameLayout {
         searchBoxTextView.setText(hint);
     }
 
-    /**
-     * Handles logic for text changes in the search box.
-     */
+    /** Handles logic for text changes in the search box. */
     private class SearchBoxTextWatcher implements TextWatcher {
 
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
         @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-        }
+        public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
         @Override
         public void afterTextChanged(Editable s) {

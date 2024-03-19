@@ -62,30 +62,27 @@ public final class BottomNavBar extends LinearLayout {
         callLog.setup(R.string.tab_title_call_history, R.drawable.quantum_ic_access_time_vd_theme_24);
         contacts.setup(R.string.tab_title_contacts, R.drawable.quantum_ic_people_vd_theme_24);
 
-        speedDial.setOnClickListener(
-                v -> {
-                    if (selectedTab != TabIndex.SPEED_DIAL) {
-                        Logger.get(getContext())
-                                .logImpression(DialerImpression.Type.MAIN_SWITCH_TAB_TO_FAVORITE);
-                    }
-                    selectTab(TabIndex.SPEED_DIAL);
-                });
-        callLog.setOnClickListener(
-                v -> {
-                    if (selectedTab != TabIndex.CALL_LOG) {
-                        Logger.get(getContext())
-                                .logImpression(DialerImpression.Type.MAIN_SWITCH_TAB_TO_CALL_LOG);
-                    }
-                    selectTab(TabIndex.CALL_LOG);
-                });
-        contacts.setOnClickListener(
-                v -> {
-                    if (selectedTab != TabIndex.CONTACTS) {
-                        Logger.get(getContext())
-                                .logImpression(DialerImpression.Type.MAIN_SWITCH_TAB_TO_CONTACTS);
-                    }
-                    selectTab(TabIndex.CONTACTS);
-                });
+        speedDial.setOnClickListener(v -> {
+            if (selectedTab != TabIndex.SPEED_DIAL) {
+                Logger.get(getContext())
+                        .logImpression(DialerImpression.Type.MAIN_SWITCH_TAB_TO_FAVORITE);
+            }
+            selectTab(TabIndex.SPEED_DIAL);
+        });
+        callLog.setOnClickListener(v -> {
+            if (selectedTab != TabIndex.CALL_LOG) {
+                Logger.get(getContext())
+                        .logImpression(DialerImpression.Type.MAIN_SWITCH_TAB_TO_CALL_LOG);
+            }
+            selectTab(TabIndex.CALL_LOG);
+        });
+        contacts.setOnClickListener(v -> {
+            if (selectedTab != TabIndex.CONTACTS) {
+                Logger.get(getContext())
+                        .logImpression(DialerImpression.Type.MAIN_SWITCH_TAB_TO_CONTACTS);
+            }
+            selectTab(TabIndex.CONTACTS);
+        });
     }
 
     private void setSelected(View view) {

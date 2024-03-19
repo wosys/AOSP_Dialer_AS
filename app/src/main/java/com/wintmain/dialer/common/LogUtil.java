@@ -18,37 +18,31 @@ package com.wintmain.dialer.common;
 
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.util.Objects;
-
-/**
- * Provides logging functions.
- */
+/** Provides logging functions. */
 public class LogUtil {
 
     public static final String TAG = "Dialer";
     private static final String SEPARATOR = " - ";
 
-    private LogUtil() {
-    }
+    private LogUtil() {}
 
     /**
      * Log at a verbose level. Verbose logs should generally be filtered out, but may be useful when
      * additional information is needed (e.g. to see how a particular flow evolved). These logs will
      * not generally be available on production builds.
      *
-     * @param tag  An identifier to allow searching for related logs. Generally of the form
-     *             'Class.method'.
-     * @param msg  The message you would like logged, possibly with format arguments.
+     * @param tag An identifier to allow searching for related logs. Generally of the form
+     *     'Class.method'.
+     * @param msg The message you would like logged, possibly with format arguments.
      * @param args Optional arguments to be used in the formatted string.
      * @see {@link String#format(String, Object...)}
      * @see {@link android.util.Log#v(String, String)}
      */
     public static void v(@NonNull String tag, @Nullable String msg, @Nullable Object... args) {
-        println(android.util.Log.VERBOSE, tag, msg, args);
+        println(android.util.Log.VERBOSE, TAG, tag, msg, args);
     }
 
     /**
@@ -56,40 +50,40 @@ public class LogUtil {
      * troubleshooting or evaluating flow. These logs will not generally be available on production
      * builds.
      *
-     * @param tag  An identifier to allow searching for related logs. Generally of the form
-     *             'Class.method'
-     * @param msg  The message you would like logged, possibly with format arguments
+     * @param tag An identifier to allow searching for related logs. Generally of the form
+     *     'Class.method'
+     * @param msg The message you would like logged, possibly with format arguments
      * @param args Optional arguments to be used in the formatted string
      * @see {@link String#format(String, Object...)}
      * @see {@link android.util.Log#d(String, String)}
      */
     public static void d(@NonNull String tag, @Nullable String msg, @Nullable Object... args) {
-        println(android.util.Log.DEBUG, tag, msg, args);
+        println(android.util.Log.DEBUG, TAG, tag, msg, args);
     }
 
     /**
      * Log at an info level. Info logs provide information that would be useful to have on production
      * builds for troubleshooting.
      *
-     * @param tag  An identifier to allow searching for related logs. Generally of the form
-     *             'Class.method'.
-     * @param msg  The message you would like logged, possibly with format arguments.
+     * @param tag An identifier to allow searching for related logs. Generally of the form
+     *     'Class.method'.
+     * @param msg The message you would like logged, possibly with format arguments.
      * @param args Optional arguments to be used in the formatted string.
      * @see {@link String#format(String, Object...)}
      * @see {@link android.util.Log#i(String, String)}
      */
     public static void i(@NonNull String tag, @Nullable String msg, @Nullable Object... args) {
-        println(android.util.Log.INFO, tag, msg, args);
+        println(android.util.Log.INFO, TAG, tag, msg, args);
     }
 
     /**
      * Log entry into a method at the info level.
      *
      * @param tag An identifier to allow searching for related logs. Generally of the form
-     *            'Class.method'.
+     *     'Class.method'.
      */
     public static void enterBlock(String tag) {
-        println(android.util.Log.INFO, tag, "enter");
+        println(android.util.Log.INFO, TAG, tag, "enter");
     }
 
     /**
@@ -98,15 +92,15 @@ public class LogUtil {
      * it is not guaranteed that an indeterminate or bad state was entered, just that something may
      * have gone wrong.
      *
-     * @param tag  An identifier to allow searching for related logs. Generally of the form
-     *             'Class.method'.
-     * @param msg  The message you would like logged, possibly with format arguments.
+     * @param tag An identifier to allow searching for related logs. Generally of the form
+     *     'Class.method'.
+     * @param msg The message you would like logged, possibly with format arguments.
      * @param args Optional arguments to be used in the formatted string.
      * @see {@link String#format(String, Object...)}
      * @see {@link android.util.Log#w(String, String)}
      */
     public static void w(@NonNull String tag, @Nullable String msg, @Nullable Object... args) {
-        println(android.util.Log.WARN, tag, msg, args);
+        println(android.util.Log.WARN, TAG, tag, msg, args);
     }
 
     /**
@@ -114,15 +108,15 @@ public class LogUtil {
      * possibly fatal. This is used to log information that will be useful for troubleshooting a crash
      * or other severe condition (e.g. error codes, state values, etc.).
      *
-     * @param tag  An identifier to allow searching for related logs. Generally of the form
-     *             'Class.method'.
-     * @param msg  The message you would like logged, possibly with format arguments.
+     * @param tag An identifier to allow searching for related logs. Generally of the form
+     *     'Class.method'.
+     * @param msg The message you would like logged, possibly with format arguments.
      * @param args Optional arguments to be used in the formatted string.
      * @see {@link String#format(String, Object...)}
      * @see {@link android.util.Log#e(String, String)}
      */
     public static void e(@NonNull String tag, @Nullable String msg, @Nullable Object... args) {
-        println(android.util.Log.ERROR, tag, msg, args);
+        println(android.util.Log.ERROR, TAG, tag, msg, args);
     }
 
     /**
@@ -130,9 +124,9 @@ public class LogUtil {
      * and is possibly fatal. This is used to log information that will be useful for troubleshooting
      * a crash or other severe condition (e.g. error codes, state values, etc.).
      *
-     * @param tag       An identifier to allow searching for related logs. Generally of the form
-     *                  'Class.method'.
-     * @param msg       The message you would like logged.
+     * @param tag An identifier to allow searching for related logs. Generally of the form
+     *     'Class.method'.
+     * @param msg The message you would like logged.
      * @param throwable The exception to log.
      * @see {@link String#format(String, Object...)}
      * @see {@link android.util.Log#e(String, String)}
@@ -141,6 +135,7 @@ public class LogUtil {
         if (!TextUtils.isEmpty(msg)) {
             println(
                     android.util.Log.ERROR,
+                    TAG,
                     tag,
                     msg + "\n" + android.util.Log.getStackTraceString(throwable));
         }
@@ -151,7 +146,7 @@ public class LogUtil {
      * default logging to avoid leaking PII in logcat.
      *
      * @return text as is if {@value #TAG}'s log level is set to DEBUG or VERBOSE or on non-release
-     * builds; returns a redacted version otherwise.
+     *     builds; returns a redacted version otherwise.
      */
     public static String sanitizePii(@Nullable Object object) {
         if (object == null) {
@@ -163,9 +158,7 @@ public class LogUtil {
         return "Redacted-" + object.toString().length() + "-chars";
     }
 
-    /**
-     * Anonymizes char to prevent logging personally identifiable information.
-     */
+    /** Anonymizes char to prevent logging personally identifiable information. */
     public static char sanitizeDialPadChar(char ch) {
         if (isDebugEnabled()) {
             return ch;
@@ -176,9 +169,7 @@ public class LogUtil {
         return ch;
     }
 
-    /**
-     * Anonymizes the phone number to prevent logging personally identifiable information.
-     */
+    /** Anonymizes the phone number to prevent logging personally identifiable information. */
     public static String sanitizePhoneNumber(@Nullable String phoneNumber) {
         if (isDebugEnabled()) {
             return phoneNumber;
@@ -207,6 +198,7 @@ public class LogUtil {
 
     private static void println(
             int level,
+            @NonNull String tag,
             @NonNull String localTag,
             @Nullable String msg,
             @Nullable Object... args) {
@@ -214,12 +206,12 @@ public class LogUtil {
         String formattedMsg;
         // Either null is passed as a single argument or more than one argument is passed.
         boolean hasArgs = args == null || args.length > 0;
-        if ((level >= android.util.Log.INFO) || android.util.Log.isLoggable(LogUtil.TAG, level)) {
+        if ((level >= android.util.Log.INFO) || android.util.Log.isLoggable(tag, level)) {
             formattedMsg = localTag;
             if (!TextUtils.isEmpty(msg)) {
-                formattedMsg += SEPARATOR + (hasArgs ? String.format(Objects.requireNonNull(msg), Objects.requireNonNull(args)) : msg);
+                formattedMsg += SEPARATOR + (hasArgs ? String.format(msg, args) : msg);
             }
-            android.util.Log.println(level, LogUtil.TAG, formattedMsg);
+            android.util.Log.println(level, tag, formattedMsg);
         }
     }
 }

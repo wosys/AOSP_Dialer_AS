@@ -18,64 +18,40 @@ package com.wintmain.dialer.main.impl.toolbar;
 
 import android.view.MenuItem;
 
-/**
- * Useful callback for {@link SearchBarView} listeners.
- */
+/** Useful callback for {@link SearchBarView} listeners. */
 public interface SearchBarListener {
 
-    /**
-     * Called when the user clicks on the search bar.
-     */
+    /** Called when the user clicks on the search bar. */
     void onSearchBarClicked();
 
-    /**
-     * Called when the search query updates.
-     */
+    /** Called when the search query updates. */
     void onSearchQueryUpdated(String query);
 
-    /**
-     * Called when the back button is clicked in the search bar.
-     */
+    /** Called when the back button is clicked in the search bar. */
     void onSearchBackButtonClicked();
 
-    /**
-     * Called when the voice search button is clicked.
-     */
+    /** Called when the voice search button is clicked. */
     void onVoiceButtonClicked(VoiceSearchResultCallback voiceSearchResultCallback);
 
-    /**
-     * Called when a toolbar menu item is clicked.
-     */
+    /** Called when a toolbar menu item is clicked. */
     boolean onMenuItemClicked(MenuItem menuItem);
 
-    /**
-     *
-     */
+    /** Called when {Activity#onPause()} is called. */
     void onActivityPause();
 
-    /**
-     *
-     */
+    /** Called when {AppCompatActivity#onUserLeaveHint()} is called. */
     void onUserLeaveHint();
 
-    /**
-     * Called when the user places a call from search (regular or dialpad).
-     */
+    /** Called when the user places a call from search (regular or dialpad). */
     void onCallPlacedFromSearch();
 
-    /**
-     * Called when a permission is about to be requested.
-     */
+    /** Called when a permission is about to be requested. */
     void requestingPermission();
 
-    /**
-     * Interface for returning voice results to the search bar.
-     */
+    /** Interface for returning voice results to the search bar. */
     interface VoiceSearchResultCallback {
 
-        /**
-         * Sets the voice results in the search bar and expands the search UI.
-         */
+        /** Sets the voice results in the search bar and expands the search UI. */
         void setResult(String result);
     }
 }
