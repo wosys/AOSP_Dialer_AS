@@ -413,10 +413,6 @@
     <string name="notification_action_speaker_on">開啟喇叭</string>
     <string name="notification_call_wifi_brand">Wi-Fi 通話</string>
     <string name="notification_call_wifi_work_brand">Wi-Fi 公司通話</string>
-    <string name="notification_channel_incoming_call">來電</string>
-    <string name="notification_channel_misc">預設</string>
-    <string name="notification_channel_missed_call">未接來電</string>
-    <string name="notification_channel_ongoing_call">進行中的通話</string>
     <string name="notification_dialing">撥號中</string>
     <string name="notification_external_call">其他裝置上有進行中的通話</string>
     <string name="notification_external_video_call">其他裝置上有進行中的視訊通話</string>

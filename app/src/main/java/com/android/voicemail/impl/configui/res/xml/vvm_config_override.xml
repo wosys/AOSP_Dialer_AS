@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2017 The Android Open Source Project
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2017 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -14,55 +15,62 @@
 -->
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <Preference
-        android:key="@string/vvm_config_override_load_current_key"
-        android:title="Load current" />
+  <Preference
+    android:key="@string/vvm_config_override_load_current_key"
+    android:title="Load current"/>
 
-    <SwitchPreference
-        android:defaultValue="false"
-        android:key="@string/vvm_config_override_enabled_key"
-        android:title="Override enabled" />
+  <SwitchPreference
+      android:key="@string/vvm_config_override_enabled_key"
+      android:title="Override enabled"
+      android:defaultValue="false"/>
 
-    <!-- Keys should be a key in CarrierConfigManager prefixed with "vvm_config_override_key_" -->
-    <EditTextPreference
-        android:defaultValue="vvm_type_omtp"
-        android:key="vvm_config_override_key_vvm_type_string"
-        android:title="type" />
+  <!-- Keys should be a key in CarrierConfigManager prefixed with "vvm_config_override_key_" -->
+  <EditTextPreference
+    android:key="vvm_config_override_key_vvm_type_string"
+      android:title="type"
+      android:defaultValue="vvm_type_omtp"
+    />
 
-    <EditTextPreference
-        android:key="vvm_config_override_key_vvm_destination_number_string"
-        android:title="destination number" />
+  <EditTextPreference
+      android:key="vvm_config_override_key_vvm_destination_number_string"
+      android:title="destination number"
+      />
 
-    <EditTextPreference
-        android:key="vvm_config_override_key_vvm_port_number_int"
-        android:title="destination port" />
-    <EditTextPreference
-        android:key="vvm_config_override_key_carrier_vvm_package_name_string_array"
-        android:title="vvm package name (CSV)" />
+  <EditTextPreference
+      android:key="vvm_config_override_key_vvm_port_number_int"
+      android:title="destination port"
+      />
+  <EditTextPreference
+      android:key="vvm_config_override_key_carrier_vvm_package_name_string_array"
+      android:title="vvm package name (CSV)"
+      />
 
-    <SwitchPreference
-        android:defaultValue="true"
-        android:key="vvm_config_override_key_vvm_prefetch_bool"
-        android:title="prefetch" />
+  <SwitchPreference
+      android:key="vvm_config_override_key_vvm_prefetch_bool"
+      android:title="prefetch"
+      android:defaultValue="true"/>
 
-    <SwitchPreference
-        android:defaultValue="false"
-        android:key="vvm_config_override_key_vvm_cellular_data_required_bool"
-        android:title="cellular data required" />
-    <EditTextPreference
-        android:key="vvm_config_override_key_vvm_ssl_port_number_int"
-        android:title="SSL port" />
+  <SwitchPreference
+      android:key="vvm_config_override_key_vvm_cellular_data_required_bool"
+      android:title="cellular data required"
+      android:defaultValue="false"/>
+  <EditTextPreference
+      android:key="vvm_config_override_key_vvm_ssl_port_number_int"
+      android:title="SSL port"
+      />
 
-    <SwitchPreference
-        android:defaultValue="false"
-        android:key="vvm_config_override_key_vvm_legacy_mode_enabled_bool"
-        android:title="legacy mode" />
+  <SwitchPreference
+      android:key="vvm_config_override_key_vvm_legacy_mode_enabled_bool"
+      android:title="legacy mode"
+      android:defaultValue="false"/>
 
-    <EditTextPreference
-        android:key="vvm_config_override_key_vvm_disabled_capabilities_string_array"
-        android:title="disabled capabilities (CSV)" />
+  <EditTextPreference
+      android:key="vvm_config_override_key_vvm_disabled_capabilities_string_array"
+      android:title="disabled capabilities (CSV)"
+      />
 
-    <EditTextPreference
-        android:key="vvm_config_override_key_vvm_client_prefix_string"
-        android:title="client prefix" />
+  <EditTextPreference
+      android:key="vvm_config_override_key_vvm_client_prefix_string"
+      android:title="client prefix"
+      />
 </PreferenceScreen>

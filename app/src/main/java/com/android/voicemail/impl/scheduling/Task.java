@@ -22,7 +22,6 @@ import android.telecom.PhoneAccountHandle;
 
 import androidx.annotation.MainThread;
 import androidx.annotation.WorkerThread;
-
 import java.util.Objects;
 
 /**
@@ -50,6 +49,41 @@ public interface Task {
     int TASK_SYNC = 2;
     int TASK_ACTIVATION = 3;
     int TASK_STATUS_CHECK = 4;
+
+    /**
+     * Used to differentiate between types of tasks. If a task with the same TaskId is already in the
+     * queue the new task will be rejected.
+     */
+    class TaskId {
+
+        /** Indicates the operation type of the task. */
+        public final int id;
+        /**
+         * Same operation for a different phoneAccountHandle is allowed. phoneAccountHandle is used to
+         * differentiate phone accounts in multi-SIM scenario. For example, each SIM can queue a sync
+         * task for their own.
+         */
+        public final PhoneAccountHandle phoneAccountHandle;
+
+        public TaskId(int id, PhoneAccountHandle phoneAccountHandle) {
+            this.id = id;
+            this.phoneAccountHandle = phoneAccountHandle;
+        }
+
+        @Override
+        public boolean equals(Object object) {
+            if (!(object instanceof TaskId)) {
+                return false;
+            }
+            TaskId other = (TaskId) object;
+            return id == other.id && phoneAccountHandle.equals(other.phoneAccountHandle);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(id, phoneAccountHandle);
+        }
+    }
 
     TaskId getId();
 
@@ -79,10 +113,10 @@ public interface Task {
 
     /**
      * @return number of milliSeconds the scheduler should wait before running this task. A value less
-     * than {@link TaskExecutor#READY_TOLERANCE_MILLISECONDS} will be considered ready. If no
-     * tasks are ready, the scheduler will sleep for this amount of time before doing another
-     * check (it will still wake if a new task is added). The first task in the queue that is
-     * ready will be executed.
+     *     than {@link TaskExecutor# READY_TOLERANCE_MILLISECONDS} will be considered ready. If no
+     *     tasks are ready, the scheduler will sleep for this amount of time before doing another
+     *     check (it will still wake if a new task is added). The first task in the queue that is
+     *     ready will be executed.
      */
     @MainThread
     long getReadyInMilliSeconds();
@@ -94,9 +128,7 @@ public interface Task {
     @MainThread
     void onBeforeExecute();
 
-    /**
-     * The actual payload of the task, executed on the worker thread.
-     */
+    /** The actual payload of the task, executed on the worker thread. */
     @WorkerThread
     void onExecuteInBackgroundThread();
 
@@ -114,40 +146,4 @@ public interface Task {
      */
     @MainThread
     void onDuplicatedTaskAdded(Task task);
-
-    /**
-     * Used to differentiate between types of tasks. If a task with the same TaskId is already in the
-     * queue the new task will be rejected.
-     */
-    class TaskId {
-
-        /**
-         * Indicates the operation type of the task.
-         */
-        public final int id;
-        /**
-         * Same operation for a different phoneAccountHandle is allowed. phoneAccountHandle is used to
-         * differentiate phone accounts in multi-SIM scenario. For example, each SIM can queue a sync
-         * task for their own.
-         */
-        public final PhoneAccountHandle phoneAccountHandle;
-
-        public TaskId(int id, PhoneAccountHandle phoneAccountHandle) {
-            this.id = id;
-            this.phoneAccountHandle = phoneAccountHandle;
-        }
-
-        @Override
-        public boolean equals(Object object) {
-            if (!(object instanceof TaskId other)) {
-                return false;
-            }
-          return id == other.id && phoneAccountHandle.equals(other.phoneAccountHandle);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(id, phoneAccountHandle);
-        }
-    }
 }

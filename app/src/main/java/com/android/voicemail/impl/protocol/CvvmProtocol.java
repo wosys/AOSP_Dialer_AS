@@ -18,7 +18,6 @@ package com.android.voicemail.impl.protocol;
 
 import android.content.Context;
 import android.telecom.PhoneAccountHandle;
-
 import com.android.voicemail.impl.OmtpConstants;
 import com.android.voicemail.impl.sms.OmtpCvvmMessageSender;
 import com.android.voicemail.impl.sms.OmtpMessageSender;
@@ -30,31 +29,31 @@ import com.android.voicemail.impl.sms.OmtpMessageSender;
  */
 public class CvvmProtocol extends VisualVoicemailProtocol {
 
-    private static final String IMAP_CHANGE_TUI_PWD_FORMAT = "CHANGE_TUI_PWD PWD=%1$s OLD_PWD=%2$s";
-    private static final String IMAP_CHANGE_VM_LANG_FORMAT = "CHANGE_VM_LANG Lang=%1$s";
-    private static final String IMAP_CLOSE_NUT = "CLOSE_NUT";
+  private static String IMAP_CHANGE_TUI_PWD_FORMAT = "CHANGE_TUI_PWD PWD=%1$s OLD_PWD=%2$s";
+  private static String IMAP_CHANGE_VM_LANG_FORMAT = "CHANGE_VM_LANG Lang=%1$s";
+  private static String IMAP_CLOSE_NUT = "CLOSE_NUT";
 
-    @Override
-    public OmtpMessageSender createMessageSender(
-            Context context,
-            PhoneAccountHandle phoneAccountHandle,
-            short applicationPort,
-            String destinationNumber) {
-        return new OmtpCvvmMessageSender(
-                context, phoneAccountHandle, applicationPort, destinationNumber);
-    }
+  @Override
+  public OmtpMessageSender createMessageSender(
+      Context context,
+      PhoneAccountHandle phoneAccountHandle,
+      short applicationPort,
+      String destinationNumber) {
+    return new OmtpCvvmMessageSender(
+        context, phoneAccountHandle, applicationPort, destinationNumber);
+  }
 
-    @Override
-    public String getCommand(String command) {
-        if (command == OmtpConstants.IMAP_CHANGE_TUI_PWD_FORMAT) {
-            return IMAP_CHANGE_TUI_PWD_FORMAT;
-        }
-        if (command == OmtpConstants.IMAP_CLOSE_NUT) {
-            return IMAP_CLOSE_NUT;
-        }
-        if (command == OmtpConstants.IMAP_CHANGE_VM_LANG_FORMAT) {
-            return IMAP_CHANGE_VM_LANG_FORMAT;
-        }
-        return super.getCommand(command);
+  @Override
+  public String getCommand(String command) {
+    if (command == OmtpConstants.IMAP_CHANGE_TUI_PWD_FORMAT) {
+      return IMAP_CHANGE_TUI_PWD_FORMAT;
     }
+    if (command == OmtpConstants.IMAP_CLOSE_NUT) {
+      return IMAP_CLOSE_NUT;
+    }
+    if (command == OmtpConstants.IMAP_CHANGE_VM_LANG_FORMAT) {
+      return IMAP_CHANGE_VM_LANG_FORMAT;
+    }
+    return super.getCommand(command);
+  }
 }

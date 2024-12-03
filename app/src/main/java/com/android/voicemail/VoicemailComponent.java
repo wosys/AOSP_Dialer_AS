@@ -23,22 +23,18 @@ import com.wintmain.dialer.inject.IncludeInDialerRoot;
 
 import dagger.Subcomponent;
 
-/**
- * Subcomponent that can be used to access the voicemail implementation.
- */
+/** Subcomponent that can be used to access the voicemail implementation. */
 @Subcomponent
 public abstract class VoicemailComponent {
+
+    public abstract VoicemailClient getVoicemailClient();
 
     public static VoicemailComponent get(Context context) {
         return ((HasComponent) ((HasRootComponent) context.getApplicationContext()).component())
                 .voicemailComponent();
     }
 
-    public abstract VoicemailClient getVoicemailClient();
-
-    /**
-     * Used to refer to the root application component.
-     */
+    /** Used to refer to the root application component. */
     @IncludeInDialerRoot
     public interface HasComponent {
         VoicemailComponent voicemailComponent();

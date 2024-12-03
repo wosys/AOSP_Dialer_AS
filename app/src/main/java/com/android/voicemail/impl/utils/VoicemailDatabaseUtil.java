@@ -24,7 +24,6 @@ import android.provider.VoicemailContract.Voicemails;
 import android.telecom.PhoneAccountHandle;
 
 import com.android.voicemail.impl.Voicemail;
-
 import java.util.List;
 
 public class VoicemailDatabaseUtil {
@@ -32,7 +31,7 @@ public class VoicemailDatabaseUtil {
     /**
      * Inserts a new voicemail into the voicemail content provider.
      *
-     * @param context   The context of the app doing the inserting
+     * @param context The context of the app doing the inserting
      * @param voicemail Data to be inserted
      * @return {@link Uri} of the newly inserted {@link Voicemail}
      * @hide
@@ -47,7 +46,7 @@ public class VoicemailDatabaseUtil {
     /**
      * Inserts a list of voicemails into the voicemail content provider.
      *
-     * @param context    The context of the app doing the inserting
+     * @param context The context of the app doing the inserting
      * @param voicemails Data to be inserted
      * @return the number of voicemails inserted
      * @hide
@@ -59,9 +58,7 @@ public class VoicemailDatabaseUtil {
         return voicemails.size();
     }
 
-    /**
-     * Maps structured {@link Voicemail} to {@link ContentValues} in content provider.
-     */
+    /** Maps structured {@link Voicemail} to {@link ContentValues} in content provider. */
     private static ContentValues getContentValues(Voicemail voicemail) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(Voicemails.DATE, String.valueOf(voicemail.getTimestampMillis()));

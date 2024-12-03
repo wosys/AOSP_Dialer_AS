@@ -22,23 +22,9 @@ import android.os.Parcelable;
 import android.telecom.PhoneAccountHandle;
 import android.text.TextUtils;
 
-/**
- * Represents a single voicemail stored in the voicemail content provider.
- */
+/** Represents a single voicemail stored in the voicemail content provider. */
 public class Voicemail implements Parcelable {
 
-    public static final Creator<Voicemail> CREATOR =
-            new Creator<Voicemail>() {
-                @Override
-                public Voicemail createFromParcel(Parcel in) {
-                    return new Voicemail(in);
-                }
-
-                @Override
-                public Voicemail[] newArray(int size) {
-                    return new Voicemail[size];
-                }
-            };
     private final Long timestamp;
     private final String number;
     private final PhoneAccountHandle phoneAccount;
@@ -76,28 +62,6 @@ public class Voicemail implements Parcelable {
         this.transcription = transcription;
     }
 
-    private Voicemail(Parcel in) {
-        timestamp = in.readLong();
-        number = (String) readCharSequence(in);
-        if (in.readInt() > 0) {
-            phoneAccount = PhoneAccountHandle.CREATOR.createFromParcel(in);
-        } else {
-            phoneAccount = null;
-        }
-        id = in.readLong();
-        duration = in.readLong();
-        source = (String) readCharSequence(in);
-        providerData = (String) readCharSequence(in);
-        if (in.readInt() > 0) {
-            uri = Uri.CREATOR.createFromParcel(in);
-        } else {
-            uri = null;
-        }
-        isRead = in.readInt() > 0;
-        hasContent = in.readInt() > 0;
-        transcription = (String) readCharSequence(in);
-    }
-
     /**
      * Create a {@link Builder} for a new {@link Voicemail} to be inserted.
      *
@@ -115,143 +79,6 @@ public class Voicemail implements Parcelable {
      */
     public static Builder createForUpdate(long id, String sourceData) {
         return new Builder().setId(id).setSourceData(sourceData);
-    }
-
-    private static CharSequence readCharSequence(Parcel in) {
-        return TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(in);
-    }
-
-    public static void writeCharSequence(Parcel dest, CharSequence val) {
-        TextUtils.writeToParcel(val, dest, 0);
-    }
-
-    /**
-     * The identifier of the voicemail in the content provider.
-     *
-     * <p>This may be missing in the case of a new {@link Voicemail} that we plan to insert into the
-     * content provider, since until it has been inserted we don't know what id it should have. If
-     * none is specified, we return -1.
-     */
-    public long getId() {
-        return id;
-    }
-
-    /**
-     * The number of the person leaving the voicemail, empty string if unknown, null if not set.
-     */
-    public String getNumber() {
-        return number;
-    }
-
-    /**
-     * The phone account associated with the voicemail, null if not set.
-     */
-    public PhoneAccountHandle getPhoneAccount() {
-        return phoneAccount;
-    }
-
-    /**
-     * The timestamp the voicemail was received, in millis since the epoch, zero if not set.
-     */
-    public long getTimestampMillis() {
-        return timestamp;
-    }
-
-    /**
-     * Gets the duration of the voicemail in millis, or zero if the field is not set.
-     */
-    public long getDuration() {
-        return duration;
-    }
-
-    /**
-     * Returns the package name of the source that added this voicemail, or null if this field is not
-     * set.
-     */
-    public String getSourcePackage() {
-        return source;
-    }
-
-    /**
-     * Returns the application-specific data type stored with the voicemail, or null if this field is
-     * not set.
-     *
-     * <p>Source data is typically used as an identifier to uniquely identify the voicemail against
-     * the voicemail server. This is likely to be something like the IMAP UID, or some other
-     * server-generated identifying string.
-     */
-    public String getSourceData() {
-        return providerData;
-    }
-
-    /**
-     * Gets the Uri that can be used to refer to this voicemail, and to make it play.
-     *
-     * <p>Returns null if we don't know the Uri.
-     */
-    public Uri getUri() {
-        return uri;
-    }
-
-    /**
-     * Tells us if the voicemail message has been marked as read.
-     *
-     * <p>Always returns false if this field has not been set, i.e. if hasRead() returns false.
-     */
-    public boolean isRead() {
-        return isRead;
-    }
-
-    /**
-     * Tells us if there is content stored at the Uri.
-     */
-    public boolean hasContent() {
-        return hasContent;
-    }
-
-    /**
-     * Returns the text transcription of this voicemail, or null if this field is not set.
-     */
-    public String getTranscription() {
-        return transcription;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(timestamp);
-        writeCharSequence(dest, number);
-        if (phoneAccount == null) {
-            dest.writeInt(0);
-        } else {
-            dest.writeInt(1);
-            phoneAccount.writeToParcel(dest, flags);
-        }
-        dest.writeLong(id);
-        dest.writeLong(duration);
-        writeCharSequence(dest, source);
-        writeCharSequence(dest, providerData);
-        if (uri == null) {
-            dest.writeInt(0);
-        } else {
-            dest.writeInt(1);
-            uri.writeToParcel(dest, flags);
-        }
-        if (isRead) {
-            dest.writeInt(1);
-        } else {
-            dest.writeInt(0);
-        }
-        if (hasContent) {
-            dest.writeInt(1);
-        } else {
-            dest.writeInt(0);
-        }
-        writeCharSequence(dest, transcription);
     }
 
     /**
@@ -274,11 +101,8 @@ public class Voicemail implements Parcelable {
         private boolean builderHasContent;
         private String builderTranscription;
 
-        /**
-         * You should use the correct factory method to construct a builder.
-         */
-        private Builder() {
-        }
+        /** You should use the correct factory method to construct a builder. */
+        private Builder() {}
 
         public Builder setNumber(String number) {
             builderNumber = number;
@@ -339,7 +163,7 @@ public class Voicemail implements Parcelable {
             builderId = builderId == null ? -1 : builderId;
             builderTimestamp = builderTimestamp == null ? 0 : builderTimestamp;
             builderDuration = builderDuration == null ? 0 : builderDuration;
-            builderIsRead = builderIsRead != null && builderIsRead;
+            builderIsRead = builderIsRead == null ? false : builderIsRead;
             return new Voicemail(
                     builderTimestamp,
                     builderNumber,
@@ -353,5 +177,165 @@ public class Voicemail implements Parcelable {
                     builderHasContent,
                     builderTranscription);
         }
+    }
+
+    /**
+     * The identifier of the voicemail in the content provider.
+     *
+     * <p>This may be missing in the case of a new {@link Voicemail} that we plan to insert into the
+     * content provider, since until it has been inserted we don't know what id it should have. If
+     * none is specified, we return -1.
+     */
+    public long getId() {
+        return id;
+    }
+
+    /** The number of the person leaving the voicemail, empty string if unknown, null if not set. */
+    public String getNumber() {
+        return number;
+    }
+
+    /** The phone account associated with the voicemail, null if not set. */
+    public PhoneAccountHandle getPhoneAccount() {
+        return phoneAccount;
+    }
+
+    /** The timestamp the voicemail was received, in millis since the epoch, zero if not set. */
+    public long getTimestampMillis() {
+        return timestamp;
+    }
+
+    /** Gets the duration of the voicemail in millis, or zero if the field is not set. */
+    public long getDuration() {
+        return duration;
+    }
+
+    /**
+     * Returns the package name of the source that added this voicemail, or null if this field is not
+     * set.
+     */
+    public String getSourcePackage() {
+        return source;
+    }
+
+    /**
+     * Returns the application-specific data type stored with the voicemail, or null if this field is
+     * not set.
+     *
+     * <p>Source data is typically used as an identifier to uniquely identify the voicemail against
+     * the voicemail server. This is likely to be something like the IMAP UID, or some other
+     * server-generated identifying string.
+     */
+    public String getSourceData() {
+        return providerData;
+    }
+
+    /**
+     * Gets the Uri that can be used to refer to this voicemail, and to make it play.
+     *
+     * <p>Returns null if we don't know the Uri.
+     */
+    public Uri getUri() {
+        return uri;
+    }
+
+    /**
+     * Tells us if the voicemail message has been marked as read.
+     *
+     * <p>Always returns false if this field has not been set, i.e. if hasRead() returns false.
+     */
+    public boolean isRead() {
+        return isRead;
+    }
+
+    /** Tells us if there is content stored at the Uri. */
+    public boolean hasContent() {
+        return hasContent;
+    }
+
+    /** Returns the text transcription of this voicemail, or null if this field is not set. */
+    public String getTranscription() {
+        return transcription;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(timestamp);
+        writeCharSequence(dest, number);
+        if (phoneAccount == null) {
+            dest.writeInt(0);
+        } else {
+            dest.writeInt(1);
+            phoneAccount.writeToParcel(dest, flags);
+        }
+        dest.writeLong(id);
+        dest.writeLong(duration);
+        writeCharSequence(dest, source);
+        writeCharSequence(dest, providerData);
+        if (uri == null) {
+            dest.writeInt(0);
+        } else {
+            dest.writeInt(1);
+            uri.writeToParcel(dest, flags);
+        }
+        if (isRead) {
+            dest.writeInt(1);
+        } else {
+            dest.writeInt(0);
+        }
+        if (hasContent) {
+            dest.writeInt(1);
+        } else {
+            dest.writeInt(0);
+        }
+        writeCharSequence(dest, transcription);
+    }
+
+    public static final Creator<Voicemail> CREATOR =
+            new Creator<Voicemail>() {
+                @Override
+                public Voicemail createFromParcel(Parcel in) {
+                    return new Voicemail(in);
+                }
+
+                @Override
+                public Voicemail[] newArray(int size) {
+                    return new Voicemail[size];
+                }
+            };
+
+    private Voicemail(Parcel in) {
+        timestamp = in.readLong();
+        number = (String) readCharSequence(in);
+        if (in.readInt() > 0) {
+            phoneAccount = PhoneAccountHandle.CREATOR.createFromParcel(in);
+        } else {
+            phoneAccount = null;
+        }
+        id = in.readLong();
+        duration = in.readLong();
+        source = (String) readCharSequence(in);
+        providerData = (String) readCharSequence(in);
+        if (in.readInt() > 0) {
+            uri = Uri.CREATOR.createFromParcel(in);
+        } else {
+            uri = null;
+        }
+        isRead = in.readInt() > 0 ? true : false;
+        hasContent = in.readInt() > 0 ? true : false;
+        transcription = (String) readCharSequence(in);
+    }
+
+    private static CharSequence readCharSequence(Parcel in) {
+        return TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(in);
+    }
+
+    public static void writeCharSequence(Parcel dest, CharSequence val) {
+        TextUtils.writeToParcel(val, dest, 0);
     }
 }

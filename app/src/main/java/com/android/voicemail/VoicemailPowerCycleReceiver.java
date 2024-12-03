@@ -22,9 +22,7 @@ import android.content.Intent;
 
 import com.wintmain.dialer.common.Assert;
 
-/**
- * Receives {@link Intent#ACTION_BOOT_COMPLETED} and {@link Intent#ACTION_SHUTDOWN}
- */
+/** Receives {@link Intent#ACTION_BOOT_COMPLETED} and {@link Intent#ACTION_SHUTDOWN} */
 public class VoicemailPowerCycleReceiver extends BroadcastReceiver {
 
     @Override

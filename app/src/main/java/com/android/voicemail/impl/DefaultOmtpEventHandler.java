@@ -19,10 +19,7 @@ package com.android.voicemail.impl;
 import android.content.Context;
 import android.provider.VoicemailContract;
 import android.provider.VoicemailContract.Status;
-
 import com.android.voicemail.impl.OmtpEvents.Type;
-
-import java.util.Objects;
 
 public class DefaultOmtpEventHandler {
 
@@ -181,14 +178,16 @@ public class DefaultOmtpEventHandler {
 
     private static void handleOtherEvent(
             Context context, VoicemailStatus.Editor status, OmtpEvents event) {
-        if (Objects.requireNonNull(event) == OmtpEvents.OTHER_SOURCE_REMOVED) {
-            status
-                    .setConfigurationState(Status.CONFIGURATION_STATE_NOT_CONFIGURED)
-                    .setNotificationChannelState(Status.NOTIFICATION_CHANNEL_STATE_NO_CONNECTION)
-                    .setDataChannelState(Status.DATA_CHANNEL_STATE_NO_CONNECTION)
-                    .apply();
-        } else {
-            VvmLog.wtf(TAG, "invalid other event " + event);
+        switch (event) {
+            case OTHER_SOURCE_REMOVED:
+                status
+                        .setConfigurationState(Status.CONFIGURATION_STATE_NOT_CONFIGURED)
+                        .setNotificationChannelState(Status.NOTIFICATION_CHANNEL_STATE_NO_CONNECTION)
+                        .setDataChannelState(Status.DATA_CHANNEL_STATE_NO_CONNECTION)
+                        .apply();
+                break;
+            default:
+                VvmLog.wtf(TAG, "invalid other event " + event);
         }
     }
 }

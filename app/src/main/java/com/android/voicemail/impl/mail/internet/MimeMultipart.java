@@ -26,89 +26,89 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
 public class MimeMultipart extends Multipart {
-    protected String preamble;
+  protected String preamble;
 
-    protected String contentType;
+  protected String contentType;
 
-    protected String boundary;
+  protected String boundary;
 
-    protected String subType;
+  protected String subType;
 
-    public MimeMultipart() throws MessagingException {
-        boundary = generateBoundary();
-        setSubType("mixed");
+  public MimeMultipart() throws MessagingException {
+    boundary = generateBoundary();
+    setSubType("mixed");
+  }
+
+  public MimeMultipart(String contentType) throws MessagingException {
+    this.contentType = contentType;
+    try {
+      subType = MimeUtility.getHeaderParameter(contentType, null).split("/")[1];
+      boundary = MimeUtility.getHeaderParameter(contentType, "boundary");
+      if (boundary == null) {
+        throw new MessagingException("MultiPart does not contain boundary: " + contentType);
+      }
+    } catch (Exception e) {
+      throw new MessagingException(
+          "Invalid MultiPart Content-Type; must contain subtype and boundary. ("
+              + contentType
+              + ")",
+          e);
+    }
+  }
+
+  public String generateBoundary() {
+    StringBuffer sb = new StringBuffer();
+    sb.append("----");
+    for (int i = 0; i < 30; i++) {
+      sb.append(Integer.toString((int) (Math.random() * 35), 36));
+    }
+    return sb.toString().toUpperCase();
+  }
+
+  public String getPreamble() throws MessagingException {
+    return preamble;
+  }
+
+  public void setPreamble(String preamble) throws MessagingException {
+    this.preamble = preamble;
+  }
+
+  @Override
+  public String getContentType() throws MessagingException {
+    return contentType;
+  }
+
+  public void setSubType(String subType) throws MessagingException {
+    this.subType = subType;
+    contentType = String.format("multipart/%s; boundary=\"%s\"", subType, boundary);
+  }
+
+  @Override
+  public void writeTo(OutputStream out) throws IOException, MessagingException {
+    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out), 1024);
+
+    if (preamble != null) {
+      writer.write(preamble + "\r\n");
     }
 
-    public MimeMultipart(String contentType) throws MessagingException {
-        this.contentType = contentType;
-        try {
-            subType = MimeUtility.getHeaderParameter(contentType, null).split("/")[1];
-            boundary = MimeUtility.getHeaderParameter(contentType, "boundary");
-            if (boundary == null) {
-                throw new MessagingException("MultiPart does not contain boundary: " + contentType);
-            }
-        } catch (Exception e) {
-            throw new MessagingException(
-                    "Invalid MultiPart Content-Type; must contain subtype and boundary. ("
-                            + contentType
-                            + ")",
-                    e);
-        }
+    for (int i = 0, count = parts.size(); i < count; i++) {
+      BodyPart bodyPart = parts.get(i);
+      writer.write("--" + boundary + "\r\n");
+      writer.flush();
+      bodyPart.writeTo(out);
+      writer.write("\r\n");
     }
 
-    public String generateBoundary() {
-        StringBuffer sb = new StringBuffer();
-        sb.append("----");
-        for (int i = 0; i < 30; i++) {
-            sb.append(Integer.toString((int) (Math.random() * 35), 36));
-        }
-        return sb.toString().toUpperCase();
-    }
+    writer.write("--" + boundary + "--\r\n");
+    writer.flush();
+  }
 
-    public String getPreamble() throws MessagingException {
-        return preamble;
-    }
+  @Override
+  public InputStream getInputStream() throws MessagingException {
+    return null;
+  }
 
-    public void setPreamble(String preamble) throws MessagingException {
-        this.preamble = preamble;
-    }
-
-    @Override
-    public String getContentType() throws MessagingException {
-        return contentType;
-    }
-
-    public void setSubType(String subType) throws MessagingException {
-        this.subType = subType;
-        contentType = String.format("multipart/%s; boundary=\"%s\"", subType, boundary);
-    }
-
-    @Override
-    public void writeTo(OutputStream out) throws IOException, MessagingException {
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out), 1024);
-
-        if (preamble != null) {
-            writer.write(preamble + "\r\n");
-        }
-
-        for (int i = 0, count = parts.size(); i < count; i++) {
-            BodyPart bodyPart = parts.get(i);
-            writer.write("--" + boundary + "\r\n");
-            writer.flush();
-            bodyPart.writeTo(out);
-            writer.write("\r\n");
-        }
-
-        writer.write("--" + boundary + "--\r\n");
-        writer.flush();
-    }
-
-    @Override
-    public InputStream getInputStream() throws MessagingException {
-        return null;
-    }
-
-    public String getSubTypeForTest() {
-        return subType;
-    }
+  public String getSubTypeForTest() {
+    return subType;
+  }
 }

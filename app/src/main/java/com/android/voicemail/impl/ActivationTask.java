@@ -16,6 +16,7 @@
 
 package com.android.voicemail.impl;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
@@ -59,15 +60,16 @@ import java.util.concurrent.TimeoutException;
 @UsedByReflection(value = "Tasks.java")
 public class ActivationTask extends BaseTask {
 
-    @VisibleForTesting
-    static final String EXTRA_MESSAGE_DATA_BUNDLE = "extra_message_data_bundle";
     private static final String TAG = "VvmActivationTask";
+
     private static final int RETRY_TIMES = 4;
     private static final int RETRY_INTERVAL_MILLIS = 5_000;
+
+    @VisibleForTesting static final String EXTRA_MESSAGE_DATA_BUNDLE = "extra_message_data_bundle";
+
     private final RetryPolicy retryPolicy;
 
-    @Nullable
-    private OmtpVvmCarrierConfigHelper configForTest;
+    @Nullable private OmtpVvmCarrierConfigHelper configForTest;
 
     private Bundle messageData;
 
@@ -77,9 +79,7 @@ public class ActivationTask extends BaseTask {
         addPolicy(retryPolicy);
     }
 
-    /**
-     * Has the user gone through the setup wizard yet.
-     */
+    /** Has the user gone through the setup wizard yet. */
     private static boolean isDeviceProvisioned(Context context) {
         return Settings.Global.getInt(
                 context.getContentResolver(), Settings.Global.DEVICE_PROVISIONED, 0)
@@ -88,8 +88,8 @@ public class ActivationTask extends BaseTask {
 
     /**
      * @param messageData The optional bundle from {@link android.provider.VoicemailContract#
-     *                    EXTRA_VOICEMAIL_SMS_FIELDS}, if the task is initiated by a status SMS. If null the task
-     *                    will request a status SMS itself.
+     *     EXTRA_VOICEMAIL_SMS_FIELDS}, if the task is initiated by a status SMS. If null the task
+     *     will request a status SMS itself.
      */
     public static void start(
             Context context, PhoneAccountHandle phoneAccountHandle, @Nullable Bundle messageData) {
@@ -107,51 +107,6 @@ public class ActivationTask extends BaseTask {
             intent.putExtra(EXTRA_MESSAGE_DATA_BUNDLE, messageData);
         }
         context.sendBroadcast(intent);
-    }
-
-    private static void updateSource(
-            Context context,
-            PhoneAccountHandle phone,
-            StatusMessage message,
-            OmtpVvmCarrierConfigHelper config) {
-
-        if (OmtpConstants.SUCCESS.equals(message.getReturnCode())) {
-            // Save the IMAP credentials in preferences so they are persistent and can be retrieved.
-            VvmAccountManager.addAccount(context, phone, message);
-            onSuccess(context, phone, config);
-        } else {
-            VvmLog.e(TAG, "Visual voicemail not available for subscriber.");
-        }
-    }
-
-    private static void onSuccess(
-            Context context, PhoneAccountHandle phoneAccountHandle, OmtpVvmCarrierConfigHelper config) {
-        config.handleEvent(
-                VoicemailStatus.edit(context, phoneAccountHandle),
-                OmtpEvents.CONFIG_REQUEST_STATUS_SUCCESS);
-        clearLegacyVoicemailNotification(context, phoneAccountHandle);
-        SyncTask.start(context, phoneAccountHandle);
-    }
-
-    /**
-     * Sends a broadcast to the dialer UI to clear legacy voicemail notifications if any.
-     */
-    private static void clearLegacyVoicemailNotification(
-            Context context, PhoneAccountHandle phoneAccountHandle) {
-        Intent intent = new Intent(VoicemailClient.ACTION_SHOW_LEGACY_VOICEMAIL);
-        intent.setPackage(context.getPackageName());
-        intent.putExtra(TelephonyManager.EXTRA_PHONE_ACCOUNT_HANDLE, phoneAccountHandle);
-        // Setting voicemail message count to zero will clear the notification.
-        intent.putExtra(TelephonyManager.EXTRA_NOTIFICATION_COUNT, 0);
-        context.sendBroadcast(intent);
-    }
-
-    private static boolean hasSignal(Context context, PhoneAccountHandle phoneAccountHandle) {
-        TelephonyManager telephonyManager =
-                context
-                        .getSystemService(TelephonyManager.class)
-                        .createForPhoneAccountHandle(phoneAccountHandle);
-        return telephonyManager.getServiceState().getState() == ServiceState.STATE_IN_SERVICE;
     }
 
     @Override
@@ -302,6 +257,50 @@ public class ActivationTask extends BaseTask {
         }
         LoggerUtils.logImpressionOnMainThread(
                 getContext(), DialerImpression.Type.VVM_ACTIVATION_COMPLETED);
+    }
+
+    private static void updateSource(
+            Context context,
+            PhoneAccountHandle phone,
+            StatusMessage message,
+            OmtpVvmCarrierConfigHelper config) {
+
+        if (OmtpConstants.SUCCESS.equals(message.getReturnCode())) {
+            // Save the IMAP credentials in preferences so they are persistent and can be retrieved.
+            VvmAccountManager.addAccount(context, phone, message);
+            onSuccess(context, phone, config);
+        } else {
+            VvmLog.e(TAG, "Visual voicemail not available for subscriber.");
+        }
+    }
+
+    private static void onSuccess(
+            Context context, PhoneAccountHandle phoneAccountHandle, OmtpVvmCarrierConfigHelper config) {
+        config.handleEvent(
+                VoicemailStatus.edit(context, phoneAccountHandle),
+                OmtpEvents.CONFIG_REQUEST_STATUS_SUCCESS);
+        clearLegacyVoicemailNotification(context, phoneAccountHandle);
+        SyncTask.start(context, phoneAccountHandle);
+    }
+
+    /** Sends a broadcast to the dialer UI to clear legacy voicemail notifications if any. */
+    private static void clearLegacyVoicemailNotification(
+            Context context, PhoneAccountHandle phoneAccountHandle) {
+        Intent intent = new Intent(VoicemailClient.ACTION_SHOW_LEGACY_VOICEMAIL);
+        intent.setPackage(context.getPackageName());
+        intent.putExtra(TelephonyManager.EXTRA_PHONE_ACCOUNT_HANDLE, phoneAccountHandle);
+        // Setting voicemail message count to zero will clear the notification.
+        intent.putExtra(TelephonyManager.EXTRA_NOTIFICATION_COUNT, 0);
+        context.sendBroadcast(intent);
+    }
+
+    @SuppressLint("MissingPermission")
+    private static boolean hasSignal(Context context, PhoneAccountHandle phoneAccountHandle) {
+        TelephonyManager telephonyManager =
+                context
+                        .getSystemService(TelephonyManager.class)
+                        .createForPhoneAccountHandle(phoneAccountHandle);
+        return telephonyManager.getServiceState().getState() == ServiceState.STATE_IN_SERVICE;
     }
 
     @VisibleForTesting

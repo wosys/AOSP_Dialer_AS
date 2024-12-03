@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.android.bubble.stub;
+package com.wintmain.dialer.bubble.stub;
 
-import com.android.bubble.Bubble;
+import com.wintmain.dialer.bubble.Bubble;
 import dagger.Binds;
 import dagger.Module;
 import javax.inject.Singleton;

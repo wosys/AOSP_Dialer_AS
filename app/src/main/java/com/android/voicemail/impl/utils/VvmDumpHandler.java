@@ -38,7 +38,7 @@ public class VvmDumpHandler {
         for (PhoneAccountHandle handle :
                 context.getSystemService(TelecomManager.class).getCallCapablePhoneAccounts()) {
             OmtpVvmCarrierConfigHelper config = new OmtpVvmCarrierConfigHelper(context, handle);
-            indentedWriter.println(config);
+            indentedWriter.println(config.toString());
         }
         indentedWriter.decreaseIndent();
         indentedWriter.println("======== Logs =========");

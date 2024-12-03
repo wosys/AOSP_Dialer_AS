@@ -32,8 +32,8 @@ public class VvmPhoneStateListener extends PhoneStateListener {
 
     private static final String TAG = "VvmPhoneStateListener";
 
-    private final PhoneAccountHandle phoneAccount;
-    private final Context context;
+    private PhoneAccountHandle phoneAccount;
+    private Context context;
     private int previousState = -1;
 
     public VvmPhoneStateListener(Context context, PhoneAccountHandle accountHandle) {

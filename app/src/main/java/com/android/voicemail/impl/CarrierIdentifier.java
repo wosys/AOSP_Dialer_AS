@@ -25,24 +25,38 @@ import android.telephony.TelephonyManager;
 import androidx.annotation.Nullable;
 
 import com.google.auto.value.AutoValue;
-
 import java.util.Optional;
 
-/**
- * Identifies a carrier.
- */
+/** Identifies a carrier. */
 @AutoValue
 @TargetApi(VERSION_CODES.O)
 @SuppressWarnings({"missingpermission"})
 public abstract class CarrierIdentifier {
 
+    public abstract String mccMnc();
+
+    /**
+     * Group ID Level 1. Used to identify MVNO(Mobile Virtual Network Operators) who subleases other
+     * carrier's network and share their mccMnc. MVNO should have a GID1 different from the host.
+     */
+    public abstract String gid1();
+
+    /** Builder for the matcher */
+    @AutoValue.Builder
+    public abstract static class Builder {
+
+        public abstract Builder setMccMnc(String mccMnc);
+
+        public abstract Builder setGid1(String gid1);
+
+        public abstract CarrierIdentifier build();
+    }
+
     public static Builder builder() {
         return new AutoValue_CarrierIdentifier.Builder().setGid1("");
     }
 
-    /**
-     * Create a identifier for a {@link PhoneAccountHandle}. Absent if the handle is not valid.
-     */
+    /** Create a identifier for a {@link PhoneAccountHandle}. Absent if the handle is not valid. */
     public static Optional<CarrierIdentifier> forHandle(
             Context context, @Nullable PhoneAccountHandle phoneAccountHandle) {
         if (phoneAccountHandle == null) {
@@ -62,26 +76,5 @@ public abstract class CarrierIdentifier {
 
         return Optional.of(
                 builder().setMccMnc(telephonyManager.getSimOperator()).setGid1(gid1).build());
-    }
-
-    public abstract String mccMnc();
-
-    /**
-     * Group ID Level 1. Used to identify MVNO(Mobile Virtual Network Operators) who subleases other
-     * carrier's network and share their mccMnc. MVNO should have a GID1 different from the host.
-     */
-    public abstract String gid1();
-
-    /**
-     * Builder for the matcher
-     */
-    @AutoValue.Builder
-    public abstract static class Builder {
-
-        public abstract Builder setMccMnc(String mccMnc);
-
-        public abstract Builder setGid1(String gid1);
-
-        public abstract CarrierIdentifier build();
     }
 }

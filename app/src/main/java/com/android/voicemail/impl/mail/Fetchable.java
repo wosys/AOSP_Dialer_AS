@@ -19,5 +19,4 @@ package com.android.voicemail.impl.mail;
  * Interface for classes that can be added to {@link FetchProfile}. i.e. {@link Part} and its
  * subclasses, and {@link FetchProfile.Item}.
  */
-public interface Fetchable {
-}
+public interface Fetchable {}

@@ -22,9 +22,7 @@ import android.content.Intent;
 
 import com.wintmain.dialer.common.LogUtil;
 
-/**
- * Receives android.provider.Telephony.SECRET_CODE
- */
+/** Receives android.provider.Telephony.SECRET_CODE */
 public class VoicemailSecretCodeReceiver extends BroadcastReceiver {
 
     @Override

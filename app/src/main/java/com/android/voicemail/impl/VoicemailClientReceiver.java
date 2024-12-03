@@ -28,20 +28,8 @@ import com.android.voicemail.impl.sync.VvmAccountManager;
 import com.wintmain.dialer.common.Assert;
 import com.wintmain.dialer.common.LogUtil;
 
-/**
- * Receiver for broadcasts in {@link VoicemailClient#ACTION_UPLOAD}
- */
+/** Receiver for broadcasts in {@link VoicemailClient#ACTION_UPLOAD} */
 public class VoicemailClientReceiver extends BroadcastReceiver {
-
-    /**
-     * Upload local database changes to the server.
-     */
-    private static void doUpload(Context context) {
-        LogUtil.i("VoicemailClientReceiver.onReceive", "ACTION_UPLOAD received");
-        for (PhoneAccountHandle phoneAccountHandle : VvmAccountManager.getActiveAccounts(context)) {
-            UploadTask.start(context, phoneAccountHandle);
-        }
-    }
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -50,10 +38,21 @@ public class VoicemailClientReceiver extends BroadcastReceiver {
                     "VoicemailClientReceiver.onReceive", "module disabled, ignoring " + intent.getAction());
             return;
         }
-        if (intent.getAction().equals(VoicemailClient.ACTION_UPLOAD)) {
-            doUpload(context);
-        } else {
-            Assert.fail("Unexpected action " + intent.getAction());
+        switch (intent.getAction()) {
+            case VoicemailClient.ACTION_UPLOAD:
+                doUpload(context);
+                break;
+            default:
+                Assert.fail("Unexpected action " + intent.getAction());
+                break;
+        }
+    }
+
+    /** Upload local database changes to the server. */
+    private static void doUpload(Context context) {
+        LogUtil.i("VoicemailClientReceiver.onReceive", "ACTION_UPLOAD received");
+        for (PhoneAccountHandle phoneAccountHandle : VvmAccountManager.getActiveAccounts(context)) {
+            UploadTask.start(context, phoneAccountHandle);
         }
     }
 }

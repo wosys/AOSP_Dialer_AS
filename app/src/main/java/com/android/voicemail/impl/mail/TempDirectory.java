@@ -16,7 +16,6 @@
 package com.android.voicemail.impl.mail;
 
 import android.content.Context;
-
 import java.io.File;
 
 /**
@@ -24,18 +23,18 @@ import java.io.File;
  * initialization.
  */
 public class TempDirectory {
-    private static File tempDirectory = null;
+  private static File tempDirectory = null;
 
-    public static File getTempDirectory() {
-        if (tempDirectory == null) {
-            throw new RuntimeException(
-                    "TempDirectory not set.  "
-                            + "If in a unit test, call Email.setTempDirectory(context) in setUp().");
-        }
-        return tempDirectory;
-    }
+  public static void setTempDirectory(Context context) {
+    tempDirectory = context.getCacheDir();
+  }
 
-    public static void setTempDirectory(Context context) {
-        tempDirectory = context.getCacheDir();
+  public static File getTempDirectory() {
+    if (tempDirectory == null) {
+      throw new RuntimeException(
+          "TempDirectory not set.  "
+              + "If in a unit test, call Email.setTempDirectory(context) in setUp().");
     }
+    return tempDirectory;
+  }
 }

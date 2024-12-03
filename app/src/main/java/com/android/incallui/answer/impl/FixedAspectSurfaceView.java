@@ -34,22 +34,22 @@ import com.wintmain.dialer.common.Assert;
  */
 public class FixedAspectSurfaceView extends SurfaceView {
 
+    /** Desired width/height ratio */
+    private float aspectRatio;
+
     private final boolean scaleWidth;
     private final boolean scaleHeight;
-    /**
-     * Desired width/height ratio
-     */
-    private float aspectRatio;
 
     public FixedAspectSurfaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         // Get initial aspect ratio from custom attributes
-        TypedArray a =
-                context.getTheme().obtainStyledAttributes(attrs, R.styleable.FixedAspectSurfaceView, 0, 0);
+        TypedArray a = context.getTheme().obtainStyledAttributes(
+                attrs, R.styleable.FixedAspectSurfaceView, 0, 0);
         scaleHeight = a.getBoolean(R.styleable.FixedAspectSurfaceView_scaleHeight, false);
         scaleWidth = a.getBoolean(R.styleable.FixedAspectSurfaceView_scaleWidth, false);
-        Assert.checkArgument(scaleHeight != scaleWidth, "Must either scale width or height");
+        Assert.checkArgument(scaleHeight != scaleWidth,
+                "Must either scale width or height");
         setAspectRatio(a.getFloat(R.styleable.FixedAspectSurfaceView_aspectRatio, 1.f));
         a.recycle();
     }
@@ -58,7 +58,7 @@ public class FixedAspectSurfaceView extends SurfaceView {
      * Set the desired aspect ratio for this view.
      *
      * @param aspect the desired width/height ratio in the current UI orientation. Must be a positive
-     *               value.
+     *     value.
      */
     public void setAspectRatio(float aspect) {
         Assert.checkArgument(aspect >= 0, "Aspect ratio must be positive");

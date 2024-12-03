@@ -30,10 +30,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.core.content.ContextCompat;
 
-import com.android.bubble.Bubble;
-import com.android.bubble.BubbleComponent;
-import com.android.bubble.BubbleInfo;
-import com.android.bubble.BubbleInfo.Action;
+import com.wintmain.dialer.bubble.Bubble;
+import com.wintmain.dialer.bubble.BubbleComponent;
+import com.wintmain.dialer.bubble.BubbleInfo;
+import com.wintmain.dialer.bubble.BubbleInfo.Action;
 import com.android.incallui.entry.ContactInfoCache.ContactCacheEntry;
 import com.android.incallui.entry.ContactInfoCache.ContactInfoCacheCallback;
 import com.android.incallui.entry.InCallPresenter.InCallState;

@@ -18,7 +18,6 @@ package com.android.voicemail.impl.scheduling;
 
 import android.content.Context;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -68,7 +67,7 @@ class TaskQueue implements Iterable<Task> {
      * Task#onDuplicatedTaskAdded(Task)} will be called on the existing task.
      *
      * @return {@code true} if the task is added, or {@code false} if the task is discarded due to
-     * collision.
+     *     collision.
      */
     public boolean add(Task task) {
         if (task.getId().id == Task.TASK_INVALID) {
@@ -98,6 +97,22 @@ class TaskQueue implements Iterable<Task> {
             }
         }
         return null;
+    }
+
+    /**
+     * Packed return value of {@link #getNextTask(long)}. If a runnable task is found {@link
+     * #minimalWaitTimeMillis} will be {@code null}. If no tasks is runnable {@link #task} will be
+     * {@code null}, and {@link #minimalWaitTimeMillis} will contain the time to wait. If there are no
+     * tasks at all both will be {@code null}.
+     */
+    static final class NextTask {
+        @Nullable final Task task;
+        @Nullable final Long minimalWaitTimeMillis;
+
+        NextTask(@Nullable Task task, @Nullable Long minimalWaitTimeMillis) {
+            this.task = task;
+            this.minimalWaitTimeMillis = minimalWaitTimeMillis;
+        }
     }
 
     /**
@@ -137,23 +152,5 @@ class TaskQueue implements Iterable<Task> {
     @Override
     public Iterator<Task> iterator() {
         return queue.iterator();
-    }
-
-    /**
-     * Packed return value of {@link #getNextTask(long)}. If a runnable task is found {@link
-     * #minimalWaitTimeMillis} will be {@code null}. If no tasks is runnable {@link #task} will be
-     * {@code null}, and {@link #minimalWaitTimeMillis} will contain the time to wait. If there are no
-     * tasks at all both will be {@code null}.
-     */
-    static final class NextTask {
-        @Nullable
-        final Task task;
-        @Nullable
-        final Long minimalWaitTimeMillis;
-
-        NextTask(@Nullable Task task, @Nullable Long minimalWaitTimeMillis) {
-            this.task = task;
-            this.minimalWaitTimeMillis = minimalWaitTimeMillis;
-        }
     }
 }

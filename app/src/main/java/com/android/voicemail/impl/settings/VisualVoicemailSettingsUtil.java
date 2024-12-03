@@ -21,7 +21,6 @@ import android.provider.CallLog;
 import android.provider.CallLog.Calls;
 import android.provider.VoicemailContract.Voicemails;
 import android.telecom.PhoneAccountHandle;
-
 import androidx.annotation.VisibleForTesting;
 
 import com.android.voicemail.VoicemailComponent;
@@ -29,6 +28,7 @@ import com.android.voicemail.impl.OmtpVvmCarrierConfigHelper;
 import com.android.voicemail.impl.VisualVoicemailPreferences;
 import com.android.voicemail.impl.VvmLog;
 import com.android.voicemail.impl.sync.VvmAccountManager;
+
 import com.wintmain.dialer.common.Assert;
 import com.wintmain.dialer.common.LogUtil;
 import com.wintmain.dialer.common.concurrent.DialerExecutor.Worker;
@@ -36,9 +36,7 @@ import com.wintmain.dialer.common.concurrent.DialerExecutorComponent;
 import com.wintmain.dialer.common.database.Selection;
 import com.wintmain.dialer.compat.android.provider.VoicemailCompat;
 
-/**
- * Save whether or not a particular account is enabled in shared to be retrieved later.
- */
+/** Save whether or not a particular account is enabled in shared to be retrieved later. */
 public class VisualVoicemailSettingsUtil {
 
     @VisibleForTesting
@@ -187,9 +185,7 @@ public class VisualVoicemailSettingsUtil {
         return prefs.contains(IS_ENABLED_KEY);
     }
 
-    /**
-     * Delete all the voicemails whose source_package field matches this package
-     */
+    /** Delete all the voicemails whose source_package field matches this package */
     private static class VoicemailDeleteWorker implements Worker<Void, Void> {
         private final Context context;
 

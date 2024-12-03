@@ -36,9 +36,10 @@ import com.wintmain.dialer.common.Assert;
 @TargetApi(VERSION_CODES.O)
 class PinChangerImpl implements PinChanger {
 
-    private static final String KEY_SCRAMBLED_PIN = "default_old_pin"; // legacy name, DO NOT CHANGE
     private final Context context;
     private final PhoneAccountHandle phoneAccountHandle;
+
+    private static final String KEY_SCRAMBLED_PIN = "default_old_pin"; // legacy name, DO NOT CHANGE
 
     PinChangerImpl(Context context, PhoneAccountHandle phoneAccountHandle) {
         this.context = context;
@@ -69,11 +70,6 @@ class PinChangerImpl implements PinChanger {
     }
 
     @Override
-    public String getScrambledPin() {
-        return new VisualVoicemailPreferences(context, phoneAccountHandle).getString(KEY_SCRAMBLED_PIN);
-    }
-
-    @Override
     public void setScrambledPin(String pin) {
         new VisualVoicemailPreferences(context, phoneAccountHandle)
                 .edit()
@@ -84,6 +80,11 @@ class PinChangerImpl implements PinChanger {
                     .handleEvent(
                             VoicemailStatus.edit(context, phoneAccountHandle), OmtpEvents.CONFIG_PIN_SET);
         }
+    }
+
+    @Override
+    public String getScrambledPin() {
+        return new VisualVoicemailPreferences(context, phoneAccountHandle).getString(KEY_SCRAMBLED_PIN);
     }
 
     @Override

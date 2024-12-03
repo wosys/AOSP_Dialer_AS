@@ -38,7 +38,7 @@ import com.wintmain.dialer.common.LogUtil;
 import com.wintmain.dialer.enrichedcall.EnrichedCallComponent;
 import com.wintmain.dialer.enrichedcall.EnrichedCallManager;
 import com.wintmain.dialer.main.impl.MainActivity;
-import com.wintmain.dialer.main.impl.MainActivityPeer;
+import com.wintmain.dialer.main.impl.TBDMainActivityPeer;
 import com.wintmain.dialer.util.PermissionsUtil;
 import com.wintmain.dialer.widget.DialerToolbar;
 import com.wintmain.dialer.widget.MessageFragment;
@@ -70,7 +70,7 @@ public class PostCallActivity extends AppCompatActivity implements MessageFragme
         Boolean conf = MainActivity.getBoolConfigUsingLatestAbout();
         if (!conf) {
             DialerSettingsActivityCompt.PrefsFragment.ThemeButtonBehavior mThemeBehavior =
-                    getThemeButtonBehavior(MainActivityPeer.themeprefs);
+                    getThemeButtonBehavior(TBDMainActivityPeer.themeprefs);
 
             if (mThemeBehavior ==
                     DialerSettingsActivityCompt.PrefsFragment.ThemeButtonBehavior.DARK) {

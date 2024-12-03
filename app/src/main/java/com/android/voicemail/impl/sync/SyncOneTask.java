@@ -26,6 +26,7 @@ import com.android.voicemail.impl.VoicemailStatus;
 import com.android.voicemail.impl.scheduling.BaseTask;
 import com.android.voicemail.impl.scheduling.RetryPolicy;
 import com.android.voicemail.impl.utils.LoggerUtils;
+
 import com.wintmain.dialer.logging.DialerImpression;
 import com.wintmain.dialer.proguard.UsedByReflection;
 
@@ -45,16 +46,16 @@ public class SyncOneTask extends BaseTask {
     private PhoneAccountHandle phone;
     private Voicemail voicemail;
 
-    public SyncOneTask() {
-        super(TASK_ALLOW_DUPLICATES);
-        addPolicy(new RetryPolicy(RETRY_TIMES, RETRY_INTERVAL_MILLIS));
-    }
-
     public static void start(Context context, PhoneAccountHandle phone, Voicemail voicemail) {
         Intent intent = BaseTask.createIntent(context, SyncOneTask.class, phone);
         intent.putExtra(EXTRA_PHONE_ACCOUNT_HANDLE, phone);
         intent.putExtra(EXTRA_VOICEMAIL, voicemail);
         context.sendBroadcast(intent);
+    }
+
+    public SyncOneTask() {
+        super(TASK_ALLOW_DUPLICATES);
+        addPolicy(new RetryPolicy(RETRY_TIMES, RETRY_INTERVAL_MILLIS));
     }
 
     @Override

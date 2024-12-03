@@ -19,7 +19,6 @@ package com.android.voicemail.impl.scheduling;
 import android.content.Intent;
 import android.os.Bundle;
 import android.telecom.PhoneAccountHandle;
-
 import com.android.voicemail.impl.VoicemailStatus;
 import com.android.voicemail.impl.VvmLog;
 
@@ -86,8 +85,7 @@ public class RetryPolicy implements Policy {
     }
 
     @Override
-    public void onBeforeExecute() {
-    }
+    public void onBeforeExecute() {}
 
     @Override
     public void onCompleted() {
@@ -115,6 +113,5 @@ public class RetryPolicy implements Policy {
     }
 
     @Override
-    public void onDuplicatedTaskAdded() {
-    }
+    public void onDuplicatedTaskAdded() {}
 }

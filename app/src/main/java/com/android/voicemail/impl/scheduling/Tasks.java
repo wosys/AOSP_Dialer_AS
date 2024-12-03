@@ -20,19 +20,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.BadParcelableException;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
-
 import com.android.voicemail.impl.VvmLog;
 
-/**
- * Common operations on {@link Task}
- */
+/** Common operations on {@link Task} */
 final class Tasks {
+
+    private Tasks() {}
 
     static final String EXTRA_CLASS_NAME = "extra_class_name";
 
-    private Tasks() {
+    /** The task cannot be created. */
+    static final class TaskCreationException extends Exception {
+        TaskCreationException(Throwable throwable) {
+            super(throwable);
+        }
     }
 
     /**
@@ -85,14 +87,5 @@ final class Tasks {
         intent.setPackage(context.getPackageName());
         intent.putExtra(EXTRA_CLASS_NAME, task.getName());
         return intent;
-    }
-
-    /**
-     * The task cannot be created.
-     */
-    static final class TaskCreationException extends Exception {
-        TaskCreationException(Throwable throwable) {
-            super(throwable);
-        }
     }
 }

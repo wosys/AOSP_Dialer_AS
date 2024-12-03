@@ -20,7 +20,6 @@ import android.annotation.TargetApi;
 import android.net.Network;
 import android.os.Build.VERSION_CODES;
 import android.telecom.PhoneAccountHandle;
-
 import androidx.annotation.NonNull;
 
 import com.android.voicemail.impl.OmtpVvmCarrierConfigHelper;
@@ -33,33 +32,13 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 /**
- * Class to retrieve a {@link Network} synchronously. {@link #getNetwork(OmtpVvmCarrierConfigHelper,
+ * Class to retrieve a {@link Network} synchronously. {@link # getNetwork(OmtpVvmCarrierConfigHelper,
  * PhoneAccountHandle)} will block until a suitable network is retrieved or it has failed.
  */
 @TargetApi(VERSION_CODES.O)
 public class VvmNetworkRequest {
 
     private static final String TAG = "VvmNetworkRequest";
-
-    @NonNull
-    public static NetworkWrapper getNetwork(
-            OmtpVvmCarrierConfigHelper config, PhoneAccountHandle handle, VoicemailStatus.Editor status)
-            throws RequestFailedException {
-        FutureNetworkRequestCallback callback =
-                new FutureNetworkRequestCallback(config, handle, status);
-        callback.requestNetwork();
-        try {
-            NetworkWrapper ret = callback.getFuture().get();
-            if (ret != null) {
-                callback.waitForIpv4();
-            }
-            return ret;
-        } catch (InterruptedException | ExecutionException e) {
-            callback.releaseNetwork();
-            VvmLog.e(TAG, "can't get future network", e);
-            throw new RequestFailedException(e);
-        }
-    }
 
     /**
      * A wrapper around a Network returned by a {@link VvmNetworkRequestCallback}, which should be
@@ -89,6 +68,26 @@ public class VvmNetworkRequest {
 
         private RequestFailedException(Throwable cause) {
             super(cause);
+        }
+    }
+
+    @NonNull
+    public static NetworkWrapper getNetwork(
+            OmtpVvmCarrierConfigHelper config, PhoneAccountHandle handle, VoicemailStatus.Editor status)
+            throws RequestFailedException {
+        FutureNetworkRequestCallback callback =
+                new FutureNetworkRequestCallback(config, handle, status);
+        callback.requestNetwork();
+        try {
+            NetworkWrapper ret = callback.getFuture().get();
+            if (ret != null) {
+                callback.waitForIpv4();
+            }
+            return ret;
+        } catch (InterruptedException | ExecutionException e) {
+            callback.releaseNetwork();
+            VvmLog.e(TAG, "can't get future network", e);
+            throw new RequestFailedException(e);
         }
     }
 

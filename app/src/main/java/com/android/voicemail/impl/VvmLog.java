@@ -26,9 +26,7 @@ import java.util.Calendar;
 import java.util.Deque;
 import java.util.Iterator;
 
-/**
- * Helper methods for adding to OMTP visual voicemail local logs.
- */
+/** Helper methods for adding to OMTP visual voicemail local logs. */
 public class VvmLog {
 
     private static final int MAX_OMTP_VVM_LOGS = 100;
@@ -157,10 +155,6 @@ public class VvmLog {
             }
         }
 
-        public ReadOnlyLocalLog readOnlyLocalLog() {
-            return new ReadOnlyLocalLog(this);
-        }
-
         public static class ReadOnlyLocalLog {
 
             private final LocalLog log;
@@ -176,6 +170,10 @@ public class VvmLog {
             public void reverseDump(FileDescriptor fd, PrintWriter pw, String[] args) {
                 log.reverseDump(fd, pw, args);
             }
+        }
+
+        public ReadOnlyLocalLog readOnlyLocalLog() {
+            return new ReadOnlyLocalLog(this);
         }
     }
 }

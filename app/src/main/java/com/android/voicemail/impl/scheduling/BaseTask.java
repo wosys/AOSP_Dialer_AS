@@ -46,16 +46,23 @@ public abstract class BaseTask implements Task {
     public static final String EXTRA_PHONE_ACCOUNT_HANDLE = "extra_phone_account_handle";
 
     private static final String EXTRA_EXECUTION_TIME = "extra_execution_time";
-    private static Clock clock = new Clock();
-    @NonNull
-    private final List<Policy> policies = new ArrayList<>();
+
     private Bundle extras;
+
     private Context context;
+
     private int id;
     private PhoneAccountHandle phoneAccountHandle;
+
     private boolean hasStarted;
     private volatile boolean hasFailed;
+
+    @NonNull
+    private final List<Policy> policies = new ArrayList<>();
+
     private long executionTime;
+
+    private static Clock clock = new Clock();
 
     protected BaseTask(int id) {
         this.id = id;
@@ -63,22 +70,13 @@ public abstract class BaseTask implements Task {
     }
 
     /**
-     * Creates an intent that can be used to be broadcast to the {@link TaskReceiver}. Derived class
-     * should build their intent upon this.
+     * Modify the task ID to prevent arbitrary task from executing. Can only be called before {@link
+     * #onCreate(Context, Bundle)} returns.
      */
-    public static Intent createIntent(
-            Context context, Class<? extends BaseTask> task, PhoneAccountHandle phoneAccountHandle) {
-        Intent intent = Tasks.createIntent(context, task);
-        intent.putExtra(EXTRA_PHONE_ACCOUNT_HANDLE, phoneAccountHandle);
-        return intent;
-    }
-
-    /**
-     * Used to replace the clock with an deterministic clock
-     */
-    @NeededForTesting
-    static void setClockForTesting(Clock clock) {
-        BaseTask.clock = clock;
+    @MainThread
+    public void setId(int id) {
+        Assert.isMainThread();
+        this.id = id;
     }
 
     @MainThread
@@ -100,7 +98,6 @@ public abstract class BaseTask implements Task {
     public PhoneAccountHandle getPhoneAccountHandle() {
         return phoneAccountHandle;
     }
-
     /**
      * Should be call in the constructor or {@link Policy#onCreate(BaseTask, Bundle)} will be missed.
      */
@@ -122,9 +119,7 @@ public abstract class BaseTask implements Task {
         hasFailed = true;
     }
 
-    /**
-     * @param timeMillis the time since epoch, in milliseconds.
-     */
+    /** @param timeMillis the time since epoch, in milliseconds. */
     @MainThread
     public void setExecutionTime(long timeMillis) {
         Assert.isMainThread();
@@ -143,19 +138,20 @@ public abstract class BaseTask implements Task {
         return createIntent(getContext(), this.getClass(), phoneAccountHandle);
     }
 
+    /**
+     * Creates an intent that can be used to be broadcast to the {@link TaskReceiver}. Derived class
+     * should build their intent upon this.
+     */
+    public static Intent createIntent(
+            Context context, Class<? extends BaseTask> task, PhoneAccountHandle phoneAccountHandle) {
+        Intent intent = Tasks.createIntent(context, task);
+        intent.putExtra(EXTRA_PHONE_ACCOUNT_HANDLE, phoneAccountHandle);
+        return intent;
+    }
+
     @Override
     public TaskId getId() {
         return new TaskId(id, phoneAccountHandle);
-    }
-
-    /**
-     * Modify the task ID to prevent arbitrary task from executing. Can only be called before {@link
-     * #onCreate(Context, Bundle)} returns.
-     */
-    @MainThread
-    public void setId(int id) {
-        Assert.isMainThread();
-        this.id = id;
     }
 
     @Override
@@ -224,5 +220,11 @@ public abstract class BaseTask implements Task {
         public long getTimeMillis() {
             return SystemClock.elapsedRealtime();
         }
+    }
+
+    /** Used to replace the clock with an deterministic clock */
+    @NeededForTesting
+    static void setClockForTesting(Clock clock) {
+        BaseTask.clock = clock;
     }
 }

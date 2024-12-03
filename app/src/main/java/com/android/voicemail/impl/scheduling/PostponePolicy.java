@@ -17,7 +17,6 @@
 package com.android.voicemail.impl.scheduling;
 
 import android.os.Bundle;
-
 import com.android.voicemail.impl.VvmLog;
 
 /**

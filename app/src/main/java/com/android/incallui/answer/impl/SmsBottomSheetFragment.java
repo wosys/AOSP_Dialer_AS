@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
@@ -43,9 +44,7 @@ import com.wintmain.dialer.common.LogUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Shows options for rejecting call with SMS
- */
+/** Shows options for rejecting call with SMS */
 public class SmsBottomSheetFragment extends BottomSheetDialogFragment {
 
     private static final String ARG_OPTIONS = "options";
@@ -96,7 +95,7 @@ public class SmsBottomSheetFragment extends BottomSheetDialogFragment {
     }
 
     private TextView newTextViewItem(@Nullable final CharSequence text) {
-        int[] attrs = new int[]{android.R.attr.selectableItemBackground};
+        int[] attrs = new int[] {android.R.attr.selectableItemBackground};
         Context context = new ContextThemeWrapper(getContext(), getTheme());
         TypedArray typedArray = context.obtainStyledAttributes(attrs);
         Drawable background = typedArray.getDrawable(0);
@@ -116,10 +115,13 @@ public class SmsBottomSheetFragment extends BottomSheetDialogFragment {
         textView.setLayoutParams(params);
 
         textView.setOnClickListener(
-                v -> {
-                    FragmentUtils.getParentUnsafe(SmsBottomSheetFragment.this, SmsSheetHolder.class)
-                            .smsSelected(text);
-                    dismiss();
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        FragmentUtils.getParentUnsafe(SmsBottomSheetFragment.this, SmsSheetHolder.class)
+                                .smsSelected(text);
+                        dismiss();
+                    }
                 });
         return textView;
     }
@@ -136,9 +138,7 @@ public class SmsBottomSheetFragment extends BottomSheetDialogFragment {
         inCallUiLock.release();
     }
 
-    /**
-     * Callback interface for {@link SmsBottomSheetFragment}
-     */
+    /** Callback interface for {@link SmsBottomSheetFragment} */
     public interface SmsSheetHolder {
 
         InCallUiLock acquireInCallUiLock(String tag);

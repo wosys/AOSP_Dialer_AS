@@ -16,6 +16,7 @@
 
 package com.android.voicemail.impl;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -39,6 +40,7 @@ import com.wintmain.dialer.common.concurrent.DialerExecutorComponent;
  */
 public class PackageReplacedReceiver extends BroadcastReceiver {
 
+    @SuppressLint({"MissingPermission", "UnsafeProtectedBroadcastReceiver"})
     @Override
     public void onReceive(Context context, Intent intent) {
         VvmLog.i("PackageReplacedReceiver.onReceive", "package replaced, starting activation");
@@ -83,7 +85,7 @@ public class PackageReplacedReceiver extends BroadcastReceiver {
     }
 
     private static class ExistingVoicemailCheck implements Worker<Void, Void> {
-        private static final String[] PROJECTION = new String[]{Voicemails._ID};
+        private static final String[] PROJECTION = new String[] {Voicemails._ID};
 
         private final Context context;
 

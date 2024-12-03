@@ -1052,7 +1052,9 @@ public class AnswerFragment extends Fragment
                             }
                         });
 
-        TelecomUtil.silenceRinger(getContext());
+        if (VERSION.SDK_INT >= VERSION_CODES.Q) {
+            TelecomUtil.silenceRinger(getContext());
+        }
     }
 
     @Override

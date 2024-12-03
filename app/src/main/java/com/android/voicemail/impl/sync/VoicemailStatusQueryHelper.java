@@ -23,25 +23,25 @@ import android.provider.VoicemailContract;
 import android.provider.VoicemailContract.Status;
 import android.telecom.PhoneAccountHandle;
 
-/**
- * Construct queries to interact with the voicemail status table.
- */
+/** Construct queries to interact with the voicemail status table. */
 public class VoicemailStatusQueryHelper {
 
-    public static final int _ID = 0;
-    public static final int CONFIGURATION_STATE = 1;
-    public static final int NOTIFICATION_CHANNEL_STATE = 2;
-    public static final int SOURCE_PACKAGE = 3;
     static final String[] PROJECTION =
-            new String[]{
+            new String[] {
                     Status._ID, // 0
                     Status.CONFIGURATION_STATE, // 1
                     Status.NOTIFICATION_CHANNEL_STATE, // 2
                     Status.SOURCE_PACKAGE // 3
             };
-    private final Context context;
-    private final ContentResolver contentResolver;
-    private final Uri sourceUri;
+
+    public static final int _ID = 0;
+    public static final int CONFIGURATION_STATE = 1;
+    public static final int NOTIFICATION_CHANNEL_STATE = 2;
+    public static final int SOURCE_PACKAGE = 3;
+
+    private Context context;
+    private ContentResolver contentResolver;
+    private Uri sourceUri;
 
     public VoicemailStatusQueryHelper(Context context) {
         this.context = context;
@@ -55,7 +55,7 @@ public class VoicemailStatusQueryHelper {
      *
      * @param phoneAccount The phone account for the voicemail source to check.
      * @return {@code true} if the voicemail source is configured, {@code} false otherwise, including
-     * if the voicemail source is not registered in the table.
+     *     if the voicemail source is not registered in the table.
      */
     public boolean isVoicemailSourceConfigured(PhoneAccountHandle phoneAccount) {
         return isFieldEqualTo(phoneAccount, CONFIGURATION_STATE, Status.CONFIGURATION_STATE_OK);
@@ -76,10 +76,10 @@ public class VoicemailStatusQueryHelper {
      * Check if a field for an entry in the status table is equal to a specific value.
      *
      * @param phoneAccount The phone account of the voicemail source to query for.
-     * @param columnIndex  The column index of the field in the returned query.
-     * @param value        The value to compare against.
+     * @param columnIndex The column index of the field in the returned query.
+     * @param value The value to compare against.
      * @return {@code true} if the stored value is equal to the provided value. {@code false}
-     * otherwise.
+     *     otherwise.
      */
     private boolean isFieldEqualTo(PhoneAccountHandle phoneAccount, int columnIndex, int value) {
         Cursor cursor = null;

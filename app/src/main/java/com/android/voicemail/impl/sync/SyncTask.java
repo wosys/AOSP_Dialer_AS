@@ -25,12 +25,11 @@ import com.android.voicemail.impl.scheduling.BaseTask;
 import com.android.voicemail.impl.scheduling.MinimalIntervalPolicy;
 import com.android.voicemail.impl.scheduling.RetryPolicy;
 import com.android.voicemail.impl.utils.LoggerUtils;
+
 import com.wintmain.dialer.logging.DialerImpression;
 import com.wintmain.dialer.proguard.UsedByReflection;
 
-/**
- * System initiated sync request.
- */
+/** System initiated sync request. */
 @UsedByReflection(value = "Tasks.java")
 public class SyncTask extends BaseTask {
 
@@ -45,17 +44,17 @@ public class SyncTask extends BaseTask {
 
     private PhoneAccountHandle phone;
 
+    public static void start(Context context, PhoneAccountHandle phone) {
+        Intent intent = BaseTask.createIntent(context, SyncTask.class, phone);
+        intent.putExtra(EXTRA_PHONE_ACCOUNT_HANDLE, phone);
+        context.sendBroadcast(intent);
+    }
+
     public SyncTask() {
         super(TASK_SYNC);
         retryPolicy = new RetryPolicy(RETRY_TIMES, RETRY_INTERVAL_MILLIS);
         addPolicy(retryPolicy);
         addPolicy(new MinimalIntervalPolicy(MINIMAL_INTERVAL_MILLIS));
-    }
-
-    public static void start(Context context, PhoneAccountHandle phone) {
-        Intent intent = BaseTask.createIntent(context, SyncTask.class, phone);
-        intent.putExtra(EXTRA_PHONE_ACCOUNT_HANDLE, phone);
-        context.sendBroadcast(intent);
     }
 
     @Override

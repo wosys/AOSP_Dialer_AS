@@ -504,10 +504,6 @@
     <string name="notification_action_speaker_on" >Turn speaker on</string>
     <string name="notification_call_wifi_brand" >Wi‑Fi call</string>
     <string name="notification_call_wifi_work_brand" >Wi‑Fi work call</string>
-    <string name="notification_channel_incoming_call" >Incoming calls</string>
-    <string name="notification_channel_misc" >Default</string>
-    <string name="notification_channel_missed_call" >Missed calls</string>
-    <string name="notification_channel_ongoing_call" >Ongoing calls</string>
     <string name="notification_dialing" >Dialing</string>
     <string name="notification_external_call" >Ongoing call on another device</string>
     <string name="notification_external_video_call" >Ongoing video call on another device</string>

@@ -18,14 +18,16 @@ package com.android.voicemail.impl.sync;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.net.InetAddresses;
 import android.net.LinkProperties;
 import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
-import android.os.Build.VERSION_CODES;
 import android.os.ConditionVariable;
+import android.os.Build.VERSION_CODES;
 import android.os.Handler;
 import android.os.Looper;
+
 import android.telecom.PhoneAccountHandle;
 import android.telephony.TelephonyManager;
 
@@ -44,19 +46,20 @@ import com.wintmain.dialer.common.Assert;
 @TargetApi(VERSION_CODES.O)
 public abstract class VvmNetworkRequestCallback extends ConnectivityManager.NetworkCallback {
 
-    public static final String NETWORK_REQUEST_FAILED_TIMEOUT = "timeout";
-    public static final String NETWORK_REQUEST_FAILED_LOST = "lost";
     private static final String TAG = "VvmNetworkRequest";
+
     // Timeout used to call ConnectivityManager.requestNetwork
     private static final int NETWORK_REQUEST_TIMEOUT_MILLIS = 60 * 1000;
-    private static final int DEFAULT_IPV4_WAIT_DELAY_MS = 500; // in milliseconds
-    private final OmtpVvmCarrierConfigHelper carrierConfigHelper;
-    private final VoicemailStatus.Editor status;
-    private final ConditionVariable mWaitV4Cv = new ConditionVariable();
+
+    public static final String NETWORK_REQUEST_FAILED_TIMEOUT = "timeout";
+    public static final String NETWORK_REQUEST_FAILED_LOST = "lost";
+
     protected Context context;
     protected PhoneAccountHandle phoneAccount;
     protected NetworkRequest networkRequest;
     private ConnectivityManager connectivityManager;
+    private final OmtpVvmCarrierConfigHelper carrierConfigHelper;
+    private final VoicemailStatus.Editor status;
     private boolean requestSent = false;
     private boolean resultReceived = false;
     private boolean released = false;
@@ -87,7 +90,7 @@ public abstract class VvmNetworkRequestCallback extends ConnectivityManager.Netw
 
     /**
      * @return NetworkRequest for a proper transport type. Use only cellular network if the carrier
-     * requires it. Otherwise use whatever available.
+     *     requires it. Otherwise use whatever available.
      */
     private NetworkRequest createNetworkRequest() {
 
@@ -128,19 +131,17 @@ public abstract class VvmNetworkRequestCallback extends ConnectivityManager.Netw
         resultReceived = true;
     }
 
+    private static final int DEFAULT_IPV4_WAIT_DELAY_MS = 500; // in milliseconds
+    private final ConditionVariable mWaitV4Cv = new ConditionVariable();
     @Override
     @CallSuper
     public void onLinkPropertiesChanged(Network network, LinkProperties lp) {
-        boolean hasIPv4 = false;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-            hasIPv4 = (lp != null);
-//              (lp.isReachable(InetAddresses.parseNumericAddress("8.8.8.8")));
-        }
-        if (hasIPv4) {
+        boolean hasIPv4 = (lp != null) && true;
+//                (lp.isReachable(InetAddresses.parseNumericAddress("8.8.8.8")));
+        if(hasIPv4) {
             mWaitV4Cv.open();
         }
     }
-
     public void waitForIpv4() {
         VvmLog.w(TAG, "Waiting for IPV4 address...");
         mWaitV4Cv.block(DEFAULT_IPV4_WAIT_DELAY_MS);
@@ -154,7 +155,7 @@ public abstract class VvmNetworkRequestCallback extends ConnectivityManager.Netw
     }
 
     public void requestNetwork() {
-        if (requestSent) {
+        if (requestSent == true) {
             VvmLog.e(TAG, "requestNetwork() called twice");
             return;
         }
@@ -169,7 +170,7 @@ public abstract class VvmNetworkRequestCallback extends ConnectivityManager.Netw
                 new Runnable() {
                     @Override
                     public void run() {
-                        if (!resultReceived) {
+                        if (resultReceived == false) {
                             onFailed(NETWORK_REQUEST_FAILED_TIMEOUT);
                         }
                     }

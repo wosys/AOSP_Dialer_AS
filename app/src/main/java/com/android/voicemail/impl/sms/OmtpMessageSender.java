@@ -22,7 +22,6 @@ import android.os.Build.VERSION_CODES;
 import android.telecom.PhoneAccountHandle;
 import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
-
 import androidx.annotation.Nullable;
 
 import com.android.voicemail.impl.OmtpConstants;
@@ -60,28 +59,25 @@ public abstract class OmtpMessageSender {
      * Sends a request to the VVM server to activate VVM for the current subscriber.
      *
      * @param sentIntent If not NULL this PendingIntent is broadcast when the message is successfully
-     *                   sent, or failed.
+     *     sent, or failed.
      */
-    public void requestVvmActivation(@Nullable PendingIntent sentIntent) {
-    }
+    public void requestVvmActivation(@Nullable PendingIntent sentIntent) {}
 
     /**
      * Sends a request to the VVM server to deactivate VVM for the current subscriber.
      *
      * @param sentIntent If not NULL this PendingIntent is broadcast when the message is successfully
-     *                   sent, or failed.
+     *     sent, or failed.
      */
-    public void requestVvmDeactivation(@Nullable PendingIntent sentIntent) {
-    }
+    public void requestVvmDeactivation(@Nullable PendingIntent sentIntent) {}
 
     /**
      * Send a request to the VVM server to get account status of the current subscriber.
      *
      * @param sentIntent If not NULL this PendingIntent is broadcast when the message is successfully
-     *                   sent, or failed.
+     *     sent, or failed.
      */
-    public void requestVvmStatus(@Nullable PendingIntent sentIntent) {
-    }
+    public void requestVvmStatus(@Nullable PendingIntent sentIntent) {}
 
     protected void sendSms(String text, PendingIntent sentIntent) {
 

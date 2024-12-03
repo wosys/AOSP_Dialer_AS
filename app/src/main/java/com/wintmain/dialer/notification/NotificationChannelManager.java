@@ -21,9 +21,12 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.media.AudioAttributes;
+import android.os.Build;
+import android.telecom.PhoneAccountHandle;
 import android.util.ArraySet;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.os.BuildCompat;
 
 import com.wintmain.dialer.R;
@@ -33,6 +36,7 @@ import com.wintmain.dialer.common.LogUtil;
 import java.util.Set;
 
 /** Creates all notification channels for Dialer. */
+@TargetApi(Build.VERSION_CODES.O)
 public final class NotificationChannelManager {
 
     /**
@@ -84,6 +88,15 @@ public final class NotificationChannelManager {
         createOngoingCallChannel(context);
         createMissedCallChannel(context);
         createDefaultChannel(context);
+        VoicemailChannelUtils.createAllChannels(context);
+    }
+
+    @NonNull
+    public static String getVoicemailChannelId(
+            @NonNull Context context, @Nullable PhoneAccountHandle handle) {
+        Assert.checkArgument(BuildCompat.isAtLeastO());
+        Assert.isNotNull(context);
+        return VoicemailChannelUtils.getChannelId(context, handle);
     }
 
     private static Set<String> getAllExistingChannelIds(@NonNull Context context) {
@@ -101,6 +114,7 @@ public final class NotificationChannelManager {
         result.add(NotificationChannelId.ONGOING_CALL);
         result.add(NotificationChannelId.MISSED_CALL);
         result.add(NotificationChannelId.DEFAULT);
+        result.addAll(VoicemailChannelUtils.getAllChannelIds(context));
         return result;
     }
 

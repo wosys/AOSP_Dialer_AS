@@ -18,7 +18,6 @@ package com.android.voicemail.impl.scheduling;
 
 import android.content.Intent;
 import android.os.Bundle;
-
 import com.android.voicemail.impl.scheduling.Task.TaskId;
 
 /**
@@ -43,8 +42,7 @@ public class MinimalIntervalPolicy implements Policy {
     }
 
     @Override
-    public void onBeforeExecute() {
-    }
+    public void onBeforeExecute() {}
 
     @Override
     public void onCompleted() {
@@ -58,10 +56,8 @@ public class MinimalIntervalPolicy implements Policy {
     }
 
     @Override
-    public void onFail() {
-    }
+    public void onFail() {}
 
     @Override
-    public void onDuplicatedTaskAdded() {
-    }
+    public void onDuplicatedTaskAdded() {}
 }

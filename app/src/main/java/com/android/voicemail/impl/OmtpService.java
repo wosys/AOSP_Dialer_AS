@@ -37,49 +37,17 @@ import com.android.voicemail.impl.sync.VvmAccountManager;
 import com.wintmain.dialer.logging.DialerImpression;
 import com.wintmain.dialer.logging.Logger;
 
-/**
- * Implements {@link VisualVoicemailService} to receive visual voicemail events
- */
+/** Implements {@link VisualVoicemailService} to receive visual voicemail events */
 @TargetApi(VERSION_CODES.O)
 public class OmtpService extends VisualVoicemailService {
 
-    public static final String ACTION_SMS_RECEIVED = "com.android.vociemailomtp.sms.sms_received";
-    public static final String EXTRA_VOICEMAIL_SMS = "extra_voicemail_sms";
     private static final String TAG = "VvmOmtpService";
+
+    public static final String ACTION_SMS_RECEIVED = "com.android.vociemailomtp.sms.sms_received";
+
+    public static final String EXTRA_VOICEMAIL_SMS = "extra_voicemail_sms";
+
     private static final String IS_SHUTTING_DOWN = "com.android.voicemail.impl.is_shutting_down";
-
-    @MainThread
-    static void onBoot(@NonNull Context context) {
-        VvmLog.i(TAG, "onBoot");
-        Assert.isTrue(isUserUnlocked(context));
-        Assert.isMainThread();
-        setShuttingDown(context, false);
-    }
-
-    @MainThread
-    static void onShutdown(@NonNull Context context) {
-        VvmLog.i(TAG, "onShutdown");
-        Assert.isTrue(isUserUnlocked(context));
-        Assert.isMainThread();
-        setShuttingDown(context, true);
-    }
-
-    private static boolean isUserUnlocked(@NonNull Context context) {
-        UserManager userManager = context.getSystemService(UserManager.class);
-        return userManager.isUserUnlocked();
-    }
-
-    private static void setShuttingDown(Context context, boolean value) {
-        PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext())
-                .edit()
-                .putBoolean(IS_SHUTTING_DOWN, value)
-                .apply();
-    }
-
-    private static boolean isShuttingDown(Context context) {
-        return PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext())
-                .getBoolean(IS_SHUTTING_DOWN, false);
-    }
 
     @Override
     public void onCellServiceConnected(
@@ -182,6 +150,22 @@ public class OmtpService extends VisualVoicemailService {
         Logger.get(this).logImpression(DialerImpression.Type.VVM_UNBUNDLED_EVENT_RECEIVED);
     }
 
+    @MainThread
+    static void onBoot(@NonNull Context context) {
+        VvmLog.i(TAG, "onBoot");
+        Assert.isTrue(isUserUnlocked(context));
+        Assert.isMainThread();
+        setShuttingDown(context, false);
+    }
+
+    @MainThread
+    static void onShutdown(@NonNull Context context) {
+        VvmLog.i(TAG, "onShutdown");
+        Assert.isTrue(isUserUnlocked(context));
+        Assert.isMainThread();
+        setShuttingDown(context, true);
+    }
+
     private boolean isModuleEnabled() {
         return VoicemailComponent.get(this).getVoicemailClient().isVoicemailModuleEnabled();
     }
@@ -207,5 +191,22 @@ public class OmtpService extends VisualVoicemailService {
             VvmLog.i(TAG, "disabling SMS filter");
             telephonyManager.setVisualVoicemailSmsFilterSettings(null);
         }
+    }
+
+    private static boolean isUserUnlocked(@NonNull Context context) {
+        UserManager userManager = context.getSystemService(UserManager.class);
+        return userManager.isUserUnlocked();
+    }
+
+    private static void setShuttingDown(Context context, boolean value) {
+        PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext())
+                .edit()
+                .putBoolean(IS_SHUTTING_DOWN, value)
+                .apply();
+    }
+
+    private static boolean isShuttingDown(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext())
+                .getBoolean(IS_SHUTTING_DOWN, false);
     }
 }

@@ -18,12 +18,12 @@ package com.android.voicemail.impl.utils;
 
 import android.util.ArrayMap;
 
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 
 public class XmlUtils {
 
@@ -56,7 +56,7 @@ public class XmlUtils {
      *
      * @param parser The XmlPullParser from which to read the list data.
      * @param endTag Name of the tag that will end the list, usually "list".
-     * @param name   An array of one string, used to return the name attribute of the list's tag.
+     * @param name An array of one string, used to return the name attribute of the list's tag.
      * @return HashMap The newly generated list.
      */
     public static final ArrayList readThisListXml(
@@ -92,7 +92,7 @@ public class XmlUtils {
      *
      * @param parser The XmlPullParser from which to read the list data.
      * @param endTag Name of the tag that will end the list, usually "string-array".
-     * @param name   An array of one string, used to return the name attribute of the list's tag.
+     * @param name An array of one string, used to return the name attribute of the list's tag.
      * @return Returns a newly generated String[].
      */
     public static String[] readThisStringArrayXml(XmlPullParser parser, String endTag, String[] name)
@@ -228,11 +228,11 @@ public class XmlUtils {
          * Called from readThisMapXml when a START_TAG is not recognized. The input stream is positioned
          * within the start tag so that attributes can be read using in.getAttribute.
          *
-         * @param in  the XML input stream
+         * @param in the XML input stream
          * @param tag the START_TAG that was not recognized.
          * @return the Object parsed from the stream which will be put into the map.
          * @throws XmlPullParserException if the START_TAG is not recognized.
-         * @throws IOException            on XmlPullParser serialization errors.
+         * @throws IOException on XmlPullParser serialization errors.
          */
         Object readThisUnknownObjectXml(XmlPullParser in, String tag)
                 throws XmlPullParserException, IOException;

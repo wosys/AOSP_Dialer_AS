@@ -90,6 +90,11 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- voicemail END-->
 
+    <!-- Needed for SMS application when targetSdkVersion is 30 -->
+    <queries>
+        <package android:name="com.google.android.apps.messaging" />
+    </queries>
+
     <application
         android:name="com.wintmain.dialer.binary.aosp.AospDialerApplication"
         android:extractNativeLibs="false"

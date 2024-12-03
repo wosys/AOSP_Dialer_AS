@@ -62,6 +62,8 @@ import java.util.Set;
 @SuppressWarnings({"missingpermission"})
 public class OmtpVvmCarrierConfigHelper {
 
+    private static final String TAG = "OmtpVvmCarrierCfgHlpr";
+
     public static final String KEY_VVM_TYPE_STRING = CarrierConfigManager.KEY_VVM_TYPE_STRING;
     public static final String KEY_VVM_DESTINATION_NUMBER_STRING =
             CarrierConfigManager.KEY_VVM_DESTINATION_NUMBER_STRING;
@@ -73,14 +75,13 @@ public class OmtpVvmCarrierConfigHelper {
     public static final String KEY_VVM_PREFETCH_BOOL = CarrierConfigManager.KEY_VVM_PREFETCH_BOOL;
     public static final String KEY_VVM_CELLULAR_DATA_REQUIRED_BOOL =
             CarrierConfigManager.KEY_VVM_CELLULAR_DATA_REQUIRED_BOOL;
-    /**
-     * @see #getSslPort()
-     */
+
+    /** @see #getSslPort() */
     public static final String KEY_VVM_SSL_PORT_NUMBER_INT = "vvm_ssl_port_number_int";
-    /**
-     * @see #isLegacyModeEnabled()
-     */
+
+    /** @see #isLegacyModeEnabled() */
     public static final String KEY_VVM_LEGACY_MODE_ENABLED_BOOL = "vvm_legacy_mode_enabled_bool";
+
     /**
      * Ban a capability reported by the server from being used. The array of string should be a subset
      * of the capabilities returned IMAP CAPABILITY command.
@@ -89,12 +90,11 @@ public class OmtpVvmCarrierConfigHelper {
      */
     public static final String KEY_VVM_DISABLED_CAPABILITIES_STRING_ARRAY =
             "vvm_disabled_capabilities_string_array";
+
     public static final String KEY_VVM_CLIENT_PREFIX_STRING = "vvm_client_prefix_string";
-    private static final String TAG = "OmtpVvmCarrierCfgHlpr";
     private static final String KEY_IGNORE_TRANSCRIPTION_BOOL = "vvm_ignore_transcription";
 
-    @Nullable
-    private static PersistableBundle overrideConfigForTest;
+    @Nullable private static PersistableBundle overrideConfigForTest;
 
     private final Context context;
     private final PersistableBundle carrierConfig;
@@ -102,10 +102,9 @@ public class OmtpVvmCarrierConfigHelper {
     private final VisualVoicemailProtocol protocol;
     private final PersistableBundle telephonyConfig;
 
-    @Nullable
-    private final PersistableBundle overrideConfig;
+    @Nullable private final PersistableBundle overrideConfig;
 
-    private final PhoneAccountHandle phoneAccountHandle;
+    private PhoneAccountHandle phoneAccountHandle;
 
     public OmtpVvmCarrierConfigHelper(Context context, @Nullable PhoneAccountHandle handle) {
         this.context = context;
@@ -159,49 +158,6 @@ public class OmtpVvmCarrierConfigHelper {
         protocol = VisualVoicemailProtocolFactory.create(this.context.getResources(), vvmType);
     }
 
-    private static Set<String> getCarrierVvmPackageNames(@Nullable PersistableBundle bundle) {
-        if (bundle == null) {
-            return null;
-        }
-        Set<String> names = new ArraySet<>();
-        if (bundle.containsKey(KEY_CARRIER_VVM_PACKAGE_NAME_STRING)) {
-            names.add(bundle.getString(KEY_CARRIER_VVM_PACKAGE_NAME_STRING));
-        }
-        if (bundle.containsKey(KEY_CARRIER_VVM_PACKAGE_NAME_STRING_ARRAY)) {
-            String[] vvmPackages = bundle.getStringArray(KEY_CARRIER_VVM_PACKAGE_NAME_STRING_ARRAY);
-            if (vvmPackages != null && vvmPackages.length > 0) {
-                Collections.addAll(names, vvmPackages);
-            }
-        }
-        if (names.isEmpty()) {
-            return null;
-        }
-        return names;
-    }
-
-    @Nullable
-    private static Set<String> getDisabledCapabilities(@Nullable PersistableBundle bundle) {
-        if (bundle == null) {
-            return null;
-        }
-        if (!bundle.containsKey(KEY_VVM_DISABLED_CAPABILITIES_STRING_ARRAY)) {
-            return null;
-        }
-        String[] disabledCapabilities =
-                bundle.getStringArray(KEY_VVM_DISABLED_CAPABILITIES_STRING_ARRAY);
-        if (disabledCapabilities != null && disabledCapabilities.length > 0) {
-            ArraySet<String> result = new ArraySet<>();
-            Collections.addAll(result, disabledCapabilities);
-            return result;
-        }
-        return null;
-    }
-
-    @VisibleForTesting
-    public static void setOverrideConfigForTest(PersistableBundle config) {
-        overrideConfigForTest = config;
-    }
-
     public PersistableBundle getConfig() {
         PersistableBundle result = new PersistableBundle();
         if (telephonyConfig != null) {
@@ -228,7 +184,10 @@ public class OmtpVvmCarrierConfigHelper {
      * known protocol.
      */
     public boolean isValid() {
-      return protocol != null;
+        if (protocol == null) {
+            return false;
+        }
+        return true;
     }
 
     @Nullable
@@ -241,9 +200,7 @@ public class OmtpVvmCarrierConfigHelper {
         return protocol;
     }
 
-    /**
-     * @returns arbitrary String stored in the config file. Used for protocol specific values.
-     */
+    /** @returns arbitrary String stored in the config file. Used for protocol specific values. */
     @Nullable
     public String getString(String key) {
         Assert.checkArgument(isValid());
@@ -267,6 +224,26 @@ public class OmtpVvmCarrierConfigHelper {
     public Set<String> getCarrierVvmPackageNames() {
         Assert.checkArgument(isValid());
         return getCarrierVvmPackageNamesWithoutValidation();
+    }
+
+    private static Set<String> getCarrierVvmPackageNames(@Nullable PersistableBundle bundle) {
+        if (bundle == null) {
+            return null;
+        }
+        Set<String> names = new ArraySet<>();
+        if (bundle.containsKey(KEY_CARRIER_VVM_PACKAGE_NAME_STRING)) {
+            names.add(bundle.getString(KEY_CARRIER_VVM_PACKAGE_NAME_STRING));
+        }
+        if (bundle.containsKey(KEY_CARRIER_VVM_PACKAGE_NAME_STRING_ARRAY)) {
+            String[] vvmPackages = bundle.getStringArray(KEY_CARRIER_VVM_PACKAGE_NAME_STRING_ARRAY);
+            if (vvmPackages != null && vvmPackages.length > 0) {
+                Collections.addAll(names, vvmPackages);
+            }
+        }
+        if (names.isEmpty()) {
+            return null;
+        }
+        return names;
     }
 
     /**
@@ -301,9 +278,7 @@ public class OmtpVvmCarrierConfigHelper {
         return (String) getValue(KEY_VVM_DESTINATION_NUMBER_STRING);
     }
 
-    /**
-     * @return Port to start a SSL IMAP connection directly.
-     */
+    /** @return Port to start a SSL IMAP connection directly. */
     public int getSslPort() {
         Assert.checkArgument(isValid());
         return (int) getValue(KEY_VVM_SSL_PORT_NUMBER_INT, 0);
@@ -317,7 +292,7 @@ public class OmtpVvmCarrierConfigHelper {
      * using it to login will cause subsequent response to be erroneous.
      *
      * @return A set of capabilities that is reported by the IMAP CAPABILITY command, but determined
-     * to have issues and should not be used.
+     *     to have issues and should not be used.
      */
     @Nullable
     public Set<String> getDisabledCapabilities() {
@@ -332,6 +307,24 @@ public class OmtpVvmCarrierConfigHelper {
             return disabledCapabilities;
         }
         return getDisabledCapabilities(telephonyConfig);
+    }
+
+    @Nullable
+    private static Set<String> getDisabledCapabilities(@Nullable PersistableBundle bundle) {
+        if (bundle == null) {
+            return null;
+        }
+        if (!bundle.containsKey(KEY_VVM_DISABLED_CAPABILITIES_STRING_ARRAY)) {
+            return null;
+        }
+        String[] disabledCapabilities =
+                bundle.getStringArray(KEY_VVM_DISABLED_CAPABILITIES_STRING_ARRAY);
+        if (disabledCapabilities != null && disabledCapabilities.length > 0) {
+            ArraySet<String> result = new ArraySet<>();
+            Collections.addAll(result, disabledCapabilities);
+            return result;
+        }
+        return null;
     }
 
     public String getClientPrefix() {
@@ -430,31 +423,32 @@ public class OmtpVvmCarrierConfigHelper {
 
     @Override
     public String toString() {
-      String builder = "OmtpVvmCarrierConfigHelper [" +
-              "phoneAccountHandle: " +
-              phoneAccountHandle +
-              ", carrierConfig: " +
-              (carrierConfig != null) +
-              ", telephonyConfig: " +
-              (telephonyConfig != null) +
-              ", type: " +
-              getVvmType() +
-              ", destinationNumber: " +
-              getDestinationNumber() +
-              ", applicationPort: " +
-              getApplicationPort() +
-              ", sslPort: " +
-              getSslPort() +
-              ", isEnabledByDefault: " +
-              isEnabledByDefault() +
-              ", isCellularDataRequired: " +
-              isCellularDataRequired() +
-              ", isPrefetchEnabled: " +
-              isPrefetchEnabled() +
-              ", isLegacyModeEnabled: " +
-              isLegacyModeEnabled() +
-              "]";
-        return builder;
+        StringBuilder builder = new StringBuilder("OmtpVvmCarrierConfigHelper [");
+        builder
+                .append("phoneAccountHandle: ")
+                .append(phoneAccountHandle)
+                .append(", carrierConfig: ")
+                .append(carrierConfig != null)
+                .append(", telephonyConfig: ")
+                .append(telephonyConfig != null)
+                .append(", type: ")
+                .append(getVvmType())
+                .append(", destinationNumber: ")
+                .append(getDestinationNumber())
+                .append(", applicationPort: ")
+                .append(getApplicationPort())
+                .append(", sslPort: ")
+                .append(getSslPort())
+                .append(", isEnabledByDefault: ")
+                .append(isEnabledByDefault())
+                .append(", isCellularDataRequired: ")
+                .append(isCellularDataRequired())
+                .append(", isPrefetchEnabled: ")
+                .append(isPrefetchEnabled())
+                .append(", isLegacyModeEnabled: ")
+                .append(isLegacyModeEnabled())
+                .append("]");
+        return builder.toString();
     }
 
     @Nullable
@@ -507,9 +501,12 @@ public class OmtpVvmCarrierConfigHelper {
         return defaultValue;
     }
 
-    /**
-     * Checks if the carrier VVM app is installed.
-     */
+    @VisibleForTesting
+    public static void setOverrideConfigForTest(PersistableBundle config) {
+        overrideConfigForTest = config;
+    }
+
+    /** Checks if the carrier VVM app is installed. */
     public boolean isCarrierAppInstalled() {
         Set<String> carrierPackages = getCarrierVvmPackageNamesWithoutValidation();
         if (carrierPackages == null) {

@@ -413,10 +413,6 @@
     <string name="notification_action_speaker_on">打开扬声器</string>
     <string name="notification_call_wifi_brand">WLAN 通话</string>
     <string name="notification_call_wifi_work_brand">WLAN 工作通话</string>
-    <string name="notification_channel_incoming_call">来电</string>
-    <string name="notification_channel_misc">默认</string>
-    <string name="notification_channel_missed_call">未接电话</string>
-    <string name="notification_channel_ongoing_call">正在进行的通话</string>
     <string name="notification_dialing">正在拨号</string>
     <string name="notification_external_call">其他设备上有正在进行的通话</string>
     <string name="notification_external_video_call">其他设备上有正在进行的视频通话</string>

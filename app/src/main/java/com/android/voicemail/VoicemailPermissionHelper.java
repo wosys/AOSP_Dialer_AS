@@ -31,9 +31,7 @@ import java.util.List;
  */
 public class VoicemailPermissionHelper {
 
-    /**
-     * _VOICEMAIL permissions are auto-granted by being the default dialer.
-     */
+    /** *_VOICEMAIL permissions are auto-granted by being the default dialer. */
     private static final String[] VOICEMAIL_PERMISSIONS = {
             permission.ADD_VOICEMAIL,
             permission.WRITE_VOICEMAIL,
@@ -50,9 +48,7 @@ public class VoicemailPermissionHelper {
         return getMissingPermissions(context).isEmpty();
     }
 
-    /**
-     * Returns a list of permission that is missing for the voicemail module to operate.
-     */
+    /** Returns a list of permission that is missing for the voicemail module to operate. */
     @NonNull
     public static List<String> getMissingPermissions(Context context) {
         List<String> result = new ArrayList<>();

@@ -48,9 +48,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-/**
- * Intercepts a incoming STATUS SMS with a blocking call.
- */
+/** Intercepts a incoming STATUS SMS with a blocking call. */
 @TargetApi(VERSION_CODES.O)
 public class StatusSmsFetcher extends BroadcastReceiver implements Closeable {
 
@@ -65,9 +63,11 @@ public class StatusSmsFetcher extends BroadcastReceiver implements Closeable {
             "com.android.voicemailomtp.sms.REQUEST_SENT";
 
     private static final int ACTION_REQUEST_SENT_REQUEST_CODE = 0;
+
+    private CompletableFuture<Bundle> future = new CompletableFuture<>();
+
     private final Context context;
     private final PhoneAccountHandle phoneAccountHandle;
-    private final CompletableFuture<Bundle> future = new CompletableFuture<>();
 
     public StatusSmsFetcher(Context context, PhoneAccountHandle phoneAccountHandle) {
         this.context = context;
@@ -75,23 +75,6 @@ public class StatusSmsFetcher extends BroadcastReceiver implements Closeable {
         IntentFilter filter = new IntentFilter(ACTION_REQUEST_SENT_INTENT);
         filter.addAction(OmtpService.ACTION_SMS_RECEIVED);
         context.registerReceiver(this, filter, PERMISSION_DIALER_ORIGIN, /* scheduler= */ null);
-    }
-
-    private static String sentSmsResultToString(int resultCode) {
-        switch (resultCode) {
-            case Activity.RESULT_OK:
-                return "OK";
-            case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
-                return "RESULT_ERROR_GENERIC_FAILURE";
-            case SmsManager.RESULT_ERROR_NO_SERVICE:
-                return "RESULT_ERROR_GENERIC_FAILURE";
-            case SmsManager.RESULT_ERROR_NULL_PDU:
-                return "RESULT_ERROR_GENERIC_FAILURE";
-            case SmsManager.RESULT_ERROR_RADIO_OFF:
-                return "RESULT_ERROR_GENERIC_FAILURE";
-            default:
-                return "UNKNOWN CODE: " + resultCode;
-        }
     }
 
     @Override
@@ -165,6 +148,23 @@ public class StatusSmsFetcher extends BroadcastReceiver implements Closeable {
         if (translatedBundle != null) {
             VvmLog.i(TAG, "Translated to STATUS SMS");
             future.complete(translatedBundle);
+        }
+    }
+
+    private static String sentSmsResultToString(int resultCode) {
+        switch (resultCode) {
+            case Activity.RESULT_OK:
+                return "OK";
+            case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
+                return "RESULT_ERROR_GENERIC_FAILURE";
+            case SmsManager.RESULT_ERROR_NO_SERVICE:
+                return "RESULT_ERROR_GENERIC_FAILURE";
+            case SmsManager.RESULT_ERROR_NULL_PDU:
+                return "RESULT_ERROR_GENERIC_FAILURE";
+            case SmsManager.RESULT_ERROR_RADIO_OFF:
+                return "RESULT_ERROR_GENERIC_FAILURE";
+            default:
+                return "UNKNOWN CODE: " + resultCode;
         }
     }
 }

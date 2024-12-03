@@ -28,21 +28,19 @@ import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
-
 import androidx.annotation.MainThread;
 
 import com.android.voicemail.impl.Assert;
 import com.android.voicemail.impl.VvmLog;
 import com.android.voicemail.impl.scheduling.Tasks.TaskCreationException;
+
 import com.wintmain.dialer.constants.ScheduledJobIds;
 import com.wintmain.dialer.strictmode.StrictModeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A {@link JobService} that will trigger the background execution of {@link TaskExecutor}.
- */
+/** A {@link JobService} that will trigger the background execution of {@link TaskExecutor}. */
 @TargetApi(VERSION_CODES.O)
 public class TaskSchedulerJobService extends JobService implements TaskExecutor.Job {
 
@@ -60,6 +58,37 @@ public class TaskSchedulerJobService extends JobService implements TaskExecutor.
 
     private JobParameters jobParameters;
 
+    @Override
+    @MainThread
+    public boolean onStartJob(JobParameters params) {
+        int jobId = params.getTransientExtras().getInt(EXTRA_JOB_ID);
+        int expectedJobId =
+                StrictModeUtils.bypass(
+                        () -> PreferenceManager.getDefaultSharedPreferences(this).getInt(EXPECTED_JOB_ID, 0));
+        if (jobId != expectedJobId) {
+            VvmLog.e(
+                    TAG, "Job " + jobId + " is not the last scheduled job " + expectedJobId + ", ignoring");
+            return false; // nothing more to do. Job not running in background.
+        }
+        VvmLog.i(TAG, "starting " + jobId);
+        jobParameters = params;
+        TaskExecutor.createRunningInstance(this);
+        TaskExecutor.getRunningInstance()
+                .onStartJob(
+                        this,
+                        getBundleList(
+                                jobParameters.getTransientExtras().getParcelableArray(EXTRA_TASK_EXTRAS_ARRAY)));
+        return true /* job still running in background */;
+    }
+
+    @Override
+    @MainThread
+    public boolean onStopJob(JobParameters params) {
+        TaskExecutor.getRunningInstance().onStopJob();
+        jobParameters = null;
+        return false /* don't reschedule. TaskExecutor service will post a new job */;
+    }
+
     /**
      * Schedule a job to run the {@code pendingTasks}. If a job is already scheduled it will be
      * appended to the back of the queue and the job will be rescheduled. A job may only be scheduled
@@ -67,7 +96,7 @@ public class TaskSchedulerJobService extends JobService implements TaskExecutor.
      * returning {@code null})
      *
      * @param delayMillis delay before running the job. Must be 0 if{@code isNewJob} is true.
-     * @param isNewJob    a new job will be forced to run immediately.
+     * @param isNewJob a new job will be forced to run immediately.
      */
     @MainThread
     public static void scheduleJob(
@@ -122,52 +151,6 @@ public class TaskSchedulerJobService extends JobService implements TaskExecutor.
         VvmLog.i(TAG, "job " + jobId + " scheduled");
     }
 
-    private static List<Bundle> getBundleList(Parcelable[] parcelables) {
-        List<Bundle> result = new ArrayList<>(parcelables.length);
-        for (Parcelable parcelable : parcelables) {
-            result.add((Bundle) parcelable);
-        }
-        return result;
-    }
-
-    private static int createJobId(Context context) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        int jobId = sharedPreferences.getInt(NEXT_JOB_ID, 0);
-        sharedPreferences.edit().putInt(NEXT_JOB_ID, jobId + 1).apply();
-        return jobId;
-    }
-
-    @Override
-    @MainThread
-    public boolean onStartJob(JobParameters params) {
-        int jobId = params.getTransientExtras().getInt(EXTRA_JOB_ID);
-        int expectedJobId =
-                StrictModeUtils.bypass(
-                        () -> PreferenceManager.getDefaultSharedPreferences(this).getInt(EXPECTED_JOB_ID, 0));
-        if (jobId != expectedJobId) {
-            VvmLog.e(
-                    TAG, "Job " + jobId + " is not the last scheduled job " + expectedJobId + ", ignoring");
-            return false; // nothing more to do. Job not running in background.
-        }
-        VvmLog.i(TAG, "starting " + jobId);
-        jobParameters = params;
-        TaskExecutor.createRunningInstance(this);
-        TaskExecutor.getRunningInstance()
-                .onStartJob(
-                        this,
-                        getBundleList(
-                                jobParameters.getTransientExtras().getParcelableArray(EXTRA_TASK_EXTRAS_ARRAY)));
-        return true /* job still running in background */;
-    }
-
-    @Override
-    @MainThread
-    public boolean onStopJob(JobParameters params) {
-        TaskExecutor.getRunningInstance().onStopJob();
-        jobParameters = null;
-        return false /* don't reschedule. TaskExecutor service will post a new job */;
-    }
-
     /**
      * The system will hold a wakelock when {@link #onStartJob(JobParameters)} is called to ensure the
      * device will not sleep when the job is still running. Finish the job so the system will release
@@ -187,5 +170,20 @@ public class TaskSchedulerJobService extends JobService implements TaskExecutor.
         return getSystemService(JobScheduler.class)
                 .getPendingJob(ScheduledJobIds.VVM_TASK_SCHEDULER_JOB)
                 == null;
+    }
+
+    private static List<Bundle> getBundleList(Parcelable[] parcelables) {
+        List<Bundle> result = new ArrayList<>(parcelables.length);
+        for (Parcelable parcelable : parcelables) {
+            result.add((Bundle) parcelable);
+        }
+        return result;
+    }
+
+    private static int createJobId(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        int jobId = sharedPreferences.getInt(NEXT_JOB_ID, 0);
+        sharedPreferences.edit().putInt(NEXT_JOB_ID, jobId + 1).apply();
+        return jobId;
     }
 }

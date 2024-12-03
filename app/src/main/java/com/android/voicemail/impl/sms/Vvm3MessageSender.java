@@ -18,7 +18,6 @@ package com.android.voicemail.impl.sms;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.telecom.PhoneAccountHandle;
-
 import androidx.annotation.Nullable;
 
 public class Vvm3MessageSender extends OmtpMessageSender {
@@ -27,7 +26,7 @@ public class Vvm3MessageSender extends OmtpMessageSender {
      * Creates a new instance of Vvm3MessageSender.
      *
      * @param applicationPort If set to a value > 0 then a binary sms is sent to this port number.
-     *                        Otherwise, a standard text SMS is sent.
+     *     Otherwise, a standard text SMS is sent.
      */
     public Vvm3MessageSender(
             Context context,
@@ -52,6 +51,7 @@ public class Vvm3MessageSender extends OmtpMessageSender {
     public void requestVvmStatus(@Nullable PendingIntent sentIntent) {
         // Status message:
         // STATUS
-        sendSms("STATUS", sentIntent);
+        StringBuilder sb = new StringBuilder().append("STATUS");
+        sendSms(sb.toString(), sentIntent);
     }
 }

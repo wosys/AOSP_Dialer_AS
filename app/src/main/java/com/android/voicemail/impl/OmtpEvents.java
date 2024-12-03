@@ -112,8 +112,21 @@ public enum OmtpEvents {
     VVM3_SUBSCRIBER_BLOCKED,
     VVM3_SUBSCRIBER_UNKNOWN;
 
+    public static class Type {
+
+        @Retention(RetentionPolicy.SOURCE)
+        @IntDef({CONFIGURATION, DATA_CHANNEL, NOTIFICATION_CHANNEL, OTHER})
+        public @interface Values {}
+
+        public static final int CONFIGURATION = 1;
+        public static final int DATA_CHANNEL = 2;
+        public static final int NOTIFICATION_CHANNEL = 3;
+        public static final int OTHER = 4;
+    }
+
     private final int type;
     private final boolean isSuccess;
+
     OmtpEvents(int type, boolean isSuccess) {
         this.type = type;
         this.isSuccess = isSuccess;
@@ -136,17 +149,5 @@ public enum OmtpEvents {
 
     public boolean isSuccess() {
         return isSuccess;
-    }
-
-    public static class Type {
-
-        public static final int CONFIGURATION = 1;
-        public static final int DATA_CHANNEL = 2;
-        public static final int NOTIFICATION_CHANNEL = 3;
-        public static final int OTHER = 4;
-        @Retention(RetentionPolicy.SOURCE)
-        @IntDef({CONFIGURATION, DATA_CHANNEL, NOTIFICATION_CHANNEL, OTHER})
-        public @interface Values {
-        }
     }
 }

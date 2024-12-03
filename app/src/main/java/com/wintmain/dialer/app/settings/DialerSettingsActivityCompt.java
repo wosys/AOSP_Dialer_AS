@@ -58,7 +58,7 @@ import com.wintmain.dialer.common.LogUtil;
 import com.wintmain.dialer.compat.telephony.TelephonyManagerCompat;
 import com.wintmain.dialer.lookup.LookupSettings;
 import com.wintmain.dialer.main.impl.MainActivity;
-import com.wintmain.dialer.main.impl.MainActivityPeer;
+import com.wintmain.dialer.main.impl.TBDMainActivityPeer;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import java.util.Objects;
@@ -72,7 +72,8 @@ public class DialerSettingsActivityCompt extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         LogUtil.enterBlock("DialerSettingsActivity.onCreate");
-        PrefsFragment.ThemeButtonBehavior mThemeBehavior = PrefsFragment.getThemeButtonBehavior(MainActivityPeer.themeprefs);
+        PrefsFragment.ThemeButtonBehavior mThemeBehavior = PrefsFragment.getThemeButtonBehavior(
+                TBDMainActivityPeer.themeprefs);
 
         if (mThemeBehavior == PrefsFragment.ThemeButtonBehavior.DARK) {
             getTheme().applyStyle(R.style.DialerDark, true);

@@ -20,7 +20,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public interface Body {
-    InputStream getInputStream() throws MessagingException;
+  public InputStream getInputStream() throws MessagingException;
 
-    void writeTo(OutputStream out) throws IOException, MessagingException;
+  public void writeTo(OutputStream out) throws IOException, MessagingException;
 }

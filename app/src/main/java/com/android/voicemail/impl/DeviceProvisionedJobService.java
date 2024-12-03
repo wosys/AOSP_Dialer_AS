@@ -42,12 +42,9 @@ import com.wintmain.dialer.constants.ScheduledJobIds;
 @TargetApi(VERSION_CODES.O)
 public class DeviceProvisionedJobService extends JobService {
 
-    @VisibleForTesting
-    static final String EXTRA_PHONE_ACCOUNT_HANDLE = "EXTRA_PHONE_ACCOUNT_HANDLE";
+    @VisibleForTesting static final String EXTRA_PHONE_ACCOUNT_HANDLE = "EXTRA_PHONE_ACCOUNT_HANDLE";
 
-    /**
-     * Queue the phone account to be reactivated after the setup wizard has completed.
-     */
+    /** Queue the phone account to be reactivated after the setup wizard has completed. */
     public static void activateAfterProvisioned(
             Context context, PhoneAccountHandle phoneAccountHandle) {
         Intent intent = new Intent();
@@ -55,16 +52,6 @@ public class DeviceProvisionedJobService extends JobService {
         context
                 .getSystemService(JobScheduler.class)
                 .enqueue(createJobInfo(context), new JobWorkItem(intent));
-    }
-
-    private static JobInfo createJobInfo(Context context) {
-        return new JobInfo.Builder(
-                ScheduledJobIds.VVM_DEVICE_PROVISIONED_JOB,
-                new ComponentName(context, DeviceProvisionedJobService.class))
-                .addTriggerContentUri(new TriggerContentUri(Global.getUriFor(Global.DEVICE_PROVISIONED), 0))
-                // VVM activation must be run as soon as possible to avoid voicemail loss
-                .setTriggerContentMaxDelay(0)
-                .build();
     }
 
     @Override
@@ -93,5 +80,15 @@ public class DeviceProvisionedJobService extends JobService {
 
     private boolean isDeviceProvisioned() {
         return Settings.Global.getInt(getContentResolver(), Settings.Global.DEVICE_PROVISIONED, 0) == 1;
+    }
+
+    private static JobInfo createJobInfo(Context context) {
+        return new JobInfo.Builder(
+                ScheduledJobIds.VVM_DEVICE_PROVISIONED_JOB,
+                new ComponentName(context, DeviceProvisionedJobService.class))
+                .addTriggerContentUri(new TriggerContentUri(Global.getUriFor(Global.DEVICE_PROVISIONED), 0))
+                // VVM activation must be run as soon as possible to avoid voicemail loss
+                .setTriggerContentMaxDelay(0)
+                .build();
     }
 }

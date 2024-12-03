@@ -32,9 +32,7 @@ public class OmtpConstants {
     // This is the format designated by the OMTP spec.
     public static final String DATE_TIME_FORMAT = "dd/MM/yyyy HH:mm Z";
 
-    /**
-     * OMTP protocol versions.
-     */
+    /** OMTP protocol versions. */
     public static final String PROTOCOL_VERSION1_1 = "11";
 
     public static final String PROTOCOL_VERSION1_2 = "12";
@@ -42,17 +40,13 @@ public class OmtpConstants {
 
     ///////////////////////// Client/Mobile originated SMS //////////////////////
 
-    /**
-     * Mobile Originated requests
-     */
+    /** Mobile Originated requests */
     public static final String ACTIVATE_REQUEST = "Activate";
 
     public static final String DEACTIVATE_REQUEST = "Deactivate";
     public static final String STATUS_REQUEST = "Status";
 
-    /**
-     * fields that can be present in a Mobile Originated OMTP SMS
-     */
+    /** fields that can be present in a Mobile Originated OMTP SMS */
     public static final String CLIENT_TYPE = "ct";
 
     public static final String APPLICATION_PORT = "pt";
@@ -67,17 +61,13 @@ public class OmtpConstants {
      * identify the field's value, if present, in the SMS body.
      */
 
-    /**
-     * The event that triggered this SYNC SMS. See {@link OmtpConstants#SYNC_TRIGGER_EVENT_VALUES}
-     */
+    /** The event that triggered this SYNC SMS. See {@link OmtpConstants#SYNC_TRIGGER_EVENT_VALUES} */
     public static final String SYNC_TRIGGER_EVENT = "ev";
 
     public static final String MESSAGE_UID = "id";
     public static final String MESSAGE_LENGTH = "l";
     public static final String NUM_MESSAGE_COUNT = "c";
-    /**
-     * See {@link OmtpConstants#CONTENT_TYPE_VALUES}
-     */
+    /** See {@link OmtpConstants#CONTENT_TYPE_VALUES} */
     public static final String CONTENT_TYPE = "t";
 
     public static final String SENDER = "s";
@@ -106,13 +96,9 @@ public class OmtpConstants {
 
     public static final String VIDEO = "o";
     public static final String FAX = "f";
-    /**
-     * Voice message deposited by an external application
-     */
+    /** Voice message deposited by an external application */
     public static final String INFOTAINMENT = "i";
-    /**
-     * Empty Call Capture - i.e. voicemail with no voice message.
-     */
+    /** Empty Call Capture - i.e. voicemail with no voice message. */
     public static final String ECC = "e";
 
     public static final String[] CONTENT_TYPE_VALUES = {VOICE, VIDEO, FAX, INFOTAINMENT, ECC};
@@ -125,31 +111,19 @@ public class OmtpConstants {
      * <p>Each string constant is the field's key in the SMS body which is used by the parser to
      * identify the field's value, if present, in the SMS body.
      */
-    /**
-     * See {@link OmtpConstants#PROVISIONING_STATUS_VALUES}
-     */
+    /** See {@link OmtpConstants#PROVISIONING_STATUS_VALUES} */
     public static final String PROVISIONING_STATUS = "st";
-    /**
-     * See {@link OmtpConstants#RETURN_CODE_VALUES}
-     */
+    /** See {@link OmtpConstants#RETURN_CODE_VALUES} */
     public static final String RETURN_CODE = "rc";
-    /**
-     * URL to send users to for activation VVM
-     */
+    /** URL to send users to for activation VVM */
     public static final String SUBSCRIPTION_URL = "rs";
-    /**
-     * IMAP4/SMTP server IP address or fully qualified domain name
-     */
+    /** IMAP4/SMTP server IP address or fully qualified domain name */
     public static final String SERVER_ADDRESS = "srv";
-    /**
-     * Phone number to access voicemails through Telephony User Interface
-     */
+    /** Phone number to access voicemails through Telephony User Interface */
     public static final String TUI_ACCESS_NUMBER = "tui";
 
     public static final String TUI_PASSWORD_LENGTH = "pw_len";
-    /**
-     * Number to send client origination SMS
-     */
+    /** Number to send client origination SMS */
     public static final String CLIENT_SMS_DESTINATION_NUMBER = "dn";
 
     public static final String IMAP_PORT = "ipt";
@@ -226,9 +200,7 @@ public class OmtpConstants {
      */
     public static final String IMAP_CLOSE_NUT = "XCLOSE_NUT";
 
-    /**
-     * Possible NO responses for CHANGE_TUI_PWD
-     */
+    /** Possible NO responses for CHANGE_TUI_PWD */
     public static final String RESPONSE_CHANGE_PIN_TOO_SHORT = "password too short";
 
     public static final String RESPONSE_CHANGE_PIN_TOO_LONG = "password too long";
@@ -236,10 +208,6 @@ public class OmtpConstants {
     public static final String RESPONSE_CHANGE_PIN_MISMATCH = "old password mismatch";
     public static final String RESPONSE_CHANGE_PIN_INVALID_CHARACTER =
             "password contains invalid characters";
-    public static final String ALTERNATIVE_MAILBOX_UPDATE = "MBOXUPDATE";
-    public static final String ALTERNATIVE_NUM_MESSAGE_COUNT = "m";
-
-    // Alternative form of sync message: MBOXUPDATE?m=<new_message_count>;<key>=<value>;
 
     public static String getClientType() {
         String manufacturer =
@@ -276,4 +244,9 @@ public class OmtpConstants {
     private static final String truncate(String string, int length) {
         return string.substring(0, Math.min(length, string.length()));
     }
+
+    // Alternative form of sync message: MBOXUPDATE?m=<new_message_count>;<key>=<value>;
+
+    public static final String ALTERNATIVE_MAILBOX_UPDATE = "MBOXUPDATE";
+    public static final String ALTERNATIVE_NUM_MESSAGE_COUNT = "m";
 }

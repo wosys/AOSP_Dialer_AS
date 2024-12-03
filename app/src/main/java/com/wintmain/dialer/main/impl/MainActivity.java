@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2017 The Android Open Source Project
+ * Copyright (C) 2023-2024 wintmain
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,8 +48,8 @@ import com.wintmain.dialer.util.TransactionSafeActivity;
 import java.util.Objects;
 
 
-public class MainActivity extends TransactionSafeActivity
-        implements com.wintmain.dialer.main.MainActivityPeer.PeerSupplier,
+/** This is the main activity for dialer. It hosts favorites, call log, search, dialpad, etc... */
+public class MainActivity extends TransactionSafeActivity implements TBDMainActivityPeer.PeerSupplier,
         // TODO(calderwoodra): remove these 2 interfaces when we migrate to new speed dial fragment
         InteractionErrorListener,
         DisambigDialogDismissedListener {
@@ -149,7 +150,7 @@ public class MainActivity extends TransactionSafeActivity
             // TODO 这边用新的有个bug，暂时还是用原来的Peer
             return new NewMainActivityPeer(this);
         } else {
-            return new MainActivityPeer(this);
+            return new TBDMainActivityPeer(this);
         }
     }
 
@@ -164,7 +165,7 @@ public class MainActivity extends TransactionSafeActivity
     protected void onResume() {
         super.onResume();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            if (!TelecomUtil.isDefaultDialer(this)) {
+            if (Build.TYPE.equals("user") && !TelecomUtil.isDefaultDialer(this)) {
                 startActivity(new Intent(this, DefaultDialerActivity.class));
                 return;
             }

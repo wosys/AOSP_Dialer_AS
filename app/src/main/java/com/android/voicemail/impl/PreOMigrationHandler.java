@@ -30,16 +30,13 @@ import com.android.voicemail.impl.settings.VisualVoicemailSettingsUtil;
 
 import java.lang.reflect.Method;
 
-/**
- * Handles migration of data from the visual voicemail client in telephony before O.
- */
+/** Handles migration of data from the visual voicemail client in telephony before O. */
 public final class PreOMigrationHandler {
 
-    @VisibleForTesting
-    static final String PRE_O_MIGRATION_FINISHED = "pre_o_migration_finished";
     // Hidden system APIs to access pre O VVM data
     // Bundle getVisualVoicemailSettings()
     private static final String METHOD_GET_VISUAL_VOICEMAIL_SETTINGS = "getVisualVoicemailSettings";
+
     /**
      * Key in bundle returned by {@link #METHOD_GET_VISUAL_VOICEMAIL_SETTINGS}, indicating whether
      * visual voicemail was enabled or disabled by the user. If the user never explicitly changed this
@@ -47,6 +44,7 @@ public final class PreOMigrationHandler {
      */
     private static final String EXTRA_VISUAL_VOICEMAIL_ENABLED_BY_USER_BOOL =
             "android.telephony.extra.VISUAL_VOICEMAIL_ENABLED_BY_USER_BOOL";
+
     /**
      * Key in bundle returned by {@link #METHOD_GET_VISUAL_VOICEMAIL_SETTINGS}, indicating the
      * voicemail access PIN scrambled during the auto provisioning process. The user is expected to
@@ -54,6 +52,8 @@ public final class PreOMigrationHandler {
      */
     private static final String EXTRA_VOICEMAIL_SCRAMBLED_PIN_STRING =
             "android.telephony.extra.VOICEMAIL_SCRAMBLED_PIN_STRING";
+
+    @VisibleForTesting static final String PRE_O_MIGRATION_FINISHED = "pre_o_migration_finished";
 
     @WorkerThread
     public static void migrate(Context context, PhoneAccountHandle phoneAccountHandle) {

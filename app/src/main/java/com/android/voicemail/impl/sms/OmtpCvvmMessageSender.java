@@ -18,14 +18,10 @@ package com.android.voicemail.impl.sms;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.telecom.PhoneAccountHandle;
-
 import androidx.annotation.Nullable;
-
 import com.android.voicemail.impl.OmtpConstants;
 
-/**
- * An implementation of the OmtpMessageSender for T-Mobile.
- */
+/** An implementation of the OmtpMessageSender for T-Mobile. */
 public class OmtpCvvmMessageSender extends OmtpMessageSender {
     public OmtpCvvmMessageSender(
             Context context,

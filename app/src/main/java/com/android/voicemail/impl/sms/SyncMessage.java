@@ -16,7 +16,6 @@
 package com.android.voicemail.impl.sms;
 
 import android.os.Bundle;
-
 import androidx.annotation.Nullable;
 
 import com.android.voicemail.impl.NeededForTesting;
@@ -48,6 +47,25 @@ public class SyncMessage {
     // Timestamp (in millis) of the new message.
     private final long msgTimeMillis;
 
+    @Override
+    public String toString() {
+        return "SyncMessage [mSyncTriggerEvent="
+                + syncTriggerEvent
+                + ", mNewMessageCount="
+                + newMessageCount
+                + ", mMessageId="
+                + messageId
+                + ", mMessageLength="
+                + messageLength
+                + ", mContentType="
+                + contentType
+                + ", mSender="
+                + sender
+                + ", mMsgTimeMillis="
+                + msgTimeMillis
+                + "]";
+    }
+
     public SyncMessage(Bundle wrappedData) {
         syncTriggerEvent = getString(wrappedData, OmtpConstants.SYNC_TRIGGER_EVENT);
         messageId = getString(wrappedData, OmtpConstants.MESSAGE_UID);
@@ -68,6 +86,60 @@ public class SyncMessage {
             return 0L;
         }
     }
+    /**
+     * @return the event that triggered the sync message. This is a mandatory field and must always be
+     *     set.
+     */
+    public String getSyncTriggerEvent() {
+        return syncTriggerEvent;
+    }
+
+    /** @return the number of new messages stored on the voicemail server. */
+    @NeededForTesting
+    public int getNewMessageCount() {
+        return newMessageCount;
+    }
+
+    /**
+     * @return the message ID of the new message.
+     *     <p>Expected to be set only for {@link OmtpConstants#NEW_MESSAGE}
+     */
+    public String getId() {
+        return messageId;
+    }
+
+    /**
+     * @return the content type of the new message.
+     *     <p>Expected to be set only for {@link OmtpConstants#NEW_MESSAGE}
+     */
+    @NeededForTesting
+    public String getContentType() {
+        return contentType;
+    }
+
+    /**
+     * @return the message length of the new message.
+     *     <p>Expected to be set only for {@link OmtpConstants#NEW_MESSAGE}
+     */
+    public int getLength() {
+        return messageLength;
+    }
+
+    /**
+     * @return the sender's phone number of the new message specified as MSISDN.
+     *     <p>Expected to be set only for {@link OmtpConstants#NEW_MESSAGE}
+     */
+    public String getSender() {
+        return sender;
+    }
+
+    /**
+     * @return the timestamp as milliseconds for the new message.
+     *     <p>Expected to be set only for {@link OmtpConstants#NEW_MESSAGE}
+     */
+    public long getTimestampMillis() {
+        return msgTimeMillis;
+    }
 
     private static int getInt(Bundle wrappedData, String key) {
         String value = wrappedData.getString(key);
@@ -87,81 +159,5 @@ public class SyncMessage {
             return "";
         }
         return value;
-    }
-
-    @Override
-    public String toString() {
-        return "SyncMessage [mSyncTriggerEvent="
-                + syncTriggerEvent
-                + ", mNewMessageCount="
-                + newMessageCount
-                + ", mMessageId="
-                + messageId
-                + ", mMessageLength="
-                + messageLength
-                + ", mContentType="
-                + contentType
-                + ", mSender="
-                + sender
-                + ", mMsgTimeMillis="
-                + msgTimeMillis
-                + "]";
-    }
-
-    /**
-     * @return the event that triggered the sync message. This is a mandatory field and must always be
-     * set.
-     */
-    public String getSyncTriggerEvent() {
-        return syncTriggerEvent;
-    }
-
-    /**
-     * @return the number of new messages stored on the voicemail server.
-     */
-    @NeededForTesting
-    public int getNewMessageCount() {
-        return newMessageCount;
-    }
-
-    /**
-     * @return the message ID of the new message.
-     * <p>Expected to be set only for {@link OmtpConstants#NEW_MESSAGE}
-     */
-    public String getId() {
-        return messageId;
-    }
-
-    /**
-     * @return the content type of the new message.
-     * <p>Expected to be set only for {@link OmtpConstants#NEW_MESSAGE}
-     */
-    @NeededForTesting
-    public String getContentType() {
-        return contentType;
-    }
-
-    /**
-     * @return the message length of the new message.
-     * <p>Expected to be set only for {@link OmtpConstants#NEW_MESSAGE}
-     */
-    public int getLength() {
-        return messageLength;
-    }
-
-    /**
-     * @return the sender's phone number of the new message specified as MSISDN.
-     * <p>Expected to be set only for {@link OmtpConstants#NEW_MESSAGE}
-     */
-    public String getSender() {
-        return sender;
-    }
-
-    /**
-     * @return the timestamp as milliseconds for the new message.
-     * <p>Expected to be set only for {@link OmtpConstants#NEW_MESSAGE}
-     */
-    public long getTimestampMillis() {
-        return msgTimeMillis;
     }
 }

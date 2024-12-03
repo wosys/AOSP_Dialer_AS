@@ -23,7 +23,6 @@ import android.os.Build.VERSION_CODES;
 import android.telecom.PhoneAccountHandle;
 import android.text.TextUtils;
 import android.util.ArrayMap;
-
 import androidx.core.os.BuildCompat;
 
 import com.android.voicemail.VoicemailComponent;
@@ -50,17 +49,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Sync OMTP visual voicemail.
- */
+/** Sync OMTP visual voicemail. */
 @TargetApi(VERSION_CODES.O)
 public class OmtpVvmSyncService {
 
     private static final String TAG = "OmtpVvmSyncService";
 
-    /**
-     * Threshold for whether we should archive and delete voicemails from the remote VM server.
-     */
+    /** Threshold for whether we should archive and delete voicemails from the remote VM server. */
     private static final float AUTO_DELETE_ARCHIVE_VM_THRESHOLD = 0.75f;
 
     private final Context context;
@@ -69,26 +64,6 @@ public class OmtpVvmSyncService {
     public OmtpVvmSyncService(Context context) {
         this.context = context;
         queryHelper = new VoicemailsQueryHelper(this.context);
-    }
-
-    private static boolean isArchiveAllowedAndEnabled(
-            Context context, PhoneAccountHandle phoneAccountHandle) {
-
-        if (!VoicemailComponent.get(context)
-                .getVoicemailClient()
-                .isVoicemailArchiveAvailable(context)) {
-            VvmLog.i("isArchiveAllowedAndEnabled", "voicemail archive is not available");
-            return false;
-        }
-        if (!VisualVoicemailSettingsUtil.isArchiveEnabled(context, phoneAccountHandle)) {
-            VvmLog.i("isArchiveAllowedAndEnabled", "voicemail archive is turned off");
-            return false;
-        }
-        if (!VisualVoicemailSettingsUtil.isEnabled(context, phoneAccountHandle)) {
-            VvmLog.i("isArchiveAllowedAndEnabled", "voicemail is turned off");
-            return false;
-        }
-        return true;
     }
 
     public void sync(
@@ -159,6 +134,7 @@ public class OmtpVvmSyncService {
             }
         } catch (InitializingException e) {
             VvmLog.w(TAG, "Can't retrieve Imap credentials.", e);
+            return;
         }
     }
 
@@ -191,6 +167,26 @@ public class OmtpVvmSyncService {
         } else {
             VvmLog.i(TAG, "no need to archive and auto delete VM, quota below threshold");
         }
+    }
+
+    private static boolean isArchiveAllowedAndEnabled(
+            Context context, PhoneAccountHandle phoneAccountHandle) {
+
+        if (!VoicemailComponent.get(context)
+                .getVoicemailClient()
+                .isVoicemailArchiveAvailable(context)) {
+            VvmLog.i("isArchiveAllowedAndEnabled", "voicemail archive is not available");
+            return false;
+        }
+        if (!VisualVoicemailSettingsUtil.isArchiveEnabled(context, phoneAccountHandle)) {
+            VvmLog.i("isArchiveAllowedAndEnabled", "voicemail archive is turned off");
+            return false;
+        }
+        if (!VisualVoicemailSettingsUtil.isEnabled(context, phoneAccountHandle)) {
+            VvmLog.i("isArchiveAllowedAndEnabled", "voicemail is turned off");
+            return false;
+        }
+        return true;
     }
 
     private void deleteAndArchiveVM(ImapHelper imapHelper, Quota quotaOnServer) {
@@ -318,9 +314,7 @@ public class OmtpVvmSyncService {
         return carrierConfigHelper.isPrefetchEnabled() && !imapHelper.isRoaming();
     }
 
-    /**
-     * Builds a map from provider data to message for the given collection of voicemails.
-     */
+    /** Builds a map from provider data to message for the given collection of voicemails. */
     private Map<String, Voicemail> buildMap(List<Voicemail> messages) {
         Map<String, Voicemail> map = new ArrayMap<String, Voicemail>();
         for (Voicemail message : messages) {
@@ -329,13 +323,11 @@ public class OmtpVvmSyncService {
         return map;
     }
 
-    /**
-     * Callback for {@link ImapHelper#fetchTranscription(TranscriptionFetchedCallback, String)}
-     */
+    /** Callback for {@link ImapHelper#fetchTranscription(TranscriptionFetchedCallback, String)} */
     public static class TranscriptionFetchedCallback {
 
-        private final Context context;
-        private final Voicemail voicemail;
+        private Context context;
+        private Voicemail voicemail;
 
         public TranscriptionFetchedCallback(Context context, Voicemail voicemail) {
             this.context = context;

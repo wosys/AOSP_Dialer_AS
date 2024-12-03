@@ -23,7 +23,6 @@ import android.net.Uri;
 import android.provider.VoicemailContract;
 import android.provider.VoicemailContract.Status;
 import android.telecom.PhoneAccountHandle;
-
 import androidx.annotation.Nullable;
 
 import com.wintmain.dialer.strictmode.StrictModeUtils;
@@ -32,34 +31,12 @@ public class VoicemailStatus {
 
     private static final String TAG = "VvmStatus";
 
-    public static Editor edit(Context context, PhoneAccountHandle phoneAccountHandle) {
-        return new Editor(context, phoneAccountHandle);
-    }
-
-    /**
-     * Reset the status to the "disabled" state, which the UI should not show anything for this
-     * phoneAccountHandle.
-     */
-    public static void disable(Context context, PhoneAccountHandle phoneAccountHandle) {
-        edit(context, phoneAccountHandle)
-                .setConfigurationState(Status.CONFIGURATION_STATE_NOT_CONFIGURED)
-                .setDataChannelState(Status.DATA_CHANNEL_STATE_NO_CONNECTION)
-                .setNotificationChannelState(Status.NOTIFICATION_CHANNEL_STATE_NO_CONNECTION)
-                .apply();
-    }
-
-    public static DeferredEditor deferredEdit(
-            Context context, PhoneAccountHandle phoneAccountHandle) {
-        return new DeferredEditor(context, phoneAccountHandle);
-    }
-
     public static class Editor {
 
         private final Context context;
-        @Nullable
-        private final PhoneAccountHandle phoneAccountHandle;
+        @Nullable private final PhoneAccountHandle phoneAccountHandle;
 
-        private final ContentValues values = new ContentValues();
+        private ContentValues values = new ContentValues();
 
         private Editor(Context context, PhoneAccountHandle phoneAccountHandle) {
             this.context = context;
@@ -160,5 +137,26 @@ public class VoicemailStatus {
         public void deferredApply() {
             super.apply();
         }
+    }
+
+    public static Editor edit(Context context, PhoneAccountHandle phoneAccountHandle) {
+        return new Editor(context, phoneAccountHandle);
+    }
+
+    /**
+     * Reset the status to the "disabled" state, which the UI should not show anything for this
+     * phoneAccountHandle.
+     */
+    public static void disable(Context context, PhoneAccountHandle phoneAccountHandle) {
+        edit(context, phoneAccountHandle)
+                .setConfigurationState(Status.CONFIGURATION_STATE_NOT_CONFIGURED)
+                .setDataChannelState(Status.DATA_CHANNEL_STATE_NO_CONNECTION)
+                .setNotificationChannelState(Status.NOTIFICATION_CHANNEL_STATE_NO_CONNECTION)
+                .apply();
+    }
+
+    public static DeferredEditor deferredEdit(
+            Context context, PhoneAccountHandle phoneAccountHandle) {
+        return new DeferredEditor(context, phoneAccountHandle);
     }
 }

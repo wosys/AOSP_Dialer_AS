@@ -25,7 +25,6 @@ import android.provider.VoicemailContract.Status;
 import android.provider.VoicemailContract.Voicemails;
 import android.telecom.PhoneAccountHandle;
 import android.telephony.TelephonyManager;
-
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -38,12 +37,13 @@ import com.android.voicemail.VoicemailVersionConstants;
 import com.android.voicemail.impl.configui.VoicemailSecretCodeActivity;
 import com.android.voicemail.impl.settings.VisualVoicemailSettingsUtil;
 import com.android.voicemail.impl.sync.VvmAccountManager;
+import com.android.voicemail.impl.transcribe.TranscriptionBackfillService;
+import com.android.voicemail.impl.transcribe.TranscriptionConfigProvider;
 import com.wintmain.dialer.common.Assert;
 import com.wintmain.dialer.common.LogUtil;
 import com.wintmain.dialer.configprovider.ConfigProviderComponent;
 
 import java.util.List;
-
 import javax.inject.Inject;
 
 /**
@@ -155,12 +155,12 @@ public class VoicemailClientImpl implements VoicemailClient {
             return false;
         }
 
-//    TranscriptionConfigProvider provider = new TranscriptionConfigProvider(context);
-//    if (!provider.isVoicemailTranscriptionAvailable()) {
-//      LogUtil.i(
-//          "VoicemailClientImpl.isVoicemailTranscriptionAvailable", "feature disabled by config");
-//      return false;
-//    }
+        TranscriptionConfigProvider provider = new TranscriptionConfigProvider(context);
+        if (!provider.isVoicemailTranscriptionAvailable()) {
+            LogUtil.i(
+                    "VoicemailClientImpl.isVoicemailTranscriptionAvailable", "feature disabled by config");
+            return false;
+        }
 
         return true;
     }
@@ -184,11 +184,11 @@ public class VoicemailClientImpl implements VoicemailClient {
             return false;
         }
 
-//    TranscriptionConfigProvider provider = new TranscriptionConfigProvider(context);
-//    if (!provider.isVoicemailDonationAvailable()) {
-//      LogUtil.i("VoicemailClientImpl.isVoicemailDonationAvailable", "feature disabled by config");
-//      return false;
-//    }
+        TranscriptionConfigProvider provider = new TranscriptionConfigProvider(context);
+        if (!provider.isVoicemailDonationAvailable()) {
+            LogUtil.i("VoicemailClientImpl.isVoicemailDonationAvailable", "feature disabled by config");
+            return false;
+        }
 
         return true;
     }
@@ -208,9 +208,9 @@ public class VoicemailClientImpl implements VoicemailClient {
                 "transcription must be available before enabling/disabling it");
         VisualVoicemailSettingsUtil.setVoicemailTranscriptionEnabled(
                 context, phoneAccountHandle, enabled);
-//    if (enabled) {
-//      TranscriptionBackfillService.scheduleTask(context, phoneAccountHandle);
-//    }
+        if (enabled) {
+            TranscriptionBackfillService.scheduleTask(context, phoneAccountHandle);
+        }
     }
 
     @Override
@@ -353,7 +353,7 @@ public class VoicemailClientImpl implements VoicemailClient {
     @Override
     public void onTosAccepted(Context context, PhoneAccountHandle account) {
         LogUtil.i("VoicemailClientImpl.onTosAccepted", "try backfilling voicemail transcriptions");
-//    TranscriptionBackfillService.scheduleTask(context, account);
+        TranscriptionBackfillService.scheduleTask(context, account);
     }
 
     @Override

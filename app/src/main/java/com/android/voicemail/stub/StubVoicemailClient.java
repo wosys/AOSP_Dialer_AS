@@ -28,7 +28,6 @@ import com.android.voicemail.VoicemailClient;
 import com.wintmain.dialer.common.Assert;
 
 import java.util.List;
-
 import javax.inject.Inject;
 
 /**
@@ -36,8 +35,7 @@ import javax.inject.Inject;
  */
 public final class StubVoicemailClient implements VoicemailClient {
     @Inject
-    public StubVoicemailClient() {
-    }
+    public StubVoicemailClient() {}
 
     @Override
     public boolean isVoicemailModuleEnabled() {
@@ -51,18 +49,15 @@ public final class StubVoicemailClient implements VoicemailClient {
 
     @Override
     public void setVoicemailEnabled(
-            Context context, PhoneAccountHandle phoneAccountHandle, boolean enabled) {
-    }
+            Context context, PhoneAccountHandle phoneAccountHandle, boolean enabled) {}
 
     @Override
     public void appendOmtpVoicemailSelectionClause(
-            Context context, StringBuilder where, List<String> selectionArgs) {
-    }
+            Context context, StringBuilder where, List<String> selectionArgs) {}
 
     @Override
     public void appendOmtpVoicemailStatusSelectionClause(
-            Context context, StringBuilder where, List<String> selectionArgs) {
-    }
+            Context context, StringBuilder where, List<String> selectionArgs) {}
 
     @Override
     public boolean isVoicemailArchiveEnabled(Context context, PhoneAccountHandle phoneAccountHandle) {
@@ -76,8 +71,7 @@ public final class StubVoicemailClient implements VoicemailClient {
 
     @Override
     public void setVoicemailArchiveEnabled(
-            Context context, PhoneAccountHandle phoneAccountHandle, boolean value) {
-    }
+            Context context, PhoneAccountHandle phoneAccountHandle, boolean value) {}
 
     @Override
     public boolean isVoicemailTranscriptionAvailable(
@@ -102,13 +96,11 @@ public final class StubVoicemailClient implements VoicemailClient {
 
     @Override
     public void setVoicemailTranscriptionEnabled(
-            Context context, PhoneAccountHandle phoneAccountHandle, boolean enabled) {
-    }
+            Context context, PhoneAccountHandle phoneAccountHandle, boolean enabled) {}
 
     @Override
     public void setVoicemailDonationEnabled(
-            Context context, PhoneAccountHandle phoneAccountHandle, boolean enabled) {
-    }
+            Context context, PhoneAccountHandle phoneAccountHandle, boolean enabled) {}
 
     @Override
     public boolean isActivated(Context context, PhoneAccountHandle phoneAccountHandle) {
@@ -116,8 +108,7 @@ public final class StubVoicemailClient implements VoicemailClient {
     }
 
     @Override
-    public void showConfigUi(@NonNull Context context) {
-    }
+    public void showConfigUi(@NonNull Context context) {}
 
     @Override
     public PersistableBundle getConfig(
@@ -126,12 +117,10 @@ public final class StubVoicemailClient implements VoicemailClient {
     }
 
     @Override
-    public void onBoot(@NonNull Context context) {
-    }
+    public void onBoot(@NonNull Context context) {}
 
     @Override
-    public void onShutdown(@NonNull Context context) {
-    }
+    public void onShutdown(@NonNull Context context) {}
 
     @Override
     public void addActivationStateListener(ActivationStateListener listener) {
@@ -154,8 +143,7 @@ public final class StubVoicemailClient implements VoicemailClient {
     }
 
     @Override
-    public void onTosAccepted(Context context, PhoneAccountHandle account) {
-    }
+    public void onTosAccepted(Context context, PhoneAccountHandle account) {}
 
     @Override
     public boolean hasAcceptedTos(Context context, PhoneAccountHandle phoneAccountHandle) {

@@ -60,7 +60,7 @@ import com.wintmain.dialer.logging.DialerImpression;
 import com.wintmain.dialer.logging.Logger;
 import com.wintmain.dialer.logging.UiAction;
 import com.wintmain.dialer.main.impl.MainActivity;
-import com.wintmain.dialer.main.impl.MainActivityPeer;
+import com.wintmain.dialer.main.impl.TBDMainActivityPeer;
 import com.wintmain.dialer.performancereport.PerformanceReport;
 import com.wintmain.dialer.postcall.PostCall;
 import com.wintmain.dialer.precall.PreCall;
@@ -132,7 +132,8 @@ abstract class CallDetailsActivityCommon extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Boolean conf = MainActivity.getBoolConfigUsingLatestAbout();
         if (!conf) {
-            DialerSettingsActivityCompt.PrefsFragment.ThemeButtonBehavior mThemeBehavior = getThemeButtonBehavior(MainActivityPeer.themeprefs);
+            DialerSettingsActivityCompt.PrefsFragment.ThemeButtonBehavior mThemeBehavior = getThemeButtonBehavior(
+                    TBDMainActivityPeer.themeprefs);
 
             if (mThemeBehavior == DialerSettingsActivityCompt.PrefsFragment.ThemeButtonBehavior.DARK) {
                 getTheme().applyStyle(R.style.DialerDark, true);

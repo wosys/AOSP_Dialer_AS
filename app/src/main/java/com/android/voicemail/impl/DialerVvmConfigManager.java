@@ -40,10 +40,43 @@ import java.util.Map.Entry;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-/**
- * Load and caches dialer vvm config from res/xml/vvm_config.xml
- */
+/** Load and caches dialer vvm config from res/xml/vvm_config.xml */
 public class DialerVvmConfigManager {
+    private static class ConfigEntry implements Comparable<ConfigEntry> {
+
+        final CarrierIdentifierMatcher matcher;
+        final PersistableBundle config;
+
+        ConfigEntry(CarrierIdentifierMatcher matcher, PersistableBundle config) {
+            this.matcher = matcher;
+            this.config = config;
+        }
+
+        /**
+         * A more specific matcher should return a negative value to have higher priority over generic
+         * matchers.
+         */
+        @Override
+        public int compareTo(@NonNull ConfigEntry other) {
+            ComparisonChain comparisonChain = ComparisonChain.start();
+            if (!(matcher.gid1().isPresent() && other.matcher.gid1().isPresent())) {
+                if (matcher.gid1().isPresent()) {
+                    return -1;
+                } else if (other.matcher.gid1().isPresent()) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            } else {
+                comparisonChain = comparisonChain.compare(matcher.gid1().get(), other.matcher.gid1().get());
+            }
+
+            return comparisonChain.compare(matcher.mccMnc(), other.matcher.mccMnc()).result();
+        }
+    }
+
+    private static final String TAG_PERSISTABLEMAP = "pbundle_as_map";
+
     /**
      * A string array of MCCMNC the config applies to. Addtional filters should be appended as the URI
      * query parameter format.
@@ -53,17 +86,19 @@ public class DialerVvmConfigManager {
      *
      * @see #KEY_GID1
      */
-    @VisibleForTesting
-    static final String KEY_MCCMNC = "mccmnc";
-    private static final String TAG_PERSISTABLEMAP = "pbundle_as_map";
+    @VisibleForTesting static final String KEY_MCCMNC = "mccmnc";
+
     /**
      * Additional query parameter in {@link #KEY_MCCMNC} to filter by the Group ID level 1.
      *
      * @see CarrierIdentifierMatcher#gid1()
      */
     private static final String KEY_GID1 = "gid1";
+
     private static final String KEY_FEATURE_FLAG_NAME = "feature_flag_name";
+
     private static Map<String, SortedSet<ConfigEntry>> cachedConfigs;
+
     private final Map<String, SortedSet<ConfigEntry>> configs;
 
     public DialerVvmConfigManager(Context context) {
@@ -78,15 +113,29 @@ public class DialerVvmConfigManager {
         configs = loadConfigs(context, parser);
     }
 
+    @Nullable
+    public PersistableBundle getConfig(CarrierIdentifier carrierIdentifier) {
+        if (!configs.containsKey(carrierIdentifier.mccMnc())) {
+            return null;
+        }
+        for (ConfigEntry configEntry : configs.get(carrierIdentifier.mccMnc())) {
+            if (configEntry.matcher.matches(carrierIdentifier)) {
+                return configEntry.config;
+            }
+        }
+        return null;
+    }
+
     private static Map<String, SortedSet<ConfigEntry>> loadConfigs(
             Context context, XmlPullParser parser) {
         Map<String, SortedSet<ConfigEntry>> configs = new ArrayMap<>();
         try {
             ArrayList list = readBundleList(parser);
             for (Object object : list) {
-                if (!(object instanceof PersistableBundle bundle)) {
+                if (!(object instanceof PersistableBundle)) {
                     throw new IllegalArgumentException("PersistableBundle expected, got " + object);
                 }
+                PersistableBundle bundle = (PersistableBundle) object;
 
                 if (bundle.containsKey(KEY_FEATURE_FLAG_NAME)
                         && !ConfigProviderComponent.get(context)
@@ -171,52 +220,6 @@ public class DialerVvmConfigManager {
             }
         }
         return PersistableBundle.EMPTY;
-    }
-
-    @Nullable
-    public PersistableBundle getConfig(CarrierIdentifier carrierIdentifier) {
-        if (!configs.containsKey(carrierIdentifier.mccMnc())) {
-            return null;
-        }
-        for (ConfigEntry configEntry : configs.get(carrierIdentifier.mccMnc())) {
-            if (configEntry.matcher.matches(carrierIdentifier)) {
-                return configEntry.config;
-            }
-        }
-        return null;
-    }
-
-    private static class ConfigEntry implements Comparable<ConfigEntry> {
-
-        final CarrierIdentifierMatcher matcher;
-        final PersistableBundle config;
-
-        ConfigEntry(CarrierIdentifierMatcher matcher, PersistableBundle config) {
-            this.matcher = matcher;
-            this.config = config;
-        }
-
-        /**
-         * A more specific matcher should return a negative value to have higher priority over generic
-         * matchers.
-         */
-        @Override
-        public int compareTo(@NonNull ConfigEntry other) {
-            ComparisonChain comparisonChain = ComparisonChain.start();
-            if (!(matcher.gid1().isPresent() && other.matcher.gid1().isPresent())) {
-                if (matcher.gid1().isPresent()) {
-                    return -1;
-                } else if (other.matcher.gid1().isPresent()) {
-                    return 1;
-                } else {
-                    return 0;
-                }
-            } else {
-                comparisonChain = comparisonChain.compare(matcher.gid1().get(), other.matcher.gid1().get());
-            }
-
-            return comparisonChain.compare(matcher.mccMnc(), other.matcher.mccMnc()).result();
-        }
     }
 
     static class MyReadMapCallback implements XmlUtils.ReadMapCallback {

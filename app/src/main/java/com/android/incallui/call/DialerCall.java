@@ -1008,7 +1008,37 @@ public class DialerCall implements VideoTechListener, StateChangedListener, Capa
             }
             capabilities &= ~Call.Details.CAPABILITY_MERGE_CONFERENCE;
         }
+        else if ((capabilities & Call.Details.CAPABILITY_RESPOND_VIA_TEXT) != 0) {
+            return isRespondViaSmsCapable();
+        }
         return (capabilities == (capabilities & supportedCapabilities));
+    }
+
+    private boolean isRespondViaSmsCapable() {
+        if (telecomCall.getState() != Call.STATE_RINGING) {
+            return false;
+        }
+
+        if (getHandle() == null) {
+            // No incoming number known or call presentation is "PRESENTATION_RESTRICTED", in
+            // other words, the user should not be able to see the incoming phone number.
+            return false;
+        }
+
+        String number = getHandle().toString();
+        if (number != null && (number.contains("@") || number.contains("%40"))) {
+            return false;
+        }
+
+        // Is there a valid SMS application on the phone?
+//        if (context.getSystemService(TelephonyManager.class)
+//                .getDefaultRespondViaMessageApplication() == null) {
+//            return false;
+//        }
+
+        // If none of the above special cases apply, it's OK to enable the
+        // "Respond via SMS" feature.
+        return true;
     }
 
     public boolean hasProperty(int property) {

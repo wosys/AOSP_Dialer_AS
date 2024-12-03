@@ -42,9 +42,7 @@ import com.android.voicemail.impl.sync.VoicemailsQueryHelper;
 import com.android.voicemail.impl.sync.VvmAccountManager;
 import com.android.voicemail.impl.utils.VoicemailDatabaseUtil;
 
-/**
- * Receive SMS messages and send for processing by the OMTP visual voicemail source.
- */
+/** Receive SMS messages and send for processing by the OMTP visual voicemail source. */
 @TargetApi(VERSION_CODES.O)
 public class OmtpMessageReceiver extends BroadcastReceiver {
 

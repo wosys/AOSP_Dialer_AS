@@ -17,7 +17,6 @@
 package com.android.voicemail.impl;
 
 import android.content.Context;
-
 import androidx.core.os.BuildCompat;
 
 import com.android.voicemail.VoicemailClient;
@@ -27,20 +26,14 @@ import com.wintmain.dialer.inject.ApplicationContext;
 import com.wintmain.dialer.inject.DialerVariant;
 import com.wintmain.dialer.inject.InstallIn;
 
-import javax.inject.Singleton;
-
 import dagger.Module;
 import dagger.Provides;
+import javax.inject.Singleton;
 
-/**
- * This module provides an instance of the voicemail client.
- */
+/** This module provides an instance of the voicemail client. */
 @InstallIn(variants = {DialerVariant.DIALER_TEST})
 @Module
 public final class VoicemailModule {
-
-    private VoicemailModule() {
-    }
 
     @Provides
     @Singleton
@@ -60,4 +53,6 @@ public final class VoicemailModule {
         VvmLog.i("VoicemailModule.provideVoicemailClient", "providing VoicemailClientImpl");
         return new VoicemailClientImpl();
     }
+
+    private VoicemailModule() {}
 }

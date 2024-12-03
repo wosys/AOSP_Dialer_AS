@@ -28,27 +28,15 @@ import com.google.common.base.Optional;
 @AutoValue
 public abstract class CarrierIdentifierMatcher {
 
-    public static Builder builder() {
-        return new AutoValue_CarrierIdentifierMatcher.Builder();
-    }
-
     public abstract String mccMnc();
 
     public abstract Optional<String> gid1();
 
-    public boolean matches(CarrierIdentifier carrierIdentifier) {
-        if (!mccMnc().equals(carrierIdentifier.mccMnc())) {
-            return false;
-        }
-        if (gid1().isPresent()) {
-            return gid1().get().equalsIgnoreCase(carrierIdentifier.gid1());
-        }
-        return true;
+    public static Builder builder() {
+        return new AutoValue_CarrierIdentifierMatcher.Builder();
     }
 
-    /**
-     * Builder for the matcher
-     */
+    /** Builder for the matcher */
     @AutoValue.Builder
     public abstract static class Builder {
         public abstract Builder setMccMnc(String mccMnc);
@@ -56,5 +44,17 @@ public abstract class CarrierIdentifierMatcher {
         public abstract Builder setGid1(String gid1);
 
         public abstract CarrierIdentifierMatcher build();
+    }
+
+    public boolean matches(CarrierIdentifier carrierIdentifier) {
+        if (!mccMnc().equals(carrierIdentifier.mccMnc())) {
+            return false;
+        }
+        if (gid1().isPresent()) {
+            if (!gid1().get().equalsIgnoreCase(carrierIdentifier.gid1())) {
+                return false;
+            }
+        }
+        return true;
     }
 }

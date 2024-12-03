@@ -18,19 +18,17 @@ package com.android.voicemail.impl.scheduling;
 
 import android.content.Context;
 import android.os.Bundle;
-
 import com.android.voicemail.impl.VvmLog;
 import com.wintmain.dialer.proguard.UsedByReflection;
 
-/**
- * Task to block another task of the same ID from being queued for a certain amount of time.
- */
+/** Task to block another task of the same ID from being queued for a certain amount of time. */
 @UsedByReflection(value = "Tasks.java")
 public class BlockerTask extends BaseTask {
 
+    private static final String TAG = "BlockerTask";
+
     public static final String EXTRA_TASK_ID = "extra_task_id";
     public static final String EXTRA_BLOCK_FOR_MILLIS = "extra_block_for_millis";
-    private static final String TAG = "BlockerTask";
 
     public BlockerTask() {
         super(TASK_INVALID);

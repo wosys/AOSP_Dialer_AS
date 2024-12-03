@@ -14,12 +14,12 @@
  * limitations under the License
  */
 
-package com.android.bubble.stub;
+package com.wintmain.dialer.bubble.stub;
 
 import android.graphics.drawable.Drawable;
 import androidx.annotation.NonNull;
-import com.android.bubble.Bubble;
-import com.android.bubble.BubbleInfo;
+import com.wintmain.dialer.bubble.Bubble;
+import com.wintmain.dialer.bubble.BubbleInfo;
 import java.util.List;
 import javax.inject.Inject;
 

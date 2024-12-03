@@ -14,7 +14,7 @@
  * limitations under the License
  */
 
-package com.android.bubble;
+package com.wintmain.dialer.bubble;
 
 import android.app.PendingIntent;
 import android.graphics.drawable.Drawable;

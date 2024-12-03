@@ -35,7 +35,6 @@ import com.android.voicemail.impl.Assert;
 import com.android.voicemail.impl.NeededForTesting;
 import com.android.voicemail.impl.VvmLog;
 import com.android.voicemail.impl.scheduling.TaskQueue.NextTask;
-
 import java.util.List;
 
 /**
@@ -75,8 +74,28 @@ import java.util.List;
 @TargetApi(VERSION_CODES.O)
 final class TaskExecutor {
 
+    /**
+     * An entity that holds execution resources for the {@link TaskExecutor} to run, usually a {@link
+     * android.app.job.JobService}.
+     */
+    interface Job {
+
+        /**
+         * Signals to Job to end and release its' resources. This is an asynchronous call and may not
+         * take effect immediately.
+         */
+        @MainThread
+        void finishAsync();
+
+        /** Whether the call to {@link #finishAsync()} has actually taken effect. */
+        @MainThread
+        boolean isFinished();
+    }
+
     private static final String TAG = "VvmTaskExecutor";
+
     private static final int READY_TOLERANCE_MILLISECONDS = 100;
+
     /**
      * Threshold to determine whether to do a short or long sleep when a task is scheduled in the
      * future.
@@ -95,40 +114,35 @@ final class TaskExecutor {
      * the service to make sure there are no pending messages.
      */
     private static final int STOP_DELAY_MILLISECONDS = 5_000;
-    /**
-     * Interval between polling of whether the job is finished.
-     */
+
+    /** Interval between polling of whether the job is finished. */
     private static final int TERMINATE_POLLING_INTERVAL_MILLISECONDS = 1_000;
-    private static TaskExecutor instance;
+
     // The thread to run tasks on
     private final WorkerThreadHandler workerThreadHandler;
-    private final MainThreadHandler mainThreadHandler;
-    private final Context appContext;
-    /**
-     * Main thread only, access through {@link #getTasks()}
-     */
-    private final TaskQueue tasks = new TaskQueue();
+
+    private static TaskExecutor instance;
+
     /**
      * Used by tests to turn task handling into a single threaded process by calling {@link
      * Handler#handleMessage(Message)} directly
      */
     private MessageSender messageSender = new MessageSender();
+
+    private final MainThreadHandler mainThreadHandler;
+
+    private final Context appContext;
+
+    /** Main thread only, access through {@link #getTasks()} */
+    private final TaskQueue tasks = new TaskQueue();
+
     private boolean isWorkerThreadBusy = false;
+
     private boolean isTerminating = false;
+
     private Job job;
-    /**
-     * Should attempt to run the next task when a task has finished or been added.
-     */
-    private boolean taskAutoRunDisabledForTesting = false;
 
-    private TaskExecutor(Context context) {
-        this.appContext = context.getApplicationContext();
-        HandlerThread thread = new HandlerThread("VvmTaskExecutor");
-        thread.start();
-
-        workerThreadHandler = new WorkerThreadHandler(thread.getLooper());
-        mainThreadHandler = new MainThreadHandler(Looper.getMainLooper());
-    }    private final Runnable stopServiceWithDelay =
+    private final Runnable stopServiceWithDelay =
             new Runnable() {
                 @MainThread
                 @Override
@@ -143,8 +157,95 @@ final class TaskExecutor {
             };
 
     /**
-     * Starts a new TaskExecutor. May only be called by {@link TaskSchedulerJobService}.
+     * Reschedule the {@link TaskSchedulerJobService} and terminate the executor when the {@link Job}
+     * is truly finished. If the job is still not finished, this runnable will requeue itself on the
+     * main thread. The requeue is only expected to happen a few times.
      */
+    private class JobFinishedPoller implements Runnable {
+
+        private final long delayMillis;
+        private final boolean isNewJob;
+        private int invocationCounter = 0;
+
+        JobFinishedPoller(long delayMillis, boolean isNewJob) {
+            this.delayMillis = delayMillis;
+            this.isNewJob = isNewJob;
+        }
+
+        @Override
+        public void run() {
+            // The job should be finished relatively quickly. Assert to make sure this assumption is true.
+            Assert.isTrue(invocationCounter < 10);
+            invocationCounter++;
+            if (job.isFinished()) {
+                VvmLog.i("JobFinishedPoller.run", "Job finished");
+                if (!getTasks().isEmpty()) {
+                    TaskSchedulerJobService.scheduleJob(
+                            appContext, serializePendingTasks(), delayMillis, isNewJob);
+                    tasks.clear();
+                }
+                terminate();
+                return;
+            }
+            VvmLog.w("JobFinishedPoller.run", "Job still running");
+            mainThreadHandler.postDelayed(this, TERMINATE_POLLING_INTERVAL_MILLISECONDS);
+        }
+    };
+
+    /** Should attempt to run the next task when a task has finished or been added. */
+    private boolean taskAutoRunDisabledForTesting = false;
+
+    /** Handles execution of the background task in teh worker thread. */
+    @VisibleForTesting
+    final class WorkerThreadHandler extends Handler {
+
+        public WorkerThreadHandler(Looper looper) {
+            super(looper);
+        }
+        @Override
+        @WorkerThread
+        public void handleMessage(Message msg) {
+            Assert.isNotMainThread();
+            Task task = (Task) msg.obj;
+            try {
+                VvmLog.i(TAG, "executing task " + task);
+                task.onExecuteInBackgroundThread();
+            } catch (Throwable throwable) {
+                VvmLog.e(TAG, "Exception while executing task " + task + ":", throwable);
+            }
+
+            Message schedulerMessage = mainThreadHandler.obtainMessage();
+            schedulerMessage.obj = task;
+            messageSender.send(schedulerMessage);
+        }
+    }
+
+    /** Handles completion of the background task in the main thread. */
+    @VisibleForTesting
+    final class MainThreadHandler extends Handler {
+
+        public MainThreadHandler(Looper looper) {
+            super(looper);
+        }
+
+        @Override
+        @MainThread
+        public void handleMessage(Message msg) {
+            Assert.isMainThread();
+            Task task = (Task) msg.obj;
+            getTasks().remove(task);
+            task.onCompleted();
+            isWorkerThreadBusy = false;
+            if (!isJobRunning() || isTerminating()) {
+                // TaskExecutor was terminated when the task is running in background, don't need to run the
+                // next task or terminate again
+                return;
+            }
+            maybeRunNextTask();
+        }
+    }
+
+    /** Starts a new TaskExecutor. May only be called by {@link TaskSchedulerJobService}. */
     @MainThread
     static void createRunningInstance(Context context) {
         Assert.isMainThread();
@@ -152,13 +253,20 @@ final class TaskExecutor {
         instance = new TaskExecutor(context);
     }
 
-    /**
-     * @return the currently running instance, or {@code null} if the executor is not running.
-     */
+    /** @return the currently running instance, or {@code null} if the executor is not running. */
     @MainThread
     @Nullable
     static TaskExecutor getRunningInstance() {
         return instance;
+    }
+
+    private TaskExecutor(Context context) {
+        this.appContext = context.getApplicationContext();
+        HandlerThread thread = new HandlerThread("VvmTaskExecutor");
+        thread.start();
+
+        workerThreadHandler = new WorkerThreadHandler(thread.getLooper());
+        mainThreadHandler = new MainThreadHandler(Looper.getMainLooper());
     }
 
     @VisibleForTesting
@@ -260,6 +368,14 @@ final class TaskExecutor {
     }
 
     @NeededForTesting
+    static class MessageSender {
+
+        public void send(Message message) {
+            message.sendToTarget();
+        }
+    }
+
+    @NeededForTesting
     void setTaskAutoRunDisabledForTest(boolean value) {
         taskAutoRunDisabledForTesting = value;
     }
@@ -299,9 +415,9 @@ final class TaskExecutor {
      * will start the termination process, but restarted when the scheduled job runs in the future.
      *
      * @param delayMillis the delay before stating the job, see {@link
-     *                    android.app.job.JobInfo.Builder#setMinimumLatency(long)}. This must be 0 if {@code
-     *                    isNewJob} is true.
-     * @param isNewJob    a new job will be requested to run immediately, bypassing all requirements.
+     *     android.app.job.JobInfo.Builder#setMinimumLatency(long)}. This must be 0 if {@code
+     *     isNewJob} is true.
+     * @param isNewJob a new job will be requested to run immediately, bypassing all requirements.
      */
     @MainThread
     @VisibleForTesting
@@ -345,125 +461,4 @@ final class TaskExecutor {
     private boolean isJobRunning() {
         return job != null;
     }
-
-    /**
-     * An entity that holds execution resources for the {@link TaskExecutor} to run, usually a {@link
-     * android.app.job.JobService}.
-     */
-    interface Job {
-
-        /**
-         * Signals to Job to end and release its' resources. This is an asynchronous call and may not
-         * take effect immediately.
-         */
-        @MainThread
-        void finishAsync();
-
-        /**
-         * Whether the call to {@link #finishAsync()} has actually taken effect.
-         */
-        @MainThread
-        boolean isFinished();
-    }
-
-    @NeededForTesting
-    static class MessageSender {
-
-        public void send(Message message) {
-            message.sendToTarget();
-        }
-    }
-
-    /**
-     * Reschedule the {@link TaskSchedulerJobService} and terminate the executor when the {@link Job}
-     * is truly finished. If the job is still not finished, this runnable will requeue itself on the
-     * main thread. The requeue is only expected to happen a few times.
-     */
-    private class JobFinishedPoller implements Runnable {
-
-        private final long delayMillis;
-        private final boolean isNewJob;
-        private int invocationCounter = 0;
-
-        JobFinishedPoller(long delayMillis, boolean isNewJob) {
-            this.delayMillis = delayMillis;
-            this.isNewJob = isNewJob;
-        }
-
-        @Override
-        public void run() {
-            // The job should be finished relatively quickly. Assert to make sure this assumption is true.
-            Assert.isTrue(invocationCounter < 10);
-            invocationCounter++;
-            if (job.isFinished()) {
-                VvmLog.i("JobFinishedPoller.run", "Job finished");
-                if (!getTasks().isEmpty()) {
-                    TaskSchedulerJobService.scheduleJob(
-                            appContext, serializePendingTasks(), delayMillis, isNewJob);
-                    tasks.clear();
-                }
-                terminate();
-                return;
-            }
-            VvmLog.w("JobFinishedPoller.run", "Job still running");
-            mainThreadHandler.postDelayed(this, TERMINATE_POLLING_INTERVAL_MILLISECONDS);
-        }
-    }
-
-    /**
-     * Handles execution of the background task in teh worker thread.
-     */
-    @VisibleForTesting
-    final class WorkerThreadHandler extends Handler {
-
-        public WorkerThreadHandler(Looper looper) {
-            super(looper);
-        }
-
-        @Override
-        @WorkerThread
-        public void handleMessage(Message msg) {
-            Assert.isNotMainThread();
-            Task task = (Task) msg.obj;
-            try {
-                VvmLog.i(TAG, "executing task " + task);
-                task.onExecuteInBackgroundThread();
-            } catch (Throwable throwable) {
-                VvmLog.e(TAG, "Exception while executing task " + task + ":", throwable);
-            }
-
-            Message schedulerMessage = mainThreadHandler.obtainMessage();
-            schedulerMessage.obj = task;
-            messageSender.send(schedulerMessage);
-        }
-    }
-
-    /**
-     * Handles completion of the background task in the main thread.
-     */
-    @VisibleForTesting
-    final class MainThreadHandler extends Handler {
-
-        public MainThreadHandler(Looper looper) {
-            super(looper);
-        }
-
-        @Override
-        @MainThread
-        public void handleMessage(Message msg) {
-            Assert.isMainThread();
-            Task task = (Task) msg.obj;
-            getTasks().remove(task);
-            task.onCompleted();
-            isWorkerThreadBusy = false;
-            if (!isJobRunning() || isTerminating()) {
-                // TaskExecutor was terminated when the task is running in background, don't need to run the
-                // next task or terminate again
-                return;
-            }
-            maybeRunNextTask();
-        }
-    }
-
-
 }

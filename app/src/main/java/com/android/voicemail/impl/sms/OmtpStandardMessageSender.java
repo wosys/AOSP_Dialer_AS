@@ -19,14 +19,10 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.telecom.PhoneAccountHandle;
 import android.text.TextUtils;
-
 import androidx.annotation.Nullable;
-
 import com.android.voicemail.impl.OmtpConstants;
 
-/**
- * A implementation of the OmtpMessageSender using the standard OMTP sms protocol.
- */
+/** A implementation of the OmtpMessageSender using the standard OMTP sms protocol. */
 public class OmtpStandardMessageSender extends OmtpMessageSender {
     private final String clientType;
     private final String protocolVersion;
@@ -35,14 +31,14 @@ public class OmtpStandardMessageSender extends OmtpMessageSender {
     /**
      * Creates a new instance of OmtpStandardMessageSender.
      *
-     * @param applicationPort   If set to a value > 0 then a binary sms is sent to this port number.
-     *                          Otherwise, a standard text SMS is sent.
+     * @param applicationPort If set to a value > 0 then a binary sms is sent to this port number.
+     *     Otherwise, a standard text SMS is sent.
      * @param destinationNumber Destination number to be used.
-     * @param clientType        The "ct" field to be set in the MO message. This is the value used by the VVM
-     *                          server to identify the client. Certain VVM servers require a specific agreed value for this
-     *                          field.
-     * @param protocolVersion   OMTP protocol version.
-     * @param clientPrefix      The client prefix requested to be used by the server in its MT messages.
+     * @param clientType The "ct" field to be set in the MO message. This is the value used by the VVM
+     *     server to identify the client. Certain VVM servers require a specific agreed value for this
+     *     field.
+     * @param protocolVersion OMTP protocol version.
+     * @param clientPrefix The client prefix requested to be used by the server in its MT messages.
      */
     public OmtpStandardMessageSender(
             Context context,

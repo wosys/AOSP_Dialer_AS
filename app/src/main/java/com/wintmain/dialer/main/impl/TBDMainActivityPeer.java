@@ -92,6 +92,7 @@ import com.wintmain.dialer.interactions.PhoneNumberInteraction;
 import com.wintmain.dialer.logging.DialerImpression;
 import com.wintmain.dialer.logging.Logger;
 import com.wintmain.dialer.logging.ScreenEvent;
+import com.wintmain.dialer.main.MainActivityPeer;
 import com.wintmain.dialer.main.impl.bottomnav.BottomNavBar;
 import com.wintmain.dialer.main.impl.bottomnav.BottomNavBar.OnBottomNavTabSelectedListener;
 import com.wintmain.dialer.main.impl.bottomnav.BottomNavBar.TabIndex;
@@ -124,7 +125,7 @@ import java.util.Optional;
  *
  * <p>TODO(calderwoodra): Deprecate this class when we launch NewmainActivityPeer.
  */
-public class MainActivityPeer implements com.wintmain.dialer.main.MainActivityPeer, FragmentUtilListener {
+public class TBDMainActivityPeer implements MainActivityPeer, FragmentUtilListener {
 
     private static final String KEY_SAVED_LANGUAGE_CODE = "saved_language_code";
     private static final String KEY_CURRENT_TAB = "current_tab";
@@ -176,7 +177,7 @@ public class MainActivityPeer implements com.wintmain.dialer.main.MainActivityPe
     private UiListener<String> getLastOutgoingCallListener;
     private UiListener<Integer> missedCallObserverUiListener;
 
-    public MainActivityPeer(AppCompatActivity activity) {
+    public TBDMainActivityPeer(AppCompatActivity activity) {
         this.activity = activity;
     }
 

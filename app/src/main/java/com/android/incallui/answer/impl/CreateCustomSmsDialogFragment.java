@@ -34,6 +34,8 @@ import com.android.incallui.incalluilock.InCallUiLock;
 import com.wintmain.dialer.R;
 import com.wintmain.dialer.common.FragmentUtils;
 
+import java.util.Objects;
+
 /**
  * Shows the dialog for users to enter a custom message when rejecting a call with an SMS message.
  */
@@ -107,20 +109,19 @@ public class CreateCustomSmsDialogFragment extends AppCompatDialogFragment {
         editText.addTextChangedListener(
                 new TextWatcher() {
                     @Override
-                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    }
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
                     @Override
-                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    }
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
                     @Override
                     public void afterTextChanged(Editable editable) {
                         Button sendButton = customMessagePopup.getButton(DialogInterface.BUTTON_POSITIVE);
-                        sendButton.setEnabled(editable != null && editable.toString().trim().length() != 0);
+                        sendButton.setEnabled(editable != null && !editable.toString().trim().isEmpty());
                     }
                 });
-        customMessagePopup.getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        Objects.requireNonNull(customMessagePopup.getWindow())
+                .setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         customMessagePopup.getWindow().addFlags(LayoutParams.FLAG_SHOW_WHEN_LOCKED);
         return customMessagePopup;
     }
@@ -132,15 +133,13 @@ public class CreateCustomSmsDialogFragment extends AppCompatDialogFragment {
     }
 
     @Override
-    public void onDismiss(DialogInterface dialogInterface) {
+    public void onDismiss(@NonNull DialogInterface dialogInterface) {
         super.onDismiss(dialogInterface);
         inCallUiLock.release();
         FragmentUtils.getParentUnsafe(this, CreateCustomSmsHolder.class).customSmsDismissed();
     }
 
-    /**
-     * Call back for {@link CreateCustomSmsDialogFragment}
-     */
+    /** Call back for {@link CreateCustomSmsDialogFragment} */
     public interface CreateCustomSmsHolder {
 
         InCallUiLock acquireInCallUiLock(String tag);

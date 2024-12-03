@@ -23,7 +23,6 @@ import android.os.UserManager;
 import android.telecom.PhoneAccountHandle;
 import android.telecom.TelecomManager;
 import android.util.ArraySet;
-
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
@@ -33,6 +32,7 @@ import com.android.voicemail.impl.OmtpConstants;
 import com.android.voicemail.impl.VisualVoicemailPreferences;
 import com.android.voicemail.impl.VoicemailStatus;
 import com.android.voicemail.impl.sms.StatusMessage;
+
 import com.wintmain.dialer.common.Assert;
 import com.wintmain.dialer.common.PerAccountSharedPreferences;
 import com.wintmain.dialer.common.concurrent.ThreadUtil;
@@ -55,8 +55,7 @@ import java.util.Set;
 public class VvmAccountManager {
     public static final String TAG = "VvmAccountManager";
 
-    @VisibleForTesting
-    static final String IS_ACCOUNT_ACTIVATED = "is_account_activated";
+    @VisibleForTesting static final String IS_ACCOUNT_ACTIVATED = "is_account_activated";
 
     private static final Set<ActivationStateListener> listeners = new ArraySet<>();
 

@@ -18,9 +18,7 @@ package com.android.voicemail.impl;
 
 import android.os.Looper;
 
-/**
- * Assertions which will result in program termination.
- */
+/** Assertions which will result in program termination. */
 public class Assert {
 
     private static Boolean isMainThreadForTest;
@@ -51,9 +49,7 @@ public class Assert {
         throw new AssertionError("Fail");
     }
 
-    /**
-     * Override the main thread status for tests. Set to null to revert to normal behavior
-     */
+    /** Override the main thread status for tests. Set to null to revert to normal behavior */
     @NeededForTesting
     public static void setIsMainThreadForTesting(Boolean isMainThread) {
         isMainThreadForTest = isMainThread;

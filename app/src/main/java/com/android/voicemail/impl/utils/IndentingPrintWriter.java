@@ -32,17 +32,11 @@ public class IndentingPrintWriter extends PrintWriter {
     private final String singleIndent;
     private final int wrapLength;
 
-    /**
-     * Mutable version of current indent
-     */
-    private final StringBuilder indentBuilder = new StringBuilder();
-    /**
-     * Cache of current {@link #indentBuilder} value
-     */
+    /** Mutable version of current indent */
+    private StringBuilder indentBuilder = new StringBuilder();
+    /** Cache of current {@link #indentBuilder} value */
     private char[] currentIndent;
-    /**
-     * Length of current line being built, excluding any indent
-     */
+    /** Length of current line being built, excluding any indent */
     private int currentLength;
 
     /**
@@ -51,7 +45,7 @@ public class IndentingPrintWriter extends PrintWriter {
      */
     private boolean emptyLine = true;
 
-    private final char[] singleChar = new char[1];
+    private char[] singleChar = new char[1];
 
     public IndentingPrintWriter(Writer writer, String singleIndent) {
         this(writer, singleIndent, -1);
@@ -74,7 +68,7 @@ public class IndentingPrintWriter extends PrintWriter {
     }
 
     public void printPair(String key, Object value) {
-        print(key + "=" + value + " ");
+        print(key + "=" + String.valueOf(value) + " ");
     }
 
     public void printPair(String key, Object[] value) {

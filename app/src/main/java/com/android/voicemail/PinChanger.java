@@ -16,17 +16,29 @@
 
 package com.android.voicemail;
 
-
 import androidx.annotation.IntDef;
 import androidx.annotation.WorkerThread;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-/**
- * Interface to change the PIN used to access the mailbox by calling.
- */
+/** Interface to change the PIN used to access the mailbox by calling. */
 public interface PinChanger {
+
+    /** Results from {@link #changePin(String, String)} */
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef(
+            value = {
+                    CHANGE_PIN_SUCCESS,
+                    CHANGE_PIN_TOO_SHORT,
+                    CHANGE_PIN_TOO_LONG,
+                    CHANGE_PIN_TOO_WEAK,
+                    CHANGE_PIN_MISMATCH,
+                    CHANGE_PIN_INVALID_CHARACTER,
+                    CHANGE_PIN_SYSTEM_ERROR
+            }
+    )
+    @interface ChangePinResult {}
 
     int CHANGE_PIN_SUCCESS = 0;
     int CHANGE_PIN_TOO_SHORT = 1;
@@ -40,39 +52,19 @@ public interface PinChanger {
     @ChangePinResult
     int changePin(String oldPin, String newPin);
 
-    String getScrambledPin();
-
     /**
      * Set the scrambled PIN if it is auto generated during provisioning. Set to {@code null} to
      * clear.
      */
     void setScrambledPin(String pin);
 
-    PinSpecification getPinSpecification();
+    String getScrambledPin();
 
-    /**
-     * Results from {@link #changePin(String, String)}
-     */
-    @Retention(RetentionPolicy.SOURCE)
-    @IntDef(
-            value = {
-                    CHANGE_PIN_SUCCESS,
-                    CHANGE_PIN_TOO_SHORT,
-                    CHANGE_PIN_TOO_LONG,
-                    CHANGE_PIN_TOO_WEAK,
-                    CHANGE_PIN_MISMATCH,
-                    CHANGE_PIN_INVALID_CHARACTER,
-                    CHANGE_PIN_SYSTEM_ERROR
-            }
-    )
-    @interface ChangePinResult {
-    }
-
-    /**
-     * Format requirements for the PIN.
-     */
+    /** Format requirements for the PIN. */
     class PinSpecification {
         public int minLength;
         public int maxLength;
     }
+
+    PinSpecification getPinSpecification();
 }

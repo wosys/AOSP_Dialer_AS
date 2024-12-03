@@ -28,9 +28,7 @@ import androidx.annotation.Nullable;
 
 import java.util.List;
 
-/**
- * Public interface for the voicemail module
- */
+/** Public interface for the voicemail module */
 public interface VoicemailClient {
 
     /**
@@ -40,9 +38,7 @@ public interface VoicemailClient {
      * external to the client.
      */
     String ACTION_UPLOAD = "com.android.voicemail.VoicemailClient.ACTION_UPLOAD";
-    /**
-     * Common key for passing {@link PhoneAccountHandle} in bundles.
-     */
+    /** Common key for passing {@link PhoneAccountHandle} in bundles. */
     String PARAM_PHONE_ACCOUNT_HANDLE = "phone_account_handle";
     /**
      * Broadcast from the client to inform the app to show a legacy voicemail notification. This
@@ -95,7 +91,7 @@ public interface VoicemailClient {
      * the voicemails from {@link TelephonyManager#getVisualVoicemailPackageName()} should be shown.
      * For example, the user synced voicemails with DialerA, and then switched to DialerB, voicemails
      * from DialerA should be ignored as they are no longer current. Voicemails from {@link
-     * #OMTP_VOICEMAIL_BLACKLIST} will also be ignored as they are voicemail source only valid pre-OC.
+     * # OMTP_VOICEMAIL_BLACKLIST} will also be ignored as they are voicemail source only valid pre-OC.
      */
     void appendOmtpVoicemailSelectionClause(
             Context context, StringBuilder where, List<String> selectionArgs);
@@ -103,7 +99,7 @@ public interface VoicemailClient {
     /**
      * Appends the selection to ignore voicemail status from non-active OMTP voicemail package. The
      * {@link android.provider.VoicemailContract.Status#SOURCE_TYPE} is checked against a list of
-     * known OMTP types. Voicemails from {@link #OMTP_VOICEMAIL_BLACKLIST} will also be ignored as
+     * known OMTP types. Voicemails from {@link # OMTP_VOICEMAIL_BLACKLIST} will also be ignored as
      * they are voicemail source only valid pre-OC.
      *
      * @see #appendOmtpVoicemailSelectionClause(Context, StringBuilder, List)
@@ -115,8 +111,8 @@ public interface VoicemailClient {
 
     /**
      * @return if the voicemail archive feature is available on the current device. This depends on
-     * whether the server side flag is turned on for the feature, and if the OS meets the
-     * requirement for this feature.
+     *     whether the server side flag is turned on for the feature, and if the OS meets the
+     *     requirement for this feature.
      */
     boolean isVoicemailArchiveAvailable(Context context);
 
@@ -125,24 +121,18 @@ public interface VoicemailClient {
 
     /**
      * @return if the voicemail transcription feature is available on the current device. This depends
-     * on whether the server side flag is turned on for the feature, visual voicemail is activated
-     * and enabled and if the OS meets the requirement for this feature.
+     *     on whether the server side flag is turned on for the feature, visual voicemail is activated
+     *     and enabled and if the OS meets the requirement for this feature.
      */
     boolean isVoicemailTranscriptionAvailable(Context context, PhoneAccountHandle account);
 
-    /**
-     * @return if the voicemail transcription setting has been enabled by the user.
-     */
+    /** @return if the voicemail transcription setting has been enabled by the user. */
     boolean isVoicemailTranscriptionEnabled(Context context, PhoneAccountHandle account);
 
-    /**
-     * @return if the voicemail donation feature is available.
-     */
+    /** @return if the voicemail donation feature is available. */
     boolean isVoicemailDonationAvailable(Context context, PhoneAccountHandle account);
 
-    /**
-     * @return if the voicemail donation setting has been enabled by the user.
-     */
+    /** @return if the voicemail donation setting has been enabled by the user. */
     boolean isVoicemailDonationEnabled(Context context, PhoneAccountHandle account);
 
     void setVoicemailTranscriptionEnabled(
@@ -182,9 +172,7 @@ public interface VoicemailClient {
     @MainThread
     void removeActivationStateListener(ActivationStateListener listener);
 
-    /**
-     * Provides interface to change the PIN used to access the mailbox by calling.
-     */
+    /** Provides interface to change the PIN used to access the mailbox by calling. */
     PinChanger createPinChanger(Context context, PhoneAccountHandle phoneAccountHandle);
 
     void onTosAccepted(Context context, PhoneAccountHandle phoneAccountHandle);
@@ -193,14 +181,12 @@ public interface VoicemailClient {
 
     /**
      * @return arbitrary carrier configuration String value associate with the indicated key. See
-     * {@code CarrierConfigKeys.java}
+     *     {@code CarrierConfigKeys.java}
      */
     @Nullable
     String getCarrierConfigString(Context context, PhoneAccountHandle phoneAccountHandle, String key);
 
-    /**
-     * Listener for changes in {@link #isActivated(Context, PhoneAccountHandle)}
-     */
+    /** Listener for changes in {@link #isActivated(Context, PhoneAccountHandle)} */
     interface ActivationStateListener {
         @MainThread
         void onActivationStateChanged(PhoneAccountHandle phoneAccountHandle, boolean isActivated);

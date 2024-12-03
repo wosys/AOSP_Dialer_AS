@@ -16,6 +16,7 @@
 
 package com.android.voicemail.impl.sync;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -27,7 +28,6 @@ import com.android.voicemail.VoicemailComponent;
 import com.android.voicemail.impl.ActivationTask;
 import com.android.voicemail.impl.VvmLog;
 import com.android.voicemail.impl.settings.VisualVoicemailSettingsUtil;
-
 import java.util.List;
 
 public class OmtpVvmSyncReceiver extends BroadcastReceiver {
@@ -44,7 +44,7 @@ public class OmtpVvmSyncReceiver extends BroadcastReceiver {
         if (VoicemailContract.ACTION_SYNC_VOICEMAIL.equals(intent.getAction())) {
             VvmLog.v(TAG, "Sync intent received");
 
-            List<PhoneAccountHandle> accounts =
+            @SuppressLint("MissingPermission") List<PhoneAccountHandle> accounts =
                     context.getSystemService(TelecomManager.class).getCallCapablePhoneAccounts();
             for (PhoneAccountHandle phoneAccount : accounts) {
                 if (!VisualVoicemailSettingsUtil.isEnabled(context, phoneAccount)) {

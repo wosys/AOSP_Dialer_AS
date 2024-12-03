@@ -24,9 +24,7 @@ import android.telecom.PhoneAccountHandle;
 import com.android.voicemail.VoicemailComponent;
 import com.android.voicemail.impl.settings.VisualVoicemailSettingsUtil;
 
-/**
- * Receives changes to the voicemail provider so they can be sent to the voicemail server.
- */
+/** Receives changes to the voicemail provider so they can be sent to the voicemail server. */
 public class VoicemailProviderChangeReceiver extends BroadcastReceiver {
 
     @Override
