@@ -14,8 +14,8 @@ android {
         // AAPT: error: <adaptive-icon> elements require a sdk version of at least 26.
         minSdk 26
         targetSdk 34
-        versionCode 20240415
-        versionName 'V20240415'
+        versionCode 20241203
+        versionName 'V20241203'
     }
 
     compileOptions {
@@ -29,8 +29,8 @@ android {
         }
     }
 
-    android.applicationVariants.all { variant ->
-        variant.outputs.all {
+    android.applicationVariants.configureEach { variant ->
+        variant.outputs.configureEach {
             if (variant.name.endsWith("debug")) {
                 outputFileName = "AOSP_Dialer_AS_v${defaultConfig.versionName}_debug.apk"
             } else {
@@ -85,47 +85,6 @@ android {
     namespace 'com.wintmain.dialer'
 }
 
-dependencies {
-    implementation 'com.android.volley:volley:1.2.1'
-    implementation 'me.leolin:ShortcutBadger:1.1.22'
-    implementation 'com.googlecode.libphonenumber:libphonenumber:8.13.14'
-    implementation 'com.googlecode.libphonenumber:geocoder:2.208'
-    implementation 'io.grpc:grpc-core:1.56.0'
-    implementation 'com.google.zxing:core:3.5.1'
-    implementation 'org.apache.james:apache-mime4j-dom:0.8.9'
-    implementation 'io.grpc:grpc-stub:1.56.0'
-    implementation 'io.grpc:grpc-okhttp:1.56.0'
-    implementation 'javax.annotation:jsr250-api:1.0'
-    //noinspection GradleDependency -- no warnning
-    implementation 'com.google.android.material:material:1.6.1'
-    implementation 'androidx.legacy:legacy-support-v13:1.0.0'
-    //noinspection GradleDependency
-    implementation 'io.grpc:grpc-protobuf-lite:1.0.3'
-    //noinspection GradleDependency
-    implementation 'commons-io:commons-io:2.13.0'
-    //noinspection GradleDependency
-    implementation 'com.github.bumptech.glide:glide:4.8.0'
-    implementation "androidx.preference:preference:1.2.0"
-    implementation 'androidx.exifinterface:exifinterface:1.3.6'
-
-    // AutoValue: https://github.com/google/auto
-    implementation 'com.google.auto:auto-common:1.2.2'
-    implementation 'com.google.auto.value:auto-value-annotations:1.10.2'
-    implementation 'androidx.recyclerview:recyclerview:1.3.2'
-    annotationProcessor 'com.google.auto.value:auto-value:1.10.2'
-
-    // Dagger2: https://github.com/google/dagger
-    implementation 'com.google.dagger:dagger:2.46.1'
-    annotationProcessor "com.google.dagger:dagger-compiler:2.46.1"
-
-    // App中集成CodeLocator: https://github.com/bytedance/CodeLocator
-    debugImplementation "com.bytedance.tools.codelocator:codelocator-core:2.0.3"
-
-    // You need to depend on the lite runtime library, not protobuf-java
-    // 见下面的 protobuf，高等级的这个依赖的版本不一样，build脚本也不一样，具体见github
-    implementation 'com.google.protobuf:protobuf-lite:3.0.0'
-}
-
 protobuf {
     // MAC arch(Mac OS X) needs a different artifact
     def isMac = System.properties['os.name'].toLowerCase().contains('mac')
@@ -159,4 +118,45 @@ protobuf {
             }
         }
     }
+}
+
+dependencies {
+    implementation 'com.android.volley:volley:1.2.1'
+    implementation 'me.leolin:ShortcutBadger:1.1.22'
+    implementation 'com.googlecode.libphonenumber:libphonenumber:8.13.14'
+    implementation 'com.googlecode.libphonenumber:geocoder:2.208'
+    implementation 'io.grpc:grpc-core:1.56.0'
+    implementation 'io.grpc:grpc-stub:1.56.0'
+    implementation 'io.grpc:grpc-okhttp:1.56.0'
+    //noinspection GradleDependency
+    implementation 'io.grpc:grpc-protobuf-lite:1.0.3'
+    implementation 'com.google.zxing:core:3.5.1'
+    implementation 'org.apache.james:apache-mime4j-dom:0.8.9'
+    implementation 'javax.annotation:jsr250-api:1.0'
+    //noinspection GradleDependency -- no warnning
+    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'androidx.legacy:legacy-support-v13:1.0.0'
+    //noinspection GradleDependency
+    implementation 'commons-io:commons-io:2.13.0'
+    //noinspection GradleDependency
+    implementation 'com.github.bumptech.glide:glide:4.8.0'
+    implementation "androidx.preference:preference:1.2.0"
+    implementation 'androidx.exifinterface:exifinterface:1.3.6'
+
+    // AutoValue: https://github.com/google/auto
+    implementation 'com.google.auto:auto-common:1.2.2'
+    implementation 'com.google.auto.value:auto-value-annotations:1.10.2'
+    implementation 'androidx.recyclerview:recyclerview:1.3.2'
+    annotationProcessor 'com.google.auto.value:auto-value:1.10.2'
+
+    // Dagger2: https://github.com/google/dagger
+    implementation 'com.google.dagger:dagger:2.46.1'
+    annotationProcessor "com.google.dagger:dagger-compiler:2.46.1"
+
+    // App中集成CodeLocator: https://github.com/bytedance/CodeLocator
+    debugImplementation "com.bytedance.tools.codelocator:codelocator-core:2.0.3"
+
+    // You need to depend on the lite runtime library, not protobuf-java
+    // 见下面的 protobuf，高等级的这个依赖的版本不一样，build脚本也不一样，具体见github
+    implementation 'com.google.protobuf:protobuf-lite:3.0.0'
 }

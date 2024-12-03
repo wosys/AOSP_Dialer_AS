@@ -1,6 +1,6 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
-    id 'com.android.application' version '8.2.0' apply false
+    id 'com.android.application' version '8.5.2' apply false
 }
 
 allprojects{
@@ -8,6 +8,6 @@ allprojects{
     setBuildDir(new File(rootDir, "build/${path.replaceAll(':', '/')}"))
 }
 
-task clean(type: Delete) {
+tasks.register('clean', Delete) {
     delete rootProject.buildDir
 }
